@@ -2,6 +2,9 @@ group 'org.gemcfadyen'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+mainClassName = 'pipeclean.HelloWorld'
 
 sourceCompatibility = 1.8
 
