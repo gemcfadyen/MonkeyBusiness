@@ -1,4 +1,3 @@
-import com.sun.deploy.net.HttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,12 +10,12 @@ public class HttpServerTest {
     private HttpRequestParserSpy httpRequestParserSpy;
     private HttpResponseBuilderSpy httpResponseBuilderSpy;
     private HttpServer httpServer;
-    private FakeClient fakeClient;
+    private ClientSpy clientSpy;
 
     @Before
     public void setUp() throws Exception {
-        fakeClient = new FakeClient();
-        serverSocketSpy = new ServerSocketSpy(fakeClient);
+        clientSpy = new ClientSpy();
+        serverSocketSpy = new ServerSocketSpy(clientSpy);
         httpRequestParserSpy = new HttpRequestParserSpy();
         httpResponseBuilderSpy = new HttpResponseBuilderSpy();
         httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpResponseBuilderSpy);
@@ -57,13 +56,13 @@ public class HttpServerTest {
     public void providesClientWithHttpResponse() {
         httpServer.start();
 
-        assertThat(fakeClient.hasHttpResponse(), is(true));
+        assertThat(clientSpy.hasHttpResponse(), is(true));
     }
 
     @Test
     public void clientConnectionIsClosed() {
         httpServer.start();
 
-        assertThat(fakeClient.isClosed(), is(true));
+        assertThat(clientSpy.isClosed(), is(true));
     }
 }

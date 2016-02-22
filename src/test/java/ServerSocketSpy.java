@@ -1,9 +1,9 @@
 class ServerSocketSpy implements HttpServerSocket {
     private boolean isAcceptingRequests = false;
-    private FakeClient clientToReturn;
+    private ClientSpy clientToReturn;
 
-    public ServerSocketSpy(FakeClient fakeClient) {
-        this.clientToReturn = fakeClient;
+    public ServerSocketSpy(ClientSpy clientSpy) {
+        this.clientToReturn = clientSpy;
     }
 
     @Override

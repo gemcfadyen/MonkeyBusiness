@@ -1,7 +1,7 @@
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class FakeClient implements HttpSocket {
+public class ClientSpy implements HttpSocket {
     private boolean isClosed = false;
     private boolean hasHttpResponse = false;
 
