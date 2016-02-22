@@ -1,6 +1,3 @@
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 public class HttpServer {
     private String host;
     private int port;
@@ -28,56 +25,3 @@ public class HttpServer {
     }
 }
 
-interface HttpServerSocket {
-    HttpSocket accept();
-}
-
-class ServerSocketSpy implements HttpServerSocket {
-    private boolean isAcceptingRequests = false;
-
-    @Override
-    public HttpSocket accept() {
-        isAcceptingRequests = true;
-        return new FakeClient();
-    }
-
-    public boolean isAcceptingRequests() {
-        return isAcceptingRequests;
-    }
-}
-
-class FakeClient implements HttpSocket {
-
-    @Override
-    public InputStream getRawHttpRequest() {
-        return new ByteArrayInputStream("An Http Request".getBytes());
-    }
-}
-
-interface HttpSocket {
-    InputStream getRawHttpRequest();
-}
-
-interface HttpRequestParser {
-
-    HttpRequest parse(InputStream inputStream);
-
-}
-
-class HttpRequestParserSpy implements HttpRequestParser {
-    private boolean hasParsedRequest = false;
-
-    @Override
-    public HttpRequest parse(InputStream inputStream) {
-        hasParsedRequest = true;
-        return null;
-    }
-
-    public boolean hasParsedRequest() {
-        return hasParsedRequest;
-    }
-}
-
-class HttpRequest {
-
-}
