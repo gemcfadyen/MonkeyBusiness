@@ -3,6 +3,7 @@ import java.io.InputStream;
 
 public class FakeClient implements HttpSocket {
     private boolean isClosed = false;
+    private boolean hasHttpResponse = false;
 
     @Override
     public InputStream getRawHttpRequest() {
@@ -14,8 +15,17 @@ public class FakeClient implements HttpSocket {
         isClosed = true;
     }
 
+    @Override
+    public void setHttpResponse(HttpResponse httpResponse) {
+        hasHttpResponse = true;
+    }
+
 
     public boolean isClosed() {
        return isClosed;
+    }
+
+    public boolean hasHttpResponse() {
+       return hasHttpResponse;
     }
 }

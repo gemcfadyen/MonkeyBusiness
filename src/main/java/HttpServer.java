@@ -22,17 +22,12 @@ public class HttpServer {
     }
 
     public void start() {
-        //Listen for Client Requests
         HttpSocket client = serverSocket.accept();
-
-        //Read the HttpRequest
-        HttpRequest httpRequest = httpRequestParser.parse(client.getRawHttpRequest());
+        httpRequestParser.parse(client.getRawHttpRequest());
 
         //Route and process request
 
-        //Create HttpResponse
-        HttpResponse httpResponse = httpResponseBuilder.build();
-        //Close Client
+        client.setHttpResponse(httpResponseBuilder.build());
         client.close();
     }
 }

@@ -54,6 +54,13 @@ public class HttpServerTest {
     }
 
     @Test
+    public void providesClientWithHttpResponse() {
+        httpServer.start();
+
+        assertThat(fakeClient.hasHttpResponse(), is(true));
+    }
+
+    @Test
     public void clientConnectionIsClosed() {
         httpServer.start();
 
