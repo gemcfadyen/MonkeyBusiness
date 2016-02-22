@@ -15,8 +15,7 @@ class ClientSocket implements HttpSocket {
         try {
             return socket.getInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e); //TODO custom exception handling
+            throw new ClientSocketException("Exception in socket whilst retrieving the request", e);
         }
     }
 
@@ -25,18 +24,17 @@ class ClientSocket implements HttpSocket {
         try {
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace(); //TODO custom exception handling
+            throw new ClientSocketException("Exception whilst closing socket", e);
         }
     }
 
     @Override
     public void setHttpResponse(HttpResponse httpResponse) {
-        System.out.println("Returning a get 200 request!");
-
+        System.out.println("Returning a response!");
         try {
             socket.getOutputStream().write(httpResponse.formatForClient());
         } catch (IOException e) {
-            e.printStackTrace(); //TODO custom exception handling
+            throw new ClientSocketException("Exception whilst writing request to socket", e);
         }
     }
 }

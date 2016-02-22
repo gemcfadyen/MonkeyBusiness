@@ -40,4 +40,13 @@ public class CommandLineArgumentParserTest {
 
         assertThat(publicDirectory, is("/some/path/here"));
     }
+
+    @Test
+    public void publicDirectoryDefaultsWhenNotSpecified() {
+        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
+        String[] commandLineArguments = new String[]{};
+        String publicDirectory = commandLineArgumentParser.extractPublicDirectory(commandLineArguments);
+
+        assertThat(publicDirectory, is("/Users/Georgina/Documents/Projects/cob-server/cob_spec/public"));
+    }
 }

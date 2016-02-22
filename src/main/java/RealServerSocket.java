@@ -13,11 +13,10 @@ public class RealServerSocket implements HttpServerSocket {
         try {
             return new ClientSocket(serverSocket.accept());
         } catch (IOException e) {
-            e.printStackTrace(); //TODO custom exception here
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new HttpServerSocketException("Exception occurred whilst server was accepting client requests", e);
         }
     }
 }
-
 
 

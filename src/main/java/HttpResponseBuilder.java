@@ -1,5 +1,3 @@
-import java.util.Date;
-
 public class HttpResponseBuilder implements ResponseBuilder {
     private String httpVersion = "HTTP/1.1";
     private int statusCode;
@@ -11,11 +9,6 @@ public class HttpResponseBuilder implements ResponseBuilder {
 
     @Override
     public HttpResponse build() {
-
-        Date today = new Date();
-        System.out.println("Returning a canned response!");
-        String httpResponse = "HTTP/1.1 200 OK\r\n\r\n" + today;
-
         return new HttpResponse(statusCode, httpVersion, reasonPhrase);
     }
 
