@@ -16,8 +16,7 @@ public class HttpRequestParser implements RequestParser {
             requestLine = parseRequestLine(readLine(reader));
             return new HttpRequest(getMethod(requestLine), getRequestUri(requestLine));
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new HttpRequestParsingException();
+            throw new HttpRequestParsingException("Error in parsing Http Request", e);
         }
     }
 
