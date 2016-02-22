@@ -1,3 +1,4 @@
+import com.sun.deploy.net.HttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,13 +9,15 @@ public class HttpServerTest {
 
     private ServerSocketSpy serverSocketSpy;
     private HttpRequestParserSpy httpRequestParserSpy;
+    private HttpResponseBuilderSpy httpResponseBuilderSpy;
     private HttpServer httpServer;
 
     @Before
     public void setUp() throws Exception {
         serverSocketSpy = new ServerSocketSpy();
         httpRequestParserSpy = new HttpRequestParserSpy();
-        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy);
+        httpResponseBuilderSpy = new HttpResponseBuilderSpy();
+        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpResponseBuilderSpy);
     }
 
     @Test
@@ -35,9 +38,16 @@ public class HttpServerTest {
     }
 
     @Test
-    public void serverAcceptsClientRequest() {
+    public void serverParsesClientRequest() {
         httpServer.start();
 
         assertThat(httpRequestParserSpy.hasParsedRequest(), is(true));
+    }
+
+    @Test
+    public void createsHttpResponse() {
+        httpServer.start();
+
+        assertThat(httpResponseBuilderSpy.hasBuiltHttpResponse(), is(true));
     }
 }

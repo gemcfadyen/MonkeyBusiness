@@ -1,3 +1,3 @@
-class HttpRequest {
+public class HttpRequest {
 
 }
