@@ -3,10 +3,23 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'application'
 mainClassName = 'pipeclean.HelloWorld'
 
 sourceCompatibility = 1.8
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls=gradle=plugin:2.0.1'
+    }
+
+}
 
 repositories {
     mavenCentral()
@@ -15,5 +28,12 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.+'
     testCompile 'org.hamcrest:hamcrest-all:1.1'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 
 }
