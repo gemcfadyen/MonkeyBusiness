@@ -12,4 +12,11 @@ public class HelloWorldTest {
         HelloWorld helloWorld = new HelloWorld();
         assertThat(helloWorld.greeting(), is("Hiiii"));
     }
+
+    @Test
+    public void inspectMainArguments() {
+        HelloWorld helloWorld = new HelloWorld();
+
+        helloWorld.main("-p 1000");
+    }
 }
