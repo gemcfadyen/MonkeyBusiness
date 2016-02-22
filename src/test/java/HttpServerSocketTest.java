@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class RealServerSocketTest {
+public class HttpServerSocketTest {
 
     @Test(expected = HttpServerSocketException.class)
     public void serverThrowsException() throws IOException {
@@ -16,8 +16,8 @@ public class RealServerSocketTest {
             }
         };
 
-        RealServerSocket realServerSocket = new RealServerSocket(fakeServerSocket);
-        realServerSocket.accept();
+        HttpServerSocket httpServerSocket = new HttpServerSocket(fakeServerSocket);
+        httpServerSocket.accept();
     }
 }
 

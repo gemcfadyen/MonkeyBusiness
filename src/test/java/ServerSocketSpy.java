@@ -1,8 +1,9 @@
-class ServerSocketSpy implements HttpServerSocket {
+class ServerSocketSpy extends HttpServerSocket {
     private boolean isAcceptingRequests = false;
     private ClientSpy clientToReturn;
 
     public ServerSocketSpy(ClientSpy clientSpy) {
+        super(null);
         this.clientToReturn = clientSpy;
     }
 
