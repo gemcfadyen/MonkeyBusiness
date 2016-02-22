@@ -1,0 +1,3 @@
+interface ResponseBuilder {
+    HttpResponse build();
+}

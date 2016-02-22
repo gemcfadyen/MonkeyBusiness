@@ -1,6 +1,6 @@
 import java.io.InputStream;
 
-public class HttpRequestParserSpy implements HttpRequestParser {
+public class RequestParserSpy implements RequestParser {
     private boolean hasParsedRequest = false;
 
     @Override
