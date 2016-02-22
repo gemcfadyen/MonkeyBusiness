@@ -37,3 +37,11 @@ jacocoTestReport {
         html.enabled = true
     }
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'HttpServerRunner'
+        )
+    }
+}
