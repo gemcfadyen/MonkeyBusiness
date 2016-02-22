@@ -7,8 +7,8 @@ import static org.junit.Assert.assertThat;
 public class HttpServerTest {
 
     private ServerSocketSpy serverSocketSpy;
-    private HttpRequestParserSpy httpRequestParserSpy;
-    private HttpResponseBuilderSpy httpResponseBuilderSpy;
+    private RequestParserSpy httpRequestParserSpy;
+    private ResponseBuilderSpy httpResponseBuilderSpy;
     private HttpServer httpServer;
     private ClientSpy clientSpy;
 
@@ -16,8 +16,8 @@ public class HttpServerTest {
     public void setUp() throws Exception {
         clientSpy = new ClientSpy();
         serverSocketSpy = new ServerSocketSpy(clientSpy);
-        httpRequestParserSpy = new HttpRequestParserSpy();
-        httpResponseBuilderSpy = new HttpResponseBuilderSpy();
+        httpRequestParserSpy = new RequestParserSpy();
+        httpResponseBuilderSpy = new ResponseBuilderSpy();
         httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpResponseBuilderSpy);
     }
 
@@ -50,6 +50,8 @@ public class HttpServerTest {
         httpServer.start();
 
         assertThat(httpResponseBuilderSpy.hasBuiltHttpResponse(), is(true));
+        assertThat(httpResponseBuilderSpy.hasGotStatusCode(), is(true));
+        assertThat(httpResponseBuilderSpy.hasGotReasonPhrase(), is(true));
     }
 
     @Test

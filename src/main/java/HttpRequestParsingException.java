@@ -1,2 +1,2 @@
-public class HttpRequestParsingException extends Throwable {
+public class HttpRequestParsingException extends RuntimeException {
 }

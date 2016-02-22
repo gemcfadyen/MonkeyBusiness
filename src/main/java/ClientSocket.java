@@ -6,14 +6,18 @@ class ClientSocket implements HttpSocket {
 
     private final Socket socket;
 
-    public ClientSocket(Socket serverSocket) {
-        this.socket = serverSocket;
-
+    public ClientSocket(Socket socket) {
+        this.socket = socket;
     }
 
     @Override
     public InputStream getRawHttpRequest() {
-        return null;
+        try {
+            return socket.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e); //TODO custom exception handling
+        }
     }
 
     @Override
@@ -30,9 +34,9 @@ class ClientSocket implements HttpSocket {
         System.out.println("Returning a get 200 request!");
 
         try {
-            socket.getOutputStream().write(httpResponse.getResponse());
+            socket.getOutputStream().write(httpResponse.formatForClient());
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO custom exception handling
         }
     }
 }

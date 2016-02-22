@@ -2,15 +2,15 @@ public class HttpServer {
     private final String host;
     private final int port;
     private final HttpServerSocket serverSocket;
-    private final HttpRequestParser httpRequestParser;
-    private final HttpResponseBuilder httpResponseBuilder;
+    private final RequestParser requestParser;
+    private final ResponseBuilder responseBuilder;
 
-    public HttpServer(String host, int port, HttpServerSocket serverSocket, HttpRequestParser httpRequestParser, HttpResponseBuilder httpResponseBuilder) {
+    public HttpServer(String host, int port, HttpServerSocket serverSocket, RequestParser requestParser, ResponseBuilder responseBuilder) {
         this.host = host;
         this.port = port;
         this.serverSocket = serverSocket;
-        this.httpRequestParser = httpRequestParser;
-        this.httpResponseBuilder = httpResponseBuilder;
+        this.requestParser = requestParser;
+        this.responseBuilder = responseBuilder;
     }
 
     public String getHost() {
@@ -22,34 +22,15 @@ public class HttpServer {
     }
 
     public void start() {
+        System.out.println("Listening for request.....");
         HttpSocket client = serverSocket.accept();
-        httpRequestParser.parse(client.getRawHttpRequest());
+        requestParser.parse(client.getRawHttpRequest());
 
-        //Route and process request
+        //TODO Route and process request
 
-        client.setHttpResponse(httpResponseBuilder.build());
+        System.out.println("Creating response now....");
+        client.setHttpResponse(responseBuilder.withStatus(404).withReasonPhrase("Not OK").build());
         client.close();
     }
 }
 
-interface HttpResponseBuilder {
-    HttpResponse build();
-}
-
-class HttpResponse {
-
-}
-
-class HttpResponseBuilderSpy implements HttpResponseBuilder {
-    private boolean hasBuiltHttpResponse;
-
-    @Override
-    public HttpResponse build() {
-        hasBuiltHttpResponse = true;
-        return new HttpResponse();
-    }
-
-    public boolean hasBuiltHttpResponse() {
-        return hasBuiltHttpResponse;
-    }
-}
