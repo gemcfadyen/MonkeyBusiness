@@ -33,7 +33,7 @@ public class HttpServer {
         //Create HttpResponse
         HttpResponse httpResponse = httpResponseBuilder.build();
         //Close Client
-
+        client.close();
     }
 }
 

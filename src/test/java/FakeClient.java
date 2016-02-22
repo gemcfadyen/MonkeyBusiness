@@ -2,9 +2,20 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class FakeClient implements HttpSocket {
+    private boolean isClosed = false;
 
     @Override
     public InputStream getRawHttpRequest() {
         return new ByteArrayInputStream("An Http Request".getBytes());
+    }
+
+    @Override
+    public void close() {
+        isClosed = true;
+    }
+
+
+    public boolean isClosed() {
+       return isClosed;
     }
 }

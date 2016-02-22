@@ -11,10 +11,12 @@ public class HttpServerTest {
     private HttpRequestParserSpy httpRequestParserSpy;
     private HttpResponseBuilderSpy httpResponseBuilderSpy;
     private HttpServer httpServer;
+    private FakeClient fakeClient;
 
     @Before
     public void setUp() throws Exception {
-        serverSocketSpy = new ServerSocketSpy();
+        fakeClient = new FakeClient();
+        serverSocketSpy = new ServerSocketSpy(fakeClient);
         httpRequestParserSpy = new HttpRequestParserSpy();
         httpResponseBuilderSpy = new HttpResponseBuilderSpy();
         httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpResponseBuilderSpy);
@@ -49,5 +51,12 @@ public class HttpServerTest {
         httpServer.start();
 
         assertThat(httpResponseBuilderSpy.hasBuiltHttpResponse(), is(true));
+    }
+
+    @Test
+    public void clientConnectionIsClosed() {
+        httpServer.start();
+
+        assertThat(fakeClient.isClosed(), is(true));
     }
 }
