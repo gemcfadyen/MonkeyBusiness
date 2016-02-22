@@ -29,7 +29,7 @@ public class HttpServer {
         //TODO Route and process request
 
         System.out.println("Creating response now....");
-        client.setHttpResponse(responseBuilder.withStatus(200).withReasonPhrase("OK").build());
+        client.setHttpResponse(responseBuilder.withStatus(404).withReasonPhrase("Not Found").build());
         client.close();
     }
 }
