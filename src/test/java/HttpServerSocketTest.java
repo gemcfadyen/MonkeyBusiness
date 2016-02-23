@@ -1,16 +1,16 @@
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 public class HttpServerSocketTest {
-
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     private ServerSocket fakeServerSocket;
     private HttpServerSocket httpServerSocket;
 
@@ -25,22 +25,13 @@ public class HttpServerSocketTest {
         httpServerSocket = new HttpServerSocket(fakeServerSocket);
     }
 
-    @Test(expected = HttpServerSocketException.class)
-    public void serverThrowsException() throws IOException {
-        httpServerSocket.accept();
-    }
-
     @Test
-    public void exceptionThrownByServerHasMessageAndCause() throws IOException {
-        RuntimeException caughtException = null;
-        try {
-            httpServerSocket.accept();
-        } catch (Exception e) {
-            caughtException = (RuntimeException) e;
-        }
+    public void exceptionThrownByServer() throws IOException {
+        expectedException.expect(HttpServerSocketException.class);
+        expectedException.expectMessage("Exception occurred whilst server was accepting client requests");
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
-        assertThat(caughtException.getMessage(), is("Exception occurred whilst server was accepting client requests"));
-        assertThat(caughtException.getCause(), instanceOf(IOException.class));
+        httpServerSocket.accept();
     }
 }
 

@@ -1,19 +1,21 @@
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 public class ClientSocketTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     private Socket fakeSocket;
     private ClientSocket clientSocket;
+
 
     @Before
     public void setUp() throws Exception {
@@ -35,57 +37,30 @@ public class ClientSocketTest {
         clientSocket = new ClientSocket(fakeSocket);
     }
 
-    @Test(expected = ClientSocketException.class)
-    public void exceptionThrownWhenErrorInGettingRequest() {
+    @Test
+    public void exceptionThrownWhenErrorInGettingResponse() {
+        expectedException.expect(ClientSocketException.class);
+        expectedException.expectMessage("Exception in socket whilst retrieving the request");
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
+
         clientSocket.getRawHttpRequest();
     }
 
     @Test
-    public void exceptionWhenGettingRequestHasMessageAndCause() {
-        RuntimeException caughtException = null;
-        try {
-            clientSocket.getRawHttpRequest();
-        } catch (Exception e) {
-            caughtException = (RuntimeException) e;
-        }
+    public void exceptionThrownWhenErrorInClosingSocket() {
+        expectedException.expect(ClientSocketException.class);
+        expectedException.expectMessage("Exception whilst closing socket");
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
-        assertThat(caughtException.getMessage(), is("Exception in socket whilst retrieving the request"));
-        assertThat(caughtException.getCause(), instanceOf(IOException.class));
-    }
-
-    @Test(expected = ClientSocketException.class)
-    public void exceptionThrownWhenSocketCloses() {
         clientSocket.close();
     }
 
     @Test
-    public void exceptionWhenClosingSocketHasMessageAndCause() {
-        RuntimeException caughtException = null;
-        try {
-            clientSocket.close();
-        } catch (Exception e) {
-            caughtException = (RuntimeException) e;
-        }
+    public void exceptionThrownWhenErrorInSettingResponse() {
+        expectedException.expect(ClientSocketException.class);
+        expectedException.expectMessage("Exception whilst writing request to socket");
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
-        assertThat(caughtException.getMessage(), is("Exception whilst closing socket"));
-        assertThat(caughtException.getCause(), instanceOf(IOException.class));
-    }
-
-    @Test(expected = ClientSocketException.class)
-    public void exceptionThrownWhilstSettingHttpResponse() {
         clientSocket.setHttpResponse(new HttpResponse(200, "HTTP/1.1", "OK"));
-    }
-
-    @Test
-    public void exceptionWhenSettingHttpResponseHasMessageAndCause() {
-        RuntimeException caughtException = null;
-        try {
-            clientSocket.setHttpResponse(new HttpResponse(200, "HTTP/1.1", "OK"));;
-        } catch (Exception e) {
-            caughtException = (RuntimeException) e;
-        }
-
-        assertThat(caughtException.getMessage(), is("Exception whilst writing request to socket"));
-        assertThat(caughtException.getCause(), instanceOf(IOException.class));
     }
 }

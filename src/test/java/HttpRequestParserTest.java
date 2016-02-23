@@ -1,5 +1,8 @@
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.*;
 
@@ -8,7 +11,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class HttpRequestParserTest {
-
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     private InputStream getRequestInputStream;
     private HttpRequestParser parser;
 
@@ -32,23 +36,14 @@ public class HttpRequestParserTest {
         assertThat(request.getMethod(), is("GET"));
     }
 
-    @Test(expected = HttpRequestParsingException.class)
-    public void throwsExceptionIfHeaderCannotBeParsed() {
+    @Test
+    public void exceptionThrownOnParseError() {
+        expectedException.expect(HttpRequestParsingException.class);
+        expectedException.expectMessage("Error in parsing Http Request");
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
+
         BufferedReaderWhichThrowsExceptionOnReadLine readerToThrowException = new BufferedReaderWhichThrowsExceptionOnReadLine(new StringReader("hi"));
         parser.parseRequest(readerToThrowException);
-    }
-
-    @Test
-    public void exceptionThrownOnParseErrorHasMessageAndCause() {
-        BufferedReaderWhichThrowsExceptionOnReadLine readerToThrowException = new BufferedReaderWhichThrowsExceptionOnReadLine(new StringReader("hi"));
-        RuntimeException caughtException = null;
-        try {
-            parser.parseRequest(readerToThrowException);
-        } catch (Exception e) {
-            caughtException = (RuntimeException) e;
-        }
-        assertThat(caughtException.getMessage(), is("Error in parsing Http Request"));
-        assertThat(caughtException.getCause(), instanceOf(IOException.class));
     }
 
     @Test
