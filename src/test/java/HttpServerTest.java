@@ -8,17 +8,17 @@ public class HttpServerTest {
 
     private ServerSocketSpy serverSocketSpy;
     private RequestParserSpy httpRequestParserSpy;
-    private ResponseBuilderSpy httpResponseBuilderSpy;
     private HttpServer httpServer;
     private ClientSpy clientSpy;
+    private RequestProcessorSpy httpRequestProcessorSpy;
 
     @Before
     public void setUp() throws Exception {
         clientSpy = new ClientSpy();
         serverSocketSpy = new ServerSocketSpy(clientSpy);
         httpRequestParserSpy = new RequestParserSpy();
-        httpResponseBuilderSpy = new ResponseBuilderSpy();
-        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpResponseBuilderSpy);
+        httpRequestProcessorSpy = new RequestProcessorSpy();
+        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy);
     }
 
     @Test
@@ -46,12 +46,10 @@ public class HttpServerTest {
     }
 
     @Test
-    public void createsHttpResponse() {
+    public void serverProcessesRequest() {
         httpServer.processRequest();
 
-        assertThat(httpResponseBuilderSpy.hasBuiltHttpResponse(), is(true));
-        assertThat(httpResponseBuilderSpy.hasGotStatusCode(), is(true));
-        assertThat(httpResponseBuilderSpy.hasGotReasonPhrase(), is(true));
+        assertThat(httpRequestProcessorSpy.hasProcessed(), is(true));
     }
 
     @Test
