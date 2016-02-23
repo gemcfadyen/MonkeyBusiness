@@ -3,14 +3,17 @@ public class HttpServer {
     private final int port;
     private final HttpServerSocket serverSocket;
     private final RequestParser requestParser;
-    private final ResponseBuilder responseBuilder;
+    private RequestProcessor httpRequestProcessor;
 
-    public HttpServer(String host, int port, HttpServerSocket serverSocket, RequestParser requestParser, ResponseBuilder responseBuilder) {
+    public HttpServer(String host, int port,
+                      HttpServerSocket serverSocket,
+                      RequestParser requestParser,
+                      RequestProcessor httpRequestProcessor) {
         this.host = host;
         this.port = port;
         this.serverSocket = serverSocket;
         this.requestParser = requestParser;
-        this.responseBuilder = responseBuilder;
+        this.httpRequestProcessor = httpRequestProcessor;
     }
 
     public String getHost() {
@@ -23,13 +26,13 @@ public class HttpServer {
 
     public void processRequest() {
         System.out.println("Listening for request.....");
+
         HttpSocket client = serverSocket.accept();
-        requestParser.parse(client.getRawHttpRequest());
+        HttpRequest httpRequest = requestParser.parse(client.getRawHttpRequest());
 
-        //TODO Route and process request
+        HttpResponse httpResponse = httpRequestProcessor.process(httpRequest);
 
-        System.out.println("Creating response now....");
-        client.setHttpResponse(responseBuilder.withStatus(404).withReasonPhrase("Not Found").build());
+        client.setHttpResponse(httpResponse);
         client.close();
     }
 }

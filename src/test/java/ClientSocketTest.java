@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Collections;
 
 public class ClientSocketTest {
 
@@ -61,6 +62,7 @@ public class ClientSocketTest {
         expectedException.expectMessage("Exception whilst writing request to socket");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
-        clientSocket.setHttpResponse(new HttpResponse(200, "HTTP/1.1", "OK"));
+        HttpResponse httpResponse = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
+        clientSocket.setHttpResponse(httpResponse);
     }
 }

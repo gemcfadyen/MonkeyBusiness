@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -30,5 +32,14 @@ public class HttpResponseBuilderTest {
                 .build();
 
         assertThat(response.reasonPhrase(), is("OK"));
+    }
+
+    @Test
+    public void buildsResponseWithAllowMethods() {
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
+                .withAllowMethods("GET", "POST")
+                .build();
+
+        assertThat(response.allowedMethods().containsAll(Arrays.asList("GET", "POST")), is(true));
     }
 }
