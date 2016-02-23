@@ -5,8 +5,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'jacoco'
-apply plugin: 'application'
-mainClassName = 'pipeclean.HelloWorld'
+
 
 sourceCompatibility = 1.8
 
@@ -35,5 +34,13 @@ jacocoTestReport {
     reports {
         xml.enabled = true
         html.enabled = true
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'HttpServerRunner'
+        )
     }
 }
