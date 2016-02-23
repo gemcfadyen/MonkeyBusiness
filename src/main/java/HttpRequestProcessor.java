@@ -1,4 +1,8 @@
 public class HttpRequestProcessor implements RequestProcessor {
+
+    public HttpRequestProcessor() {
+    }
+
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
         HttpResponseBuilder httpResponseBuilder = HttpResponseBuilder.anHttpResponseBuilder();
@@ -14,6 +18,7 @@ public class HttpRequestProcessor implements RequestProcessor {
         else {
            httpResponseBuilder.withStatus(404).withReasonPhrase("Not Found");
         }
+
         return httpResponseBuilder.build();
     }
 }

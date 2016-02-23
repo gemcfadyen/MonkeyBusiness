@@ -9,9 +9,17 @@ public class HttpServerRunner {
         String host = "localhost";
         int port = commandLineArgumentParser.extractPort(args);
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(args);
-        HttpServerSocket httpServerSocket = new HttpServerSocket(new ServerSocket(port));
 
-        HttpServer httpServer = new HttpServer(host, port, httpServerSocket, new HttpRequestParser(), new HttpRequestProcessor());
+        HttpServerSocket httpServerSocket = new HttpServerSocket(new ServerSocket(port), new HttpResponseFormatter());
+
+        HttpServer httpServer = new HttpServer(
+                host,
+                port,
+                httpServerSocket,
+                new HttpRequestParser(),
+                new HttpRequestProcessor()
+        );
+
         start(httpServer);
     }
 

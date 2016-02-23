@@ -72,7 +72,6 @@ public class HttpRequestParserTest {
         assertThat(headerProperties.get("Content-Length"), is("32"));
     }
 
-
     @Test
     public void parsesBodyFromPostRequest() {
         HttpRequest request = parser.parse(postRequestInputStream);

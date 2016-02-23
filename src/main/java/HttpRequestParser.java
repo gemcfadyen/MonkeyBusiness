@@ -34,24 +34,17 @@ public class HttpRequestParser implements RequestParser {
                 .build();
     }
 
-    private char[] getBody(BufferedReader reader, int contentLength) throws IOException {
-        char[] bodyContents = new char[contentLength];
-        reader.read(bodyContents, 0, contentLength);
-        return bodyContents;
-    }
-
-    private int getContentLength(Map<String, String> headerParams) {
-        String contentLengthFromHeader = headerParams.get("Content-Length");
-        return contentLengthFromHeader != null ? Integer.valueOf(contentLengthFromHeader) : 0;
-    }
-
     private String[] getRequestLine(BufferedReader reader) throws IOException {
         String firstLine = readLine(reader);
         return split(firstLine, space());
     }
 
-    private String[] split(String line, String delimeter) {
-        return line.split(delimeter);
+    private String getRequestUri(String[] requestLine) {
+        return requestLine[1];
+    }
+
+    private String getMethod(String[] requestLine) {
+        return requestLine[0];
     }
 
     private Map<String, String> getHeaderParameters(BufferedReader reader) throws IOException {
@@ -76,23 +69,30 @@ public class HttpRequestParser implements RequestParser {
         return params[1].trim();
     }
 
-    private boolean hasContent(String headerLine) {
-        return !headerLine.isEmpty();
-    }
-
-    private String getRequestUri(String[] requestLine) {
-        return requestLine[1];
-    }
-
-    private String getMethod(String[] requestLine) {
-        return requestLine[0];
-    }
-
-    private String space() {
-        return " ";
+    private char[] getBody(BufferedReader reader, int contentLength) throws IOException {
+        char[] bodyContents = new char[contentLength];
+        reader.read(bodyContents, 0, contentLength);
+        return bodyContents;
     }
 
     private String readLine(BufferedReader reader) throws IOException {
         return reader.readLine();
+    }
+
+    private String[] split(String line, String delimeter) {
+        return line.split(delimeter);
+    }
+
+    private boolean hasContent(String headerLine) {
+        return !headerLine.isEmpty();
+    }
+
+    private int getContentLength(Map<String, String> headerParams) {
+        String contentLengthFromHeader = headerParams.get("Content-Length");
+        return contentLengthFromHeader != null ? Integer.valueOf(contentLengthFromHeader) : 0;
+    }
+
+    private String space() {
+        return " ";
     }
 }

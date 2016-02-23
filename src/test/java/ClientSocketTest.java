@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Collections;
 
 public class ClientSocketTest {
 
@@ -35,7 +34,7 @@ public class ClientSocketTest {
 
             }
         };
-        clientSocket = new ClientSocket(fakeSocket);
+        clientSocket = new ClientSocket(fakeSocket, new HttpResponseFormatter());
     }
 
     @Test

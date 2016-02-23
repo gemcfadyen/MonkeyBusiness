@@ -5,22 +5,22 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class HttpResponseTest {
+public class HttpResponseFormatterTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-    private HttpResponse responseThrowingException;
+    private ResponseFormatter formatter;
+    private HttpResponseFormatter responseFormatterThrowingException;
 
     @Before
-    public void setUp() throws Exception {
-        responseThrowingException = new HttpResponse(200, "HTTP/1.1", "OK", Collections.emptyList()) {
-            protected byte[] formatResponse() throws UnsupportedEncodingException {
+    public void setup() {
+        formatter = new HttpResponseFormatter();
+        responseFormatterThrowingException = new HttpResponseFormatter() {
+            @Override
+            protected byte[] createFormatted(HttpResponse response) throws UnsupportedEncodingException {
                 throw new UnsupportedEncodingException("Exception Thrown For Test");
             }
         };
@@ -30,7 +30,7 @@ public class HttpResponseTest {
     public void statusLineResponseFormat() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
 
-        byte[] formattedResponse = response.formatForClient();
+        byte[] formattedResponse = formatter.format(response);
 
         assertThat(formattedResponse, is("HTTP/1.1 200 OK\r\n\r\n".getBytes()));
     }
@@ -39,18 +39,9 @@ public class HttpResponseTest {
     public void statusLineWithAllowMethodsResponseFormat() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "PUT").build();
 
-        byte[] formattedResponse = response.formatForClient();
+        byte[] formattedResponse = formatter.format(response);
 
         assertThat(formattedResponse, is("HTTP/1.1 200 OK\r\nAllow: GET,PUT\r\n\r\n".getBytes()));
-    }
-
-    @Test
-    public void allowMethods() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "POST").build();
-
-        List<String> allowedMethods = response.allowedMethods();
-
-        assertThat(allowedMethods.containsAll(Arrays.asList("GET", "POST")), is(true));
     }
 
     @Test
@@ -59,6 +50,7 @@ public class HttpResponseTest {
         expectedException.expectMessage("Error in creating HTTP Response");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(UnsupportedEncodingException.class));
 
-        responseThrowingException.formatForClient();
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "PUT").build();
+        responseFormatterThrowingException.format(response);
     }
 }
