@@ -1,22 +1,36 @@
+import org.hamcrest.core.IsInstanceOf;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class HttpServerSocketTest {
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    private ServerSocket fakeServerSocket;
+    private HttpServerSocket httpServerSocket;
 
-    @Test(expected = HttpServerSocketException.class)
-    public void serverThrowsException() throws IOException {
-
-        ServerSocket fakeServerSocket = new ServerSocket() {
+    @Before
+    public void setUp() throws Exception {
+        fakeServerSocket = new ServerSocket() {
             @Override
             public Socket accept() throws IOException {
                 throw new IOException("Throws exception for test");
             }
         };
+        httpServerSocket = new HttpServerSocket(fakeServerSocket);
+    }
 
-        HttpServerSocket httpServerSocket = new HttpServerSocket(fakeServerSocket);
+    @Test
+    public void exceptionThrownByServer() throws IOException {
+        expectedException.expect(HttpServerSocketException.class);
+        expectedException.expectMessage("Exception occurred whilst server was accepting client requests");
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
+
         httpServerSocket.accept();
     }
 }

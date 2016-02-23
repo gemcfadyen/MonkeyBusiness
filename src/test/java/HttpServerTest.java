@@ -33,21 +33,21 @@ public class HttpServerTest {
 
     @Test
     public void whenServerIsStartedItAcceptsClientRequests() {
-        httpServer.start();
+        httpServer.processRequest();
 
         assertThat(serverSocketSpy.isAcceptingRequests(), is(true));
     }
 
     @Test
     public void serverParsesClientRequest() {
-        httpServer.start();
+        httpServer.processRequest();
 
         assertThat(httpRequestParserSpy.hasParsedRequest(), is(true));
     }
 
     @Test
     public void createsHttpResponse() {
-        httpServer.start();
+        httpServer.processRequest();
 
         assertThat(httpResponseBuilderSpy.hasBuiltHttpResponse(), is(true));
         assertThat(httpResponseBuilderSpy.hasGotStatusCode(), is(true));
@@ -56,14 +56,14 @@ public class HttpServerTest {
 
     @Test
     public void providesClientWithHttpResponse() {
-        httpServer.start();
+        httpServer.processRequest();
 
         assertThat(clientSpy.hasHttpResponse(), is(true));
     }
 
     @Test
     public void clientConnectionIsClosed() {
-        httpServer.start();
+        httpServer.processRequest();
 
         assertThat(clientSpy.isClosed(), is(true));
     }

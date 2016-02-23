@@ -17,7 +17,7 @@ public class HttpServerRunner {
 
     private static void start(HttpServer server) {
         while (true) {
-            server.start();
+            server.processRequest();
         }
     }
 }

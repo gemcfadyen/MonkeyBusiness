@@ -12,7 +12,6 @@ public class HttpServerSocket {
         try {
             return new ClientSocket(serverSocket.accept());
         } catch (IOException e) {
-            e.printStackTrace();
             throw new HttpServerSocketException("Exception occurred whilst server was accepting client requests", e);
         }
     }
