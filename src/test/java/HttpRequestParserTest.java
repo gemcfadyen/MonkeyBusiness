@@ -15,7 +15,6 @@ public class HttpRequestParserTest {
     public ExpectedException expectedException = ExpectedException.none();
     private InputStream getRequestInputStream;
     private HttpRequestParser parser;
-    private String postFixture;
     private InputStream postRequestInputStream;
 
     @Before
@@ -28,7 +27,8 @@ public class HttpRequestParserTest {
                 "Accept-Encoding: gzip,deflate\r\n\r\n";
         getRequestInputStream = new ByteArrayInputStream(getRequest.getBytes());
         parser = new HttpRequestParser();
-        postFixture = "POST /path/script.cgi HTTP/1.1\r\n" +
+
+        String postFixture = "POST /path/script.cgi HTTP/1.1\r\n" +
                 "From: frog@jmarshall.com\r\n" +
                 "User-Agent: HTTPTool/1.1\r\n" +
                 "Content-Type: application/x-www-form-urlencoded\r\n" +

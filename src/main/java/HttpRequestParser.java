@@ -13,24 +13,30 @@ public class HttpRequestParser implements RequestParser {
     }
 
     protected HttpRequest parseRequest(BufferedReader reader) {
-        String[] requestLine;
-
         try {
-            requestLine = getRequestLine(reader);
-            Map<String, String> headerParams = getHeaderParameters(reader);
-            char[] bodyContents = getBody(reader, getContentLength(headerParams));
-
-            //TODO maybe should be a builder aswell
-            return new HttpRequest(getMethod(requestLine), getRequestUri(requestLine), headerParams, String.valueOf(bodyContents));
+            return createHttpRequest(reader);
         } catch (IOException e) {
             throw new HttpRequestParsingException("Error in parsing Http Request", e);
         }
     }
 
+    private HttpRequest createHttpRequest(BufferedReader reader) throws IOException {
+        String[] requestLine = getRequestLine(reader);
+        Map<String, String> headerParams = getHeaderParameters(reader);
+        char[] bodyContents = getBody(reader, getContentLength(headerParams));
+        System.out.println("body is: " + String.valueOf(bodyContents));
+
+        return HttpRequestBuilder.anHttpRequestBuilder()
+                .withRequestLine(getMethod(requestLine))
+                .withRequestUri(getRequestUri(requestLine))
+                .withHeaderParamters(headerParams)
+                .withBody(String.valueOf(bodyContents))
+                .build();
+    }
+
     private char[] getBody(BufferedReader reader, int contentLength) throws IOException {
         char[] bodyContents = new char[contentLength];
         reader.read(bodyContents, 0, contentLength);
-        System.out.println("body is: " + String.valueOf(bodyContents));
         return bodyContents;
     }
 
@@ -40,32 +46,38 @@ public class HttpRequestParser implements RequestParser {
     }
 
     private String[] getRequestLine(BufferedReader reader) throws IOException {
-        String[] requestLine;
         String firstLine = readLine(reader);
-        requestLine = parseRequestLine(firstLine);
-        return requestLine;
+        return split(firstLine, space());
+    }
+
+    private String[] split(String line, String delimeter) {
+        return line.split(delimeter);
     }
 
     private Map<String, String> getHeaderParameters(BufferedReader reader) throws IOException {
         Map<String, String> headerParams = new HashMap<>();
 
-        String headerLine = readLine(reader);
-        while (!headerLine.isEmpty()) {
-            String[] mapEntry = headerLine.split(":");
-            System.out.println("make into a map" + mapEntry[0].trim() + " => " + mapEntry[1].trim());
-            headerParams.put(mapEntry[0].trim(), mapEntry[1].trim());
-            headerLine = readLine(reader);
+        String line = readLine(reader);
+        while (hasContent(line)) {
+            String[] mapEntry = split(line, ":");
+            System.out.println("Header Parameter Map: " + mapEntry[0].trim() + " => " + mapEntry[1].trim());
+            headerParams.put(headerParameterKey(mapEntry), headerParameterValue(mapEntry));
+
+            line = readLine(reader);
         }
-
-//        if (headerParams.get("Content-Length") == null) {
-//            headerParams.put("Content-Length", "0");
-//        }
-
         return headerParams;
     }
 
-    private String[] parseRequestLine(String line) {
-        return line.split(space());
+    private String headerParameterKey(String[] params) {
+        return params[0].trim();
+    }
+
+    private String headerParameterValue(String[] params) {
+        return params[1].trim();
+    }
+
+    private boolean hasContent(String headerLine) {
+        return !headerLine.isEmpty();
     }
 
     private String getRequestUri(String[] requestLine) {
@@ -83,5 +95,4 @@ public class HttpRequestParser implements RequestParser {
     private String readLine(BufferedReader reader) throws IOException {
         return reader.readLine();
     }
-
 }

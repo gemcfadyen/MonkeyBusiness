@@ -7,7 +7,10 @@ public class HttpRequest {
     private Map<String, String> headerParams;
     private String body;
 
-    public HttpRequest(String method, String requestUri, Map<String, String> headerParams, String bodyContent) {
+    public HttpRequest(String method,
+                       String requestUri,
+                       Map<String, String> headerParams,
+                       String bodyContent) {
         this.method = method;
         this.requestUri = requestUri;
         this.headerParams = headerParams;
