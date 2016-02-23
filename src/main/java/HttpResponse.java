@@ -3,14 +3,14 @@ import java.util.List;
 
 class HttpResponse {
     private final int statusCode;
-    private final List<String> allowedMethods;
+    private final List<HttpMethods> allowedMethods;
     private String httpVersion;
     private String reasonPhrase;
 
     protected HttpResponse(int statusCode,
                            String httpVersion,
                            String reasonPhrase,
-                           List<String> allowedMethods) {
+                           List<HttpMethods> allowedMethods) {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
         this.reasonPhrase = reasonPhrase;
@@ -29,7 +29,7 @@ class HttpResponse {
         return reasonPhrase;
     }
 
-    public List<String> allowedMethods() {
+    public List<HttpMethods> allowedMethods() {
         return allowedMethods;
     }
 }

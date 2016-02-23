@@ -30,10 +30,10 @@ public class HttpResponseFormatter implements ResponseFormatter {
         return response.allowedMethods().size() > 0;
     }
 
-    private String commaDelimitAllowParameters(HttpResponse response) { //String formattedResponse) {
-        List<String> allowMethods = response.allowedMethods();
+    private String commaDelimitAllowParameters(HttpResponse response) {
+        List<HttpMethods> allowMethods = response.allowedMethods();
         String allowedLine = "";
-        String firstMethod = "";
+        HttpMethods firstMethod;
         if (allowMethods.size() > 0) {
             firstMethod = allowMethods.get(0);
             for (int i = 1; i < allowMethods.size(); i++) {
@@ -41,7 +41,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
             }
             return "Allow: " + firstMethod + allowedLine;
         }
-        return "";
+        return allowedLine;
     }
 
     private String formatStatusLine(HttpResponse response) {

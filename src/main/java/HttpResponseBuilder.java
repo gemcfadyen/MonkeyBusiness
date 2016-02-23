@@ -3,17 +3,16 @@ import java.util.Collections;
 import java.util.List;
 
 public final class HttpResponseBuilder {
-    private String httpVersion = "HTTP/1.1";
     private int statusCode;
     private String reasonPhrase;
-    private List<String> allowedMethods = new ArrayList<>();
+    private List<HttpMethods> allowedMethods = new ArrayList<>();
 
     public static HttpResponseBuilder anHttpResponseBuilder() {
         return new HttpResponseBuilder();
     }
 
     public HttpResponse build() {
-        return new HttpResponse(statusCode, httpVersion, reasonPhrase, allowedMethods);
+        return new HttpResponse(statusCode, "HTTP/1.1", reasonPhrase, allowedMethods);
     }
 
     public HttpResponseBuilder withStatus(int statusCode) {
@@ -26,7 +25,7 @@ public final class HttpResponseBuilder {
         return this;
     }
 
-    public HttpResponseBuilder withAllowMethods(String... supportedMethods) {
+    public HttpResponseBuilder withAllowMethods(HttpMethods... supportedMethods) {
         Collections.addAll(allowedMethods, supportedMethods);
         return this;
     }

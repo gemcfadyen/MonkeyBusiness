@@ -37,7 +37,7 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void statusLineWithAllowMethodsResponseFormat() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "PUT").build();
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.GET, HttpMethods.PUT).build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -50,7 +50,7 @@ public class HttpResponseFormatterTest {
         expectedException.expectMessage("Error in creating HTTP Response");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(UnsupportedEncodingException.class));
 
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "PUT").build();
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.GET, HttpMethods.PUT).build();
         responseFormatterThrowingException.format(response);
     }
 }

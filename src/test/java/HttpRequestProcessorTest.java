@@ -55,7 +55,7 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest("options", "/method_options", Collections.EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder("GET", "HEAD", "POST", "OPTIONS", "PUT"));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT));
     }
 
 //    @Test

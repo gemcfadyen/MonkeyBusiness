@@ -13,7 +13,7 @@ public class HttpRequestProcessor implements RequestProcessor {
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         }
         else if (httpRequest.getRequestUri().equals("/method_options")) {
-          httpResponseBuilder.withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "HEAD", "POST", "OPTIONS", "PUT");
+          httpResponseBuilder.withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.values());
         }
         else {
            httpResponseBuilder.withStatus(404).withReasonPhrase("Not Found");

@@ -29,7 +29,7 @@ public class HttpRequestParser implements RequestParser {
         return HttpRequestBuilder.anHttpRequestBuilder()
                 .withRequestLine(getMethod(requestLine))
                 .withRequestUri(getRequestUri(requestLine))
-                .withHeaderParamters(headerParams)
+                .withHeaderParameters(headerParams)
                 .withBody(String.valueOf(bodyContents))
                 .build();
     }

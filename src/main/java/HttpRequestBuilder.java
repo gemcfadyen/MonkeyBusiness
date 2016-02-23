@@ -21,7 +21,7 @@ public class HttpRequestBuilder {
         return this;
     }
 
-    public HttpRequestBuilder withHeaderParamters(Map<String, String> headerParams) {
+    public HttpRequestBuilder withHeaderParameters(Map<String, String> headerParams) {
         this.headerParameters = headerParams;
         return this;
     }
