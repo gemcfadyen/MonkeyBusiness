@@ -1,14 +1,17 @@
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 class HttpResponse {
     private final int statusCode;
+    private final List<String> allowedMethods;
     private String httpVersion;
     private String reasonPhrase;
 
-    public HttpResponse(int statusCode, String httpVersion, String reasonPhrase) {
+    public HttpResponse(int statusCode, String httpVersion, String reasonPhrase, List<String> allowedMethods) {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
         this.reasonPhrase = reasonPhrase;
+        this.allowedMethods = allowedMethods;
     }
 
     public byte[] formatForClient() {
@@ -21,12 +24,23 @@ class HttpResponse {
 
     protected byte[] formatResponse() throws UnsupportedEncodingException {
         String formattedResponse = statusLine();
-        System.out.println("Formatted response " + formattedResponse);
-        return formattedResponse.getBytes("UTF-8");
+
+        if (allowedMethods.size() > 0) {
+            String allowedLine = "";
+            String firstMethod = allowedMethods.get(0);
+            for (int i = 1; i < allowedMethods().size(); i++) {
+                allowedLine += "," + allowedMethods.get(i);
+            }
+
+
+            formattedResponse = formattedResponse + "\r\nAllow: " + firstMethod + allowedLine;
+        }
+        System.out.println("formatted response is  " + formattedResponse);
+        return (formattedResponse + endOfStatusLine()).getBytes("UTF-8");
     }
 
     private String statusLine() {
-        return httpVersion + space() + statusCode + space() + reasonPhrase + endOfStatusLine();
+        return httpVersion + space() + statusCode + space() + reasonPhrase;
     }
 
     private String endOfStatusLine() {
@@ -47,6 +61,10 @@ class HttpResponse {
 
     public String reasonPhrase() {
         return reasonPhrase;
+    }
+
+    public List<String> allowedMethods() {
+        return allowedMethods;
     }
 }
 

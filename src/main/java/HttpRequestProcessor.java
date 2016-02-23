@@ -1,12 +1,19 @@
 public class HttpRequestProcessor implements RequestProcessor {
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
-
+        HttpResponseBuilder httpResponseBuilder = HttpResponseBuilder.anHttpResponseBuilder();
         if (httpRequest.getRequestUri().equals("/")) {
-            return new HttpResponse(200, "HTTP/1.1", "OK");
+            httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         }
-
-        HttpResponse httpResponse = new HttpResponse(404, "HTTP/1.1", "Not Found");
-        return httpResponse;
+        else if (httpRequest.getRequestUri().equals("/form")) {
+            httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
+        }
+        else if (httpRequest.getRequestUri().equals("/method_options")) {
+          httpResponseBuilder.withStatus(200).withReasonPhrase("OK").withAllowMethods("GET", "HEAD", "POST", "OPTIONS", "PUT");
+        }
+        else {
+           httpResponseBuilder.withStatus(404).withReasonPhrase("Not Found");
+        }
+        return httpResponseBuilder.build();
     }
 }

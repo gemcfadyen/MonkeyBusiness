@@ -1,3 +1,5 @@
+import java.util.Collections;
+
 public class RequestProcessorSpy implements RequestProcessor {
     private boolean hasProcessed = false;
 
@@ -8,6 +10,6 @@ public class RequestProcessorSpy implements RequestProcessor {
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
         hasProcessed = true;
-        return new HttpResponse(200, "HTTP/1.1", "OK");
+        return new HttpResponse(200, "HTTP/1.1", "OK", Collections.emptyList());
     }
 }
