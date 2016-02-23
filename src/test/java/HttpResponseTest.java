@@ -1,3 +1,5 @@
+import org.hamcrest.CoreMatchers;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -7,6 +9,17 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class HttpResponseTest {
+
+    private HttpResponse responseThrowingException;
+
+    @Before
+    public void setUp() throws Exception {
+        responseThrowingException = new HttpResponse(200, "HTTP/1.1", "OK") {
+            protected byte[] formatResponse() throws UnsupportedEncodingException {
+                throw new UnsupportedEncodingException("Exception Thrown For Test");
+            }
+        };
+    }
 
     @Test
     public void httpResponseFormat() {
@@ -19,11 +32,19 @@ public class HttpResponseTest {
 
     @Test(expected = HttpResponseException.class)
     public void exceptionIsThrownWhenErrorInFormatting() throws IOException {
-        HttpResponse response = new HttpResponse(200, "HTTP/1.1", "OK") {
-            protected byte[] formatResponse() throws UnsupportedEncodingException {
-                throw new UnsupportedEncodingException("Exception Thrown For Test");
-            }
-        };
-        response.formatForClient();
+        responseThrowingException.formatForClient();
+    }
+
+    @Test
+    public void exceptionOnFormattingHasMessageAndCause() {
+        RuntimeException caughtException = null;
+        try {
+            responseThrowingException.formatForClient();
+        } catch (Exception e) {
+          caughtException = (RuntimeException) e;
+        }
+
+        assertThat(caughtException.getMessage(), is("Error in creating HTTP Response"));
+        assertThat(caughtException.getCause(), CoreMatchers.instanceOf(UnsupportedEncodingException.class));
     }
 }
