@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -62,7 +61,10 @@ public class ClientSocketTest {
 
         ClientSocket clientSocket = new ClientSocket(fakeSocket(), responseFormatterSpy);
 
-        clientSocket.setHttpResponse(new HttpResponse(200, "HTTP/1.1", "OK", EMPTY_LIST));
+        clientSocket.setHttpResponse(HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(200)
+                .withReasonPhrase("OK")
+                .build());
 
         assertThat(responseFormatterSpy.hasFormatted(), is(true));
     }
@@ -87,19 +89,19 @@ public class ClientSocketTest {
 
     private Socket fakeSocket() {
         return new Socket() {
-                @Override
-                public InputStream getInputStream() throws IOException {
-                    throw new RuntimeException("Not implemented for test");
-                }
+            @Override
+            public InputStream getInputStream() throws IOException {
+                throw new RuntimeException("Not implemented for test");
+            }
 
-                public synchronized void close() throws IOException {
-                    throw new RuntimeException("Not implemented for test");
-                }
+            public synchronized void close() throws IOException {
+                throw new RuntimeException("Not implemented for test");
+            }
 
-                public OutputStream getOutputStream() throws IOException {
-                    return new ByteArrayOutputStream(10);
-                }
-            };
+            public OutputStream getOutputStream() throws IOException {
+                return new ByteArrayOutputStream(10);
+            }
+        };
     }
 }
 
