@@ -1,8 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-
+import static java.util.Collections.EMPTY_MAP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -18,7 +17,7 @@ public class HttpRequestProcessorTest {
 
     @Test
     public void provides404WhenNoRoutesMet() {
-        HttpRequest httpRequest = new HttpRequest("get", "/unknown/route", Collections.EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest("get", "/unknown/route", EMPTY_MAP, "");
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
@@ -27,7 +26,7 @@ public class HttpRequestProcessorTest {
 
     @Test
     public void simpleGetReturnsCode200() {
-        HttpRequest httpRequest = new HttpRequest("get", "/", Collections.EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest("get", "/", EMPTY_MAP, "");
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
@@ -36,7 +35,7 @@ public class HttpRequestProcessorTest {
 
     @Test
     public void simplePutReturnsCode200() {
-        HttpRequest httpRequest = new HttpRequest("post", "/form", Collections.EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest("post", "/form", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
@@ -44,7 +43,7 @@ public class HttpRequestProcessorTest {
 
     @Test
     public void simpleOptionReturns200Code() {
-        HttpRequest httpRequest = new HttpRequest("options", "/method_options", Collections.EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest("options", "/method_options", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
@@ -52,7 +51,7 @@ public class HttpRequestProcessorTest {
 
     @Test
     public void simpleOptionReturnsMethodsInAllow() {
-        HttpRequest httpRequest = new HttpRequest("options", "/method_options", Collections.EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest("options", "/method_options", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT));

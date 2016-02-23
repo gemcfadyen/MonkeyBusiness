@@ -4,37 +4,28 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import static java.util.Collections.EMPTY_LIST;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 public class ClientSocketTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-    private Socket fakeSocket;
+    private Socket socketThatThrowsExceptions;
     private ClientSocket clientSocket;
 
 
     @Before
     public void setUp() throws Exception {
-        fakeSocket = new Socket() {
-            @Override
-            public InputStream getInputStream() throws IOException {
-                throw new IOException("Exception thrown for testing");
-            }
-
-            public synchronized void close() throws IOException {
-                throw new IOException("Exception thrown for testing");
-            }
-
-            public OutputStream getOutputStream() throws IOException {
-                throw new IOException("Exception thrown for testing");
-
-            }
-        };
-        clientSocket = new ClientSocket(fakeSocket, new HttpResponseFormatter());
+        setupSocketThatThrowsExceptions();
+        clientSocket = new ClientSocket(socketThatThrowsExceptions, new HttpResponseFormatter());
     }
 
     @Test
@@ -63,5 +54,65 @@ public class ClientSocketTest {
 
         HttpResponse httpResponse = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
         clientSocket.setHttpResponse(httpResponse);
+    }
+
+    @Test
+    public void responseIsFormattedWhenSentToClient() {
+        FormatterSpy responseFormatterSpy = new FormatterSpy();
+
+        ClientSocket clientSocket = new ClientSocket(fakeSocket(), responseFormatterSpy);
+
+        clientSocket.setHttpResponse(new HttpResponse(200, "HTTP/1.1", "OK", EMPTY_LIST));
+
+        assertThat(responseFormatterSpy.hasFormatted(), is(true));
+    }
+
+    private void setupSocketThatThrowsExceptions() {
+        socketThatThrowsExceptions = new Socket() {
+            @Override
+            public InputStream getInputStream() throws IOException {
+                throw new IOException("Exception thrown for testing");
+            }
+
+            public synchronized void close() throws IOException {
+                throw new IOException("Exception thrown for testing");
+            }
+
+            public OutputStream getOutputStream() throws IOException {
+                throw new IOException("Exception thrown for testing");
+
+            }
+        };
+    }
+
+    private Socket fakeSocket() {
+        return new Socket() {
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    throw new RuntimeException("Not implemented for test");
+                }
+
+                public synchronized void close() throws IOException {
+                    throw new RuntimeException("Not implemented for test");
+                }
+
+                public OutputStream getOutputStream() throws IOException {
+                    return new ByteArrayOutputStream(10);
+                }
+            };
+    }
+}
+
+class FormatterSpy implements ResponseFormatter {
+    private boolean hasFormatted = false;
+
+    @Override
+    public byte[] format(HttpResponse response) {
+        hasFormatted = true;
+        return new byte[0];
+    }
+
+    public boolean hasFormatted() {
+        return hasFormatted;
     }
 }

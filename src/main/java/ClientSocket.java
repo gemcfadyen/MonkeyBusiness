@@ -34,7 +34,7 @@ class ClientSocket implements HttpSocket {
     public void setHttpResponse(HttpResponse httpResponse) {
         System.out.println("Returning a response!");
         try {
-            socket.getOutputStream().write(responseFormatter.format(httpResponse));//.formatForClient());
+            socket.getOutputStream().write(responseFormatter.format(httpResponse));
         } catch (IOException e) {
             throw new ClientSocketException("Exception whilst writing request to socket", e);
         }
