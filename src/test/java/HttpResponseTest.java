@@ -28,7 +28,7 @@ public class HttpResponseTest {
 
     @Test
     public void statusLineResponseFormat() {
-        HttpResponse response = new HttpResponse(200, "HTTP/1.1", "OK", Collections.emptyList());
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
 
         byte[] formattedResponse = response.formatForClient();
 

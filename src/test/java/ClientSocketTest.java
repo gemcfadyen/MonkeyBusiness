@@ -62,6 +62,7 @@ public class ClientSocketTest {
         expectedException.expectMessage("Exception whilst writing request to socket");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
-        clientSocket.setHttpResponse(new HttpResponse(200, "HTTP/1.1", "OK", Collections.emptyList()));
+        HttpResponse httpResponse = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
+        clientSocket.setHttpResponse(httpResponse);
     }
 }

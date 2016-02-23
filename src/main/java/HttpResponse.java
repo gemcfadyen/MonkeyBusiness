@@ -1,13 +1,14 @@
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+
 class HttpResponse {
     private final int statusCode;
     private final List<String> allowedMethods;
     private String httpVersion;
     private String reasonPhrase;
 
-    public HttpResponse(int statusCode, String httpVersion, String reasonPhrase, List<String> allowedMethods) {
+    protected HttpResponse(int statusCode, String httpVersion, String reasonPhrase, List<String> allowedMethods) {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
         this.reasonPhrase = reasonPhrase;
@@ -31,8 +32,6 @@ class HttpResponse {
             for (int i = 1; i < allowedMethods().size(); i++) {
                 allowedLine += "," + allowedMethods.get(i);
             }
-
-
             formattedResponse = formattedResponse + "\r\nAllow: " + firstMethod + allowedLine;
         }
         System.out.println("formatted response is  " + formattedResponse);

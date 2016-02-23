@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HttpResponseBuilder implements ResponseBuilder {
+public final class HttpResponseBuilder {
     private String httpVersion = "HTTP/1.1";
     private int statusCode;
     private String reasonPhrase;
@@ -12,25 +12,21 @@ public class HttpResponseBuilder implements ResponseBuilder {
         return new HttpResponseBuilder();
     }
 
-    @Override
     public HttpResponse build() {
         return new HttpResponse(statusCode, httpVersion, reasonPhrase, allowedMethods);
     }
 
-    @Override
-    public ResponseBuilder withStatus(int statusCode) {
+    public HttpResponseBuilder withStatus(int statusCode) {
         this.statusCode = statusCode;
         return this;
     }
 
-    @Override
-    public ResponseBuilder withReasonPhrase(String phrase) {
+    public HttpResponseBuilder withReasonPhrase(String phrase) {
         this.reasonPhrase = phrase;
         return this;
     }
 
-    @Override
-    public ResponseBuilder withAllowMethods(String... supportedMethods) {
+    public HttpResponseBuilder withAllowMethods(String... supportedMethods) {
         Collections.addAll(allowedMethods, supportedMethods);
         return this;
     }
