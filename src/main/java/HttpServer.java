@@ -21,7 +21,7 @@ public class HttpServer {
         return port;
     }
 
-    public void start() {
+    public void processRequest() {
         System.out.println("Listening for request.....");
         HttpSocket client = serverSocket.accept();
         requestParser.parse(client.getRawHttpRequest());
