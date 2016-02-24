@@ -3,8 +3,7 @@ class UnknownRoute implements Action {
     public HttpResponse process(HttpRequest request) {
 
         return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(404)
-                .withReasonPhrase("Not Found")
+                .withStatusCode(StatusCode.NOT_FOUND)
                 .build();
     }
 }

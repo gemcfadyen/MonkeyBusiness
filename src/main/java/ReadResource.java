@@ -9,8 +9,7 @@ class ReadResource implements Action {
     public HttpResponse process(HttpRequest request) {
         byte[] body = resourceHandler.read(request.getRequestUri());
         return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
-                .withReasonPhrase("OK")
+                .withStatusCode(StatusCode.OK)
                 .withBody(body)
                 .build();
     }

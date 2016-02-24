@@ -1,18 +1,17 @@
-class WriteResource implements Action {
+class DeleteResource implements Action {
     private final ResourceHandler resourceHandler;
 
-    public WriteResource(ResourceHandler resourceHandler) {
+    public DeleteResource(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
     }
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        System.out.println("PUT /FORM");
-        resourceHandler.write(request.getRequestUri(), request.getBody());
+        System.out.println("DELETE/FORM");
+        resourceHandler.delete(request.getRequestUri());
 
         return HttpResponseBuilder.anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
-                .withBody(request.getBody().getBytes())
                 .build();
     }
 }

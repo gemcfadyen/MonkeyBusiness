@@ -51,7 +51,7 @@ public class ClientSocketTest {
         expectedException.expectMessage("Exception whilst writing request to socket");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
-        HttpResponse httpResponse = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
+        HttpResponse httpResponse = HttpResponseBuilder.anHttpResponseBuilder().withStatusCode(StatusCode.OK).build();
         clientSocket.setHttpResponse(httpResponse);
     }
 
@@ -62,8 +62,7 @@ public class ClientSocketTest {
         ClientSocket clientSocket = new ClientSocket(fakeSocket(), responseFormatterSpy);
 
         clientSocket.setHttpResponse(HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
-                .withReasonPhrase("OK")
+                .withStatusCode(StatusCode.OK)
                 .build());
 
         assertThat(responseFormatterSpy.hasFormatted(), is(true));

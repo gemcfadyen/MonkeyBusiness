@@ -17,7 +17,7 @@ public class ResourceHandlerSpy implements ResourceHandler {
     @Override
     public byte[] read(String filename) {
         hasReadResource = true;
-        return new byte[0];
+        return "My=Data".getBytes();
     }
 
     public boolean hasWrittenToResource() {

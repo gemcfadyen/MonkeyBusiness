@@ -28,7 +28,7 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void statusLineResponseFormat() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").build();
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatusCode(StatusCode.OK).build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -37,7 +37,11 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void statusLineWithAllowMethodsResponseFormat() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.GET, HttpMethods.PUT).build();
+        HttpResponse response = HttpResponseBuilder
+                .anHttpResponseBuilder()
+                .withStatusCode(StatusCode.OK)
+                .withAllowMethods(HttpMethods.GET, HttpMethods.PUT)
+                .build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -46,7 +50,11 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void locationLineResponseFormat() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(302).withReasonPhrase("Found").withLocation("www.newurl.com").build();
+        HttpResponse response = HttpResponseBuilder
+                .anHttpResponseBuilder()
+                .withStatusCode(StatusCode.FOUND)
+                .withLocation("www.newurl.com")
+                .build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -55,7 +63,11 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void bodyIncludedOnResponse() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withBody("My=Data".getBytes()).build();
+        HttpResponse response = HttpResponseBuilder
+                .anHttpResponseBuilder()
+                .withStatusCode(StatusCode.OK)
+                .withBody("My=Data".getBytes())
+                .build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -68,7 +80,12 @@ public class HttpResponseFormatterTest {
         expectedException.expectMessage("Error in creating HTTP Response");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(UnsupportedEncodingException.class));
 
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.GET, HttpMethods.PUT).build();
+        HttpResponse response = HttpResponseBuilder
+                .anHttpResponseBuilder()
+                .withStatusCode(StatusCode.OK)
+                .withAllowMethods(HttpMethods.GET, HttpMethods.PUT)
+                .build();
+
         responseFormatterThrowingException.format(response);
     }
 }

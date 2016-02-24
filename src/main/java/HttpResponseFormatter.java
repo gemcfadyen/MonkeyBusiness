@@ -81,8 +81,8 @@ public class HttpResponseFormatter implements ResponseFormatter {
 
     private String formatStatusLine(HttpResponse response) {
         return response.httpVersion() + space()
-                + response.statusCode() + space()
-                + response.reasonPhrase();
+                + response.statusCode().getCode() + space()
+                + response.statusCode().getReasonPhrase();
     }
 
     private String endOfHeader() {

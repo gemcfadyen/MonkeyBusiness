@@ -2,16 +2,15 @@ import java.util.List;
 
 
 public class HttpResponse {
-    private final int statusCode;
+    private final StatusCode statusCode;
     private String location;
     private final List<HttpMethods> allowedMethods;
     private String httpVersion;
     private String reasonPhrase;
     private byte[] body;
 
-    protected HttpResponse(int statusCode,
+    protected HttpResponse(StatusCode statusCode,
                            String httpVersion,
-                           String reasonPhrase,
                            String location,
                            List<HttpMethods> allowedMethods,
                            byte[] body) {
@@ -24,7 +23,7 @@ public class HttpResponse {
         this.body = body;
     }
 
-    public int statusCode() {
+    public StatusCode statusCode() {
         return statusCode;
     }
 

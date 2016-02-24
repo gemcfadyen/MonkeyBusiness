@@ -4,8 +4,7 @@ class Redirect implements Action {
     public HttpResponse process(HttpRequest request) {
 
         return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(302)
-                .withReasonPhrase("Found")
+                .withStatusCode(StatusCode.FOUND)
                 .withLocation("http://localhost:5000/")
                 .build();
     }

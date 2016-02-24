@@ -9,8 +9,7 @@ public class RouteProcessorSpy implements RouteProcessor {
     public HttpResponse process(HttpRequest httpRequest) {
         hasProcessed = true;
         return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
-                .withReasonPhrase("OK")
+                .withStatusCode(StatusCode.OK)
                 .build();
     }
 }
