@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.*;
+import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -15,6 +15,7 @@ public class HttpRequestParserTest {
     public ExpectedException expectedException = ExpectedException.none();
     private InputStream getRequestInputStream;
     private HttpRequestParser parser;
+    private InputStream postRequestInputStream;
 
     @Before
     public void setupFixture() {
@@ -26,6 +27,13 @@ public class HttpRequestParserTest {
                 "Accept-Encoding: gzip,deflate\r\n\r\n";
         getRequestInputStream = new ByteArrayInputStream(getRequest.getBytes());
         parser = new HttpRequestParser();
+
+        String postFixture = "POST /path/script.cgi HTTP/1.1\r\n" +
+                "From: frog@jmarshall.com\r\n" +
+                "User-Agent: HTTPTool/1.1\r\n" +
+                "Content-Type: application/x-www-form-urlencoded\r\n" +
+                "Content-Length: 32\r\n\r\nhome=Cosby&favorite+flavor=flies";
+        postRequestInputStream = new ByteArrayInputStream(postFixture.getBytes());
     }
 
     @Test
@@ -51,6 +59,24 @@ public class HttpRequestParserTest {
         HttpRequest request = parser.parse(getRequestInputStream);
 
         assertThat(request.getRequestUri(), is("/"));
+    }
+
+    @Test
+    public void parsesMapOfHeaderProperties() {
+        HttpRequest request = parser.parse(postRequestInputStream);
+        Map<String, String> headerProperties = request.headerParameters();
+
+        assertThat(headerProperties.get("From"), is("frog@jmarshall.com"));
+        assertThat(headerProperties.get("User-Agent"), is("HTTPTool/1.1"));
+        assertThat(headerProperties.get("Content-Type"), is("application/x-www-form-urlencoded"));
+        assertThat(headerProperties.get("Content-Length"), is("32"));
+    }
+
+    @Test
+    public void parsesBodyFromPostRequest() {
+        HttpRequest request = parser.parse(postRequestInputStream);
+
+        assertThat(request.getBody(), is("home=Cosby&favorite+flavor=flies"));
     }
 }
 

@@ -30,9 +30,7 @@ public class HttpServer {
         HttpSocket client = serverSocket.accept();
         HttpRequest httpRequest = requestParser.parse(client.getRawHttpRequest());
 
-        HttpResponse httpResponse = httpRequestProcessor.process(httpRequest);
-
-        client.setHttpResponse(httpResponse);
+        client.setHttpResponse(httpRequestProcessor.process(httpRequest));
         client.close();
     }
 }

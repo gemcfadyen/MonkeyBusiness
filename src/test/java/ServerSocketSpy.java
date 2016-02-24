@@ -3,7 +3,7 @@ class ServerSocketSpy extends HttpServerSocket {
     private ClientSpy clientToReturn;
 
     public ServerSocketSpy(ClientSpy clientSpy) {
-        super(null);
+        super(null, new HttpResponseFormatter());
         this.clientToReturn = clientSpy;
     }
 

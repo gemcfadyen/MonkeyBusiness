@@ -5,9 +5,11 @@ import java.net.Socket;
 class ClientSocket implements HttpSocket {
 
     private final Socket socket;
+    private ResponseFormatter responseFormatter;
 
-    public ClientSocket(Socket socket) {
+    public ClientSocket(Socket socket, ResponseFormatter responseFormatter) {
         this.socket = socket;
+        this.responseFormatter = responseFormatter;
     }
 
     @Override
@@ -32,7 +34,7 @@ class ClientSocket implements HttpSocket {
     public void setHttpResponse(HttpResponse httpResponse) {
         System.out.println("Returning a response!");
         try {
-            socket.getOutputStream().write(httpResponse.formatForClient());
+            socket.getOutputStream().write(responseFormatter.format(httpResponse));
         } catch (IOException e) {
             throw new ClientSocketException("Exception whilst writing request to socket", e);
         }

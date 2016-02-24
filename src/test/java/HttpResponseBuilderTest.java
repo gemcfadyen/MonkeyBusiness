@@ -37,9 +37,9 @@ public class HttpResponseBuilderTest {
     @Test
     public void buildsResponseWithAllowMethods() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
-                .withAllowMethods("GET", "POST")
+                .withAllowMethods(HttpMethods.GET, HttpMethods.POST)
                 .build();
 
-        assertThat(response.allowedMethods().containsAll(Arrays.asList("GET", "POST")), is(true));
+        assertThat(response.allowedMethods().containsAll(Arrays.asList(HttpMethods.GET, HttpMethods.POST)), is(true));
     }
 }

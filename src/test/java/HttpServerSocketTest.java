@@ -22,7 +22,7 @@ public class HttpServerSocketTest {
                 throw new IOException("Throws exception for test");
             }
         };
-        httpServerSocket = new HttpServerSocket(fakeServerSocket);
+        httpServerSocket = new HttpServerSocket(fakeServerSocket, new HttpResponseFormatter());
     }
 
     @Test
