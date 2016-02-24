@@ -1,10 +1,8 @@
 public class HttpRequestProcessor implements RequestProcessor {
 
-    private ResourceFinder resourceFinder;
     private ResourceHandler resourceHandler;
 
-    public HttpRequestProcessor(ResourceFinder resourceFinder, ResourceHandler resourceHandler) {
-        this.resourceFinder = resourceFinder;
+    public HttpRequestProcessor(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
     }
 
@@ -18,7 +16,7 @@ public class HttpRequestProcessor implements RequestProcessor {
             System.out.println("routing at /form with " + httpRequest.getMethod());
             if (httpRequest.getMethod().equals(HttpMethods.GET.name())) {
                 System.out.println("GET /FORM");
-                byte[] body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+                byte[] body = resourceHandler.read(httpRequest.getRequestUri());
                 System.out.println("BODY FROM THE GET IS " + body);
                 httpResponseBuilder.withBody(body);
             }
@@ -45,10 +43,9 @@ public class HttpRequestProcessor implements RequestProcessor {
         } else if(httpRequest.getRequestUri().equals("/redirect")) {
             httpResponseBuilder.withStatus(302).withReasonPhrase("Found").withLocation("http://localhost:5000/");
         } else if(httpRequest.getRequestUri().contains("/image")) {
-            byte[] body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+            byte[] body = resourceHandler.read(httpRequest.getRequestUri());
             httpResponseBuilder.withStatus(200).withBody(body);
         }
-
         else {
             httpResponseBuilder.withStatus(404).withReasonPhrase("Not Found");
         }

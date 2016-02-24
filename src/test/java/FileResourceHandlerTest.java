@@ -4,8 +4,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -74,8 +78,35 @@ public class FileResourceHandlerTest {
         resourceHandler.write(resourceName, "anything");
     }
 
+    @Test
+    public void readsContentOfExistingResource() throws IOException {
+        File resource = setupResourceWithContent();
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
+        byte[] resourceContent = resourceHandler.read("/" + resource.getName());
+
+        assertThat(resourceContent, is("My=Data".getBytes()));
+    }
+
+    @Test
+    public void readsContentOfNonExistingResource() {
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
+        byte[] resourceContent = resourceHandler.read("non-existing-resource");
+
+        assertThat(resourceContent, nullValue());
+    }
+
+    private File setupResourceWithContent() throws IOException {
+        File resource = temporaryFolder.newFile("resource");
+        Writer fileWriter = new FileWriter(resource.getPath());
+        fileWriter.write("My=Data");
+        fileWriter.flush();
+        fileWriter.close();
+
+        return resource;
+    }
+
     private byte[] getContentOfResource() {
-        ResourceFinder reader = new FileFinder(absolutePath);
-        return reader.getContentOf(resourceName);
+        ResourceHandler resourceHandler= new FileResourceHandler(absolutePath);
+        return resourceHandler.read(resourceName);
     }
 }

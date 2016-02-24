@@ -8,14 +8,12 @@ import static org.junit.Assert.assertThat;
 
 public class HttpRequestProcessorTest {
     private HttpRequestProcessor requestProcessor;
-    private ResourceFinderSpy resourceFinderSpy;
-    private ResourceHandlerSpy resourceWriterSpy;
+    private ResourceHandlerSpy resourceHandlerSpy;
 
     @Before
     public void setup() {
-        resourceFinderSpy = new ResourceFinderSpy();
-        resourceWriterSpy = new ResourceHandlerSpy();
-        requestProcessor = new HttpRequestProcessor(resourceFinderSpy, resourceWriterSpy);
+        resourceHandlerSpy = new ResourceHandlerSpy();
+        requestProcessor = new HttpRequestProcessor(resourceHandlerSpy);
     }
 
     @Test
@@ -66,8 +64,7 @@ public class HttpRequestProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
-        assertThat(httpResponse.body(), is("My=Data".getBytes()));
-        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
@@ -77,7 +74,7 @@ public class HttpRequestProcessorTest {
 
         assertThat(httpResponse.statusCode(), is(200));
         assertThat(httpResponse.body(), is("content".getBytes()));
-        assertThat(resourceWriterSpy.hasWrittenToResource(), is(true));
+        assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
@@ -87,7 +84,7 @@ public class HttpRequestProcessorTest {
 
         assertThat(httpResponse.statusCode(), is(200));
         assertThat(httpResponse.body(), is("content".getBytes()));
-        assertThat(resourceWriterSpy.hasWrittenToResource(), is(true));
+        assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
@@ -96,7 +93,7 @@ public class HttpRequestProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
-        assertThat(resourceWriterSpy.hasDeletedResource(), is(true));
+        assertThat(resourceHandlerSpy.hasDeletedResource(), is(true));
     }
 
     @Test
@@ -114,7 +111,7 @@ public class HttpRequestProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
-        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
@@ -123,7 +120,7 @@ public class HttpRequestProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
-        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
 }

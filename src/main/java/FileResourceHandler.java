@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FileResourceHandler implements ResourceHandler {
     private String absolutePath;
@@ -26,11 +28,23 @@ public class FileResourceHandler implements ResourceHandler {
         return resource.delete();
     }
 
+    @Override
+    public byte[] read(String filename) {
+        try {
+            System.out.println("Looking up resource at location: " + fullPath(filename));
+            return Files.readAllBytes(Paths.get(fullPath(filename)));
+        } catch (IOException e) {
+            System.out.println("FILE IS NOT Found!!!");
+            return noResourceContentAvailable();
+        }
+    }
+    private byte[] noResourceContentAvailable() {
+        return null;
+    }
     private String fullPath(String fileName) {
         return absolutePath + fileName;
     }
 
-    //TODO should this be injected, but then what is the responsibilities of this class
     protected void writeContentToFile(String filename, String content) throws IOException {
         File resource = new File(fullPath(filename));
         FileWriter fileWriter = new FileWriter(resource);
