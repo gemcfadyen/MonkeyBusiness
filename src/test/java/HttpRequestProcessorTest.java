@@ -108,4 +108,22 @@ public class HttpRequestProcessorTest {
         assertThat(httpResponse.location(), is("http://localhost:5000/"));
     }
 
+    @Test
+    public void getImageContentForJpeg() {
+        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.jpeg", EMPTY_MAP, "");
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+    }
+
+    @Test
+    public void getImageContentForPng() {
+        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.png", EMPTY_MAP, "");
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+    }
+
 }

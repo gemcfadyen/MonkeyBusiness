@@ -44,6 +44,9 @@ public class HttpRequestProcessor implements RequestProcessor {
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.values());
         } else if(httpRequest.getRequestUri().equals("/redirect")) {
             httpResponseBuilder.withStatus(302).withReasonPhrase("Found").withLocation("http://localhost:5000/");
+        } else if(httpRequest.getRequestUri().contains("/image")) {
+            byte[] body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+            httpResponseBuilder.withStatus(200).withBody(body);
         }
 
         else {
