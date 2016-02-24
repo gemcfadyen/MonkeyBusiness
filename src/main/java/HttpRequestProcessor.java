@@ -1,11 +1,11 @@
 public class HttpRequestProcessor implements RequestProcessor {
 
     private ResourceFinder resourceFinder;
-    private ResourceWriter resourceWriter;
+    private ResourceHandler resourceHandler;
 
-    public HttpRequestProcessor(ResourceFinder resourceFinder, ResourceWriter resourceWriter) {
+    public HttpRequestProcessor(ResourceFinder resourceFinder, ResourceHandler resourceHandler) {
         this.resourceFinder = resourceFinder;
-        this.resourceWriter = resourceWriter;
+        this.resourceHandler = resourceHandler;
     }
 
     @Override
@@ -25,19 +25,19 @@ public class HttpRequestProcessor implements RequestProcessor {
 
             if (httpRequest.getMethod().equals(HttpMethods.POST.name())) {
                 System.out.println("POST /FORM");
-                resourceWriter.write(httpRequest.getRequestUri(), httpRequest.getBody());
+                resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
                 httpResponseBuilder.withBody(httpRequest.getBody());
             }
 
             if (httpRequest.getMethod().equals(HttpMethods.PUT.name())) {
                 System.out.println("PUT /FORM");
-                resourceWriter.write(httpRequest.getRequestUri(), httpRequest.getBody());
+                resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
                 httpResponseBuilder.withBody(httpRequest.getBody());
             }
 
             if (httpRequest.getMethod().equals(HttpMethods.DELETE.name())) {
                 System.out.println("DELETE/FORM");
-                resourceWriter.delete(httpRequest.getRequestUri());
+                resourceHandler.delete(httpRequest.getRequestUri());
             }
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         } else if (httpRequest.getRequestUri().equals("/method_options")) {

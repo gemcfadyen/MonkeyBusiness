@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
 class FileFinder implements ResourceFinder {
     private String rootPath;
@@ -13,23 +12,41 @@ class FileFinder implements ResourceFinder {
     public String getContentOf(String resourcePath) {
         try {
             System.out.println("Looking up resource at location: " + rootPath + resourcePath);
-            Reader fileReader = new FileReader(rootPath + resourcePath);
-            BufferedReader resourceReader = new BufferedReader(fileReader);//TODO inject in?
-
-            StringBuffer content = new StringBuffer("");
-            String line = resourceReader.readLine();
-
-            while (line != null) {
-                content.append(line);
-                line = resourceReader.readLine();
-            }
-            System.out.println("Found file " + content.toString());
-            return content.toString();
+            String content = readContentsOfFile(filename(resourcePath));
+            System.out.println("contents of file found " + content);
+            return content;
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("FILE IS NOT Found!!!");
-            return null;
+            return noResourceContentAvailable();
         }
+    }
 
+    private String filename(String resourcePath) {
+        return rootPath + resourcePath;
+    }
+
+    private String readContentsOfFile(String filename) throws IOException {
+        BufferedReader resourceReader = new BufferedReader(new FileReader(filename));
+        StringBuilder content = new StringBuilder("");
+
+        String line = readLine(resourceReader);
+
+        while (hasContent(line)) {
+            content.append(line);
+            line = readLine(resourceReader);
+        }
+        return content.toString();
+    }
+
+    private String readLine(BufferedReader resourceReader) throws IOException {
+        return resourceReader.readLine();
+    }
+
+    private boolean hasContent(String line) {
+        return line != null;
+    }
+
+    private String noResourceContentAvailable() {
+        return null;
     }
 }

@@ -1,8 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.AbstractCollection;
-
 import static java.util.Collections.EMPTY_MAP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -11,12 +9,12 @@ import static org.junit.Assert.assertThat;
 public class HttpRequestProcessorTest {
     private HttpRequestProcessor requestProcessor;
     private ResourceFinderSpy resourceFinderSpy;
-    private ResourceWriterSpy resourceWriterSpy;
+    private ResourceHandlerSpy resourceWriterSpy;
 
     @Before
     public void setup() {
         resourceFinderSpy = new ResourceFinderSpy();
-        resourceWriterSpy = new ResourceWriterSpy();
+        resourceWriterSpy = new ResourceHandlerSpy();
         requestProcessor = new HttpRequestProcessor(resourceFinderSpy, resourceWriterSpy);
     }
 

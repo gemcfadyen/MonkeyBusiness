@@ -1,4 +1,4 @@
-public class ResourceWriterSpy implements ResourceWriter {
+public class ResourceHandlerSpy implements ResourceHandler {
     private boolean hasWrittenFile;
     private boolean hasDeletedResource;
 
