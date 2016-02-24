@@ -45,6 +45,15 @@ public class HttpResponseFormatterTest {
     }
 
     @Test
+    public void bodyIncludedOnResponse() {
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withBody("My=Data").build();
+
+        byte[] formattedResponse = formatter.format(response);
+
+        assertThat(formattedResponse, is("HTTP/1.1 200 OK\r\n\r\nMy=Data".getBytes()));
+    }
+
+    @Test
     public void exceptionOnFormatting() {
         expectedException.expect(HttpResponseException.class);
         expectedException.expectMessage("Error in creating HTTP Response");

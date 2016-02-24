@@ -42,4 +42,14 @@ public class HttpResponseBuilderTest {
 
         assertThat(response.allowedMethods().containsAll(Arrays.asList(HttpMethods.GET, HttpMethods.POST)), is(true));
     }
+
+    @Test
+    public void buildsResponseWithBody() {
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(200)
+                .withBody("My=Data")
+                .build();
+
+        assertThat(response.body(), is("My=Data"));
+    }
 }
