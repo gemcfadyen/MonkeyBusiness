@@ -72,10 +72,21 @@ public class HttpRequestProcessorTest {
 
     @Test
     public void postMethodCreatesAResource() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.POST.name(), "/form", EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest(HttpMethods.POST.name(), "/form", EMPTY_MAP, "content");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.body(), is("content"));
         assertThat(resourceWriterSpy.hasCreatedResource(), is(true));
+    }
+
+    @Test
+    public void putMethodUpdatesAResource() {
+        HttpRequest httpRequest = new HttpRequest(HttpMethods.PUT.name(), "/form", EMPTY_MAP, "content");
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.body(), is("content"));
+        assertThat(resourceWriterSpy.hasCreatedResource(), is(true)); //TODO Chcek this is the right assertion
     }
 }

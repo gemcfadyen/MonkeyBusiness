@@ -30,6 +30,15 @@ public class FileResourceWriterTest {
         assertThat(getContentOfResource(), is("My=Data"));
     }
 
+    @Test
+    public void updatesAnExistingResource() {
+        ResourceWriter resourceWriter = new FileResourceWriter(absolutePath);
+        resourceWriter.write(resourceName, "originalData");
+        resourceWriter.write(resourceName, "UpdatedData");
+
+        assertThat(getContentOfResource(), is("UpdatedData"));
+    }
+
     private String getContentOfResource() {
         ResourceFinder reader = new FileFinder(absolutePath);
         return reader.getContentOf(resourceName);

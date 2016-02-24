@@ -29,6 +29,13 @@ public class HttpRequestProcessor implements RequestProcessor {
                 resourceWriter.write(httpRequest.getRequestUri(), httpRequest.getBody());
                 httpResponseBuilder.withBody(httpRequest.getBody());
             }
+
+            if(httpRequest.getMethod().equals(HttpMethods.PUT.name())) {
+                System.out.println("PUT /FORM");
+                resourceWriter.write(httpRequest.getRequestUri(), httpRequest.getBody());
+                httpResponseBuilder.withBody(httpRequest.getBody());
+            }
+
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         }
         else if (httpRequest.getRequestUri().equals("/method_options")) {
