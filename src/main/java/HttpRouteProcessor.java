@@ -1,55 +1,144 @@
-public class HttpRouteProcessor implements RouteProcessor {
+import java.util.HashMap;
+import java.util.Map;
 
+public class HttpRouteProcessor implements RouteProcessor {
+    private Map<RouteKey, RequestProcessor> routes = new HashMap<>();
     private ResourceHandler resourceHandler;
 
     public HttpRouteProcessor(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
+        configureRoutes();
+    }
+
+    private void configureRoutes() {
+        routes.put(new RouteKey("/", HttpMethods.GET.name()), new OkResponse());
+        routes.put(new RouteKey("/form", HttpMethods.GET.name()), new ReadResourceResponse(resourceHandler));
+        routes.put(new RouteKey("/form", HttpMethods.POST.name()), new WriteResourceResponse(resourceHandler));
+        routes.put(new RouteKey("/form", HttpMethods.PUT.name()), new WriteResourceResponse(resourceHandler));
+        routes.put(new RouteKey("/form", HttpMethods.DELETE.name()), new DeleteContentResponse(resourceHandler));
+        routes.put(new RouteKey("/method_options", HttpMethods.OPTIONS.name()), new MethodOptionsResponse());
+        routes.put(new RouteKey("/redirect", HttpMethods.GET.name()), new RedirectResponse());
+        routes.put(new RouteKey("/image.jpeg", HttpMethods.GET.name()), new ReadResourceResponse(resourceHandler));
+        routes.put(new RouteKey("/image.png", HttpMethods.GET.name()), new ReadResourceResponse(resourceHandler));
+        routes.put(new RouteKey("/image.gif", HttpMethods.GET.name()), new ReadResourceResponse(resourceHandler));
     }
 
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
-        System.out.println("Routing the request " + httpRequest.getRequestUri());
-        HttpResponseBuilder httpResponseBuilder = HttpResponseBuilder.anHttpResponseBuilder();
-        if (httpRequest.getRequestUri().equals("/")) {
-            httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
-        } else if (httpRequest.getRequestUri().equals("/form")) {
-            System.out.println("routing at /form with " + httpRequest.getMethod());
-            if (httpRequest.getMethod().equals(HttpMethods.GET.name())) {
-                System.out.println("GET /FORM");
-                byte[] body = resourceHandler.read(httpRequest.getRequestUri());
-                System.out.println("BODY FROM THE GET IS " + body);
-                httpResponseBuilder.withBody(body);
-            }
+        System.out.println("Routing key is: " + httpRequest.getRequestUri() + httpRequest.getMethod());
+        RouteKey routeKey = new RouteKey(httpRequest.getRequestUri(), httpRequest.getMethod());
 
-            if (httpRequest.getMethod().equals(HttpMethods.POST.name())) {
-                System.out.println("POST /FORM");
-                resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
-                httpResponseBuilder.withBody(httpRequest.getBody().getBytes());
-            }
+        return routes.get(routeKey) != null ?
+                routes.get(routeKey).process(httpRequest) :
+                new UnknownRouteResponse().process(httpRequest);
+    }
+}
 
-            if (httpRequest.getMethod().equals(HttpMethods.PUT.name())) {
-                System.out.println("PUT /FORM");
-                resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
-                httpResponseBuilder.withBody(httpRequest.getBody().getBytes());
-            }
+interface RequestProcessor {
 
-            if (httpRequest.getMethod().equals(HttpMethods.DELETE.name())) {
-                System.out.println("DELETE/FORM");
-                resourceHandler.delete(httpRequest.getRequestUri());
-            }
-            httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
-        } else if (httpRequest.getRequestUri().equals("/method_options")) {
-            httpResponseBuilder.withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.values());
-        } else if(httpRequest.getRequestUri().equals("/redirect")) {
-            httpResponseBuilder.withStatus(302).withReasonPhrase("Found").withLocation("http://localhost:5000/");
-        } else if(httpRequest.getRequestUri().contains("/image")) {
-            byte[] body = resourceHandler.read(httpRequest.getRequestUri());
-            httpResponseBuilder.withStatus(200).withBody(body);
-        }
-        else {
-            httpResponseBuilder.withStatus(404).withReasonPhrase("Not Found");
-        }
+    HttpResponse process(HttpRequest request);
+}
 
-        return httpResponseBuilder.build();
+class OkResponse implements RequestProcessor {
+    public HttpResponse process(HttpRequest request) {
+        return HttpResponseBuilder
+                .anHttpResponseBuilder()
+                .withStatus(200)
+                .withReasonPhrase("OK")
+                .build();
+    }
+}
+
+class WriteResourceResponse implements RequestProcessor {
+    private final ResourceHandler resourceHandler;
+
+    public WriteResourceResponse(ResourceHandler resourceHandler) {
+        this.resourceHandler = resourceHandler;
+    }
+
+    @Override
+    public HttpResponse process(HttpRequest request) {
+        System.out.println("PUT /FORM");
+        resourceHandler.write(request.getRequestUri(), request.getBody());
+
+        return HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(200)
+                .withReasonPhrase("OK")
+                .withBody(request.getBody().getBytes())
+                .build();
+    }
+}
+
+class DeleteContentResponse implements RequestProcessor {
+    private final ResourceHandler resourceHandler;
+
+    public DeleteContentResponse(ResourceHandler resourceHandler) {
+        this.resourceHandler = resourceHandler;
+    }
+
+    @Override
+    public HttpResponse process(HttpRequest request) {
+        System.out.println("DELETE/FORM");
+        resourceHandler.delete(request.getRequestUri());
+
+        return HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(200)
+                .withReasonPhrase("OK")
+                .build();
+    }
+}
+
+
+class MethodOptionsResponse implements RequestProcessor {
+
+    @Override
+    public HttpResponse process(HttpRequest request) {
+        return HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(200)
+                .withReasonPhrase("OK")
+                .withAllowMethods(HttpMethods.values())
+                .build();
+    }
+}
+
+class RedirectResponse implements RequestProcessor {
+
+    @Override
+    public HttpResponse process(HttpRequest request) {
+
+        return HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(302)
+                .withReasonPhrase("Found")
+                .withLocation("http://localhost:5000/")
+                .build();
+    }
+}
+
+class ReadResourceResponse implements RequestProcessor {
+    private final ResourceHandler resourceHandler;
+
+    public ReadResourceResponse(ResourceHandler resourceHandler) {
+        this.resourceHandler = resourceHandler;
+    }
+
+    @Override
+    public HttpResponse process(HttpRequest request) {
+        byte[] body = resourceHandler.read(request.getRequestUri());
+        return HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(200)
+                .withReasonPhrase("OK")
+                .withBody(body)
+                .build();
+    }
+}
+
+class UnknownRouteResponse implements RequestProcessor {
+    @Override
+    public HttpResponse process(HttpRequest request) {
+
+        return HttpResponseBuilder.anHttpResponseBuilder()
+                .withStatus(404)
+                .withReasonPhrase("Not Found")
+                .build();
     }
 }
