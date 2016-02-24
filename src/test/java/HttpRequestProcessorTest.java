@@ -7,12 +7,13 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class HttpRequestProcessorTest {
-
     private HttpRequestProcessor requestProcessor;
+    private ResourceFinderSpy resourceFinderSpy;
 
     @Before
     public void setup() {
-        requestProcessor = new HttpRequestProcessor();
+        resourceFinderSpy = new ResourceFinderSpy();
+        requestProcessor = new HttpRequestProcessor(resourceFinderSpy);
     }
 
     @Test
@@ -57,13 +58,13 @@ public class HttpRequestProcessorTest {
         assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT));
     }
 
-
     @Test
     public void getMethodLooksUpResourceForResponseBody() {
-        HttpRequest httpRequest = new HttpRequest("get", "/form", EMPTY_MAP, "");
+        HttpRequest httpRequest = new HttpRequest("GET", "/form", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(200));
         assertThat(httpResponse.body(), is("My=Data"));
+        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
     }
 }

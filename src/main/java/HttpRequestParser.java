@@ -36,6 +36,7 @@ public class HttpRequestParser implements RequestParser {
 
     private String[] getRequestLine(BufferedReader reader) throws IOException {
         String firstLine = readLine(reader);
+        System.out.println("REQUEST LINE " + firstLine);
         return split(firstLine, space());
     }
 
