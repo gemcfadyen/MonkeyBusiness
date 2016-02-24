@@ -1,8 +1,8 @@
-public class HttpRequestProcessor implements RequestProcessor {
+public class HttpRouteProcessor implements RouteProcessor {
 
     private ResourceHandler resourceHandler;
 
-    public HttpRequestProcessor(ResourceHandler resourceHandler) {
+    public HttpRouteProcessor(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
     }
 

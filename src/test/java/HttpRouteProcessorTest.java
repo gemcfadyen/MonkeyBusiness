@@ -6,14 +6,14 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class HttpRequestProcessorTest {
-    private HttpRequestProcessor requestProcessor;
+public class HttpRouteProcessorTest {
+    private HttpRouteProcessor requestProcessor;
     private ResourceHandlerSpy resourceHandlerSpy;
 
     @Before
     public void setup() {
         resourceHandlerSpy = new ResourceHandlerSpy();
-        requestProcessor = new HttpRequestProcessor(resourceHandlerSpy);
+        requestProcessor = new HttpRouteProcessor(resourceHandlerSpy);
     }
 
     @Test

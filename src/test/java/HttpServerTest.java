@@ -10,14 +10,14 @@ public class HttpServerTest {
     private RequestParserSpy httpRequestParserSpy;
     private HttpServer httpServer;
     private ClientSpy clientSpy;
-    private RequestProcessorSpy httpRequestProcessorSpy;
+    private RouteProcessorSpy httpRequestProcessorSpy;
 
     @Before
     public void setUp() throws Exception {
         clientSpy = new ClientSpy();
         serverSocketSpy = new ServerSocketSpy(clientSpy);
         httpRequestParserSpy = new RequestParserSpy();
-        httpRequestProcessorSpy = new RequestProcessorSpy();
+        httpRequestProcessorSpy = new RouteProcessorSpy();
         httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy);
     }
 

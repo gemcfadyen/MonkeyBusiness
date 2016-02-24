@@ -1,4 +1,4 @@
-public class RequestProcessorSpy implements RequestProcessor {
+public class RouteProcessorSpy implements RouteProcessor {
     private boolean hasProcessed = false;
 
     public boolean hasProcessed() {

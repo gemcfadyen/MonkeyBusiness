@@ -3,17 +3,17 @@ public class HttpServer {
     private final int port;
     private final HttpServerSocket serverSocket;
     private final RequestParser requestParser;
-    private RequestProcessor httpRequestProcessor;
+    private RouteProcessor httpRouteProcessor;
 
     public HttpServer(String host, int port,
                       HttpServerSocket serverSocket,
                       RequestParser requestParser,
-                      RequestProcessor httpRequestProcessor) {
+                      RouteProcessor httpRouteProcessor) {
         this.host = host;
         this.port = port;
         this.serverSocket = serverSocket;
         this.requestParser = requestParser;
-        this.httpRequestProcessor = httpRequestProcessor;
+        this.httpRouteProcessor = httpRouteProcessor;
     }
 
     public String getHost() {
@@ -30,7 +30,7 @@ public class HttpServer {
         HttpSocket client = serverSocket.accept();
         HttpRequest httpRequest = requestParser.parse(client.getRawHttpRequest());
 
-        client.setHttpResponse(httpRequestProcessor.process(httpRequest));
+        client.setHttpResponse(httpRouteProcessor.process(httpRequest));
         client.close();
     }
 }
