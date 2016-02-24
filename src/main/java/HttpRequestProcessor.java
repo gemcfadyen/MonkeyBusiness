@@ -1,9 +1,11 @@
 public class HttpRequestProcessor implements RequestProcessor {
 
     private ResourceFinder resourceFinder;
+    private ResourceWriter resourceWriter;
 
-    public HttpRequestProcessor(ResourceFinder resourceFinder) {
+    public HttpRequestProcessor(ResourceFinder resourceFinder, ResourceWriter resourceWriter) {
         this.resourceFinder = resourceFinder;
+        this.resourceWriter = resourceWriter;
     }
 
     @Override
@@ -18,7 +20,14 @@ public class HttpRequestProcessor implements RequestProcessor {
             if(httpRequest.getMethod().equals(HttpMethods.GET.name())) {
                 System.out.println("GET /FORM");
                 String body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+                System.out.println("BODY FROM THE GET IS " + body);
                 httpResponseBuilder.withBody(body);
+            }
+
+            if(httpRequest.getMethod().equals(HttpMethods.POST.name())) {
+                System.out.println("POST /FORM");
+                resourceWriter.write(httpRequest.getRequestUri(), httpRequest.getBody());
+                httpResponseBuilder.withBody(httpRequest.getBody());
             }
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         }
