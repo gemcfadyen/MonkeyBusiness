@@ -3,6 +3,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.is;
@@ -37,6 +38,22 @@ public class FileResourceWriterTest {
         resourceWriter.write(resourceName, "UpdatedData");
 
         assertThat(getContentOfResource(), is("UpdatedData"));
+    }
+
+    @Test
+    public void triesToRemovesAResourceThatDoesntExist() {
+        ResourceWriter resourceWriter = new FileResourceWriter(absolutePath);
+        boolean deleted = resourceWriter.delete("Non-Existing-Resource");
+        assertThat(deleted, is(false));
+    }
+
+    @Test
+    public void removesExistingResource() {
+        ResourceWriter resourceWriter = new FileResourceWriter(absolutePath);
+        resourceWriter.write(resourceName, "My=Data");
+
+        boolean isDeleted = resourceWriter.delete(resourceName);
+        assertThat(isDeleted, is(true));
     }
 
     private String getContentOfResource() {

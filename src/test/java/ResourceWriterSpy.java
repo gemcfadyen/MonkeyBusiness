@@ -1,12 +1,23 @@
 public class ResourceWriterSpy implements ResourceWriter {
     private boolean hasWrittenFile;
+    private boolean hasDeletedResource;
 
     @Override
     public void write(String fileName, String content) {
         hasWrittenFile = true;
     }
 
-    public boolean hasCreatedResource() {
+    @Override
+    public boolean delete(String filename) {
+        hasDeletedResource = true;
+        return false;
+    }
+
+    public boolean hasWrittenToResource() {
         return hasWrittenFile;
+    }
+
+    public boolean hasDeletedResource() {
+        return hasDeletedResource;
     }
 }

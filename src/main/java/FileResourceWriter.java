@@ -23,4 +23,10 @@ public class FileResourceWriter implements ResourceWriter {
             //TODO custom exception to be thrown here
         }
     }
+
+    @Override
+    public boolean delete(String fileName) {
+        File resource = new File(absolutePath + fileName);
+        return resource.delete();
+    }
 }

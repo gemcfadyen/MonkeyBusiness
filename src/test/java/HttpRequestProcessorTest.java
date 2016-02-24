@@ -1,6 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.AbstractCollection;
+
 import static java.util.Collections.EMPTY_MAP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -57,7 +59,7 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.OPTIONS.name(), "/method_options", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT, HttpMethods.DELETE));
     }
 
     @Test
@@ -77,7 +79,7 @@ public class HttpRequestProcessorTest {
 
         assertThat(httpResponse.statusCode(), is(200));
         assertThat(httpResponse.body(), is("content"));
-        assertThat(resourceWriterSpy.hasCreatedResource(), is(true));
+        assertThat(resourceWriterSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
@@ -87,6 +89,16 @@ public class HttpRequestProcessorTest {
 
         assertThat(httpResponse.statusCode(), is(200));
         assertThat(httpResponse.body(), is("content"));
-        assertThat(resourceWriterSpy.hasCreatedResource(), is(true)); //TODO Chcek this is the right assertion
+        assertThat(resourceWriterSpy.hasWrittenToResource(), is(true));
     }
+
+    @Test
+    public void deleteMethodRemovesResource() {
+        HttpRequest httpRequest = new HttpRequest(HttpMethods.DELETE.name(), "/form", EMPTY_MAP, "");
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(resourceWriterSpy.hasDeletedResource(), is(true));
+    }
+
 }
