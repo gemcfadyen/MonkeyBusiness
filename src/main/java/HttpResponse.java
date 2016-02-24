@@ -6,15 +6,18 @@ class HttpResponse {
     private final List<HttpMethods> allowedMethods;
     private String httpVersion;
     private String reasonPhrase;
+    private String body;
 
     protected HttpResponse(int statusCode,
                            String httpVersion,
                            String reasonPhrase,
-                           List<HttpMethods> allowedMethods) {
+                           List<HttpMethods> allowedMethods,
+                           String body) {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
         this.reasonPhrase = reasonPhrase;
         this.allowedMethods = allowedMethods;
+        this.body = body;
     }
 
     public int statusCode() {
@@ -31,6 +34,10 @@ class HttpResponse {
 
     public List<HttpMethods> allowedMethods() {
         return allowedMethods;
+    }
+
+    public String body() {
+        return body;
     }
 }
 

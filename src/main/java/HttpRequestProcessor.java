@@ -10,6 +10,9 @@ public class HttpRequestProcessor implements RequestProcessor {
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         }
         else if (httpRequest.getRequestUri().equals("/form")) {
+            if(httpRequest.getMethod().equals("get")) {
+                httpResponseBuilder.withBody("My=Data");
+            }
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK");
         }
         else if (httpRequest.getRequestUri().equals("/method_options")) {

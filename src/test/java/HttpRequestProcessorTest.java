@@ -57,21 +57,13 @@ public class HttpRequestProcessorTest {
         assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT));
     }
 
-//    @Test
-//    public void postingContentCreatesResource() {
-//        HttpRequest httpRequest = new HttpRequest("post", "/form");
-//
-//        /***
-//         * POST /path/script.cgi HTTP/1.0
-//         From: frog@jmarshall.com
-//         User-Agent: HTTPTool/1.0
-//         Content-Type: application/x-www-form-urlencoded
-//         Content-Length: 32
-//
-//         home=Cosby&favorite+flavor=flies
-//         */
-//        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-//
-//        assertThat(httpResponse.allowedMethods(), containsInAnyOrder("GET", "HEAD", "POST", "OPTIONS", "PUT"));
-//    }
+
+    @Test
+    public void getMethodLooksUpResourceForResponseBody() {
+        HttpRequest httpRequest = new HttpRequest("get", "/form", EMPTY_MAP, "");
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.body(), is("My=Data"));
+    }
 }
