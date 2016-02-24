@@ -18,7 +18,7 @@ public class HttpRequestProcessor implements RequestProcessor {
             System.out.println("routing at /form with " + httpRequest.getMethod());
             if (httpRequest.getMethod().equals(HttpMethods.GET.name())) {
                 System.out.println("GET /FORM");
-                String body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+                byte[] body = resourceFinder.getContentOf(httpRequest.getRequestUri());
                 System.out.println("BODY FROM THE GET IS " + body);
                 httpResponseBuilder.withBody(body);
             }
@@ -26,13 +26,13 @@ public class HttpRequestProcessor implements RequestProcessor {
             if (httpRequest.getMethod().equals(HttpMethods.POST.name())) {
                 System.out.println("POST /FORM");
                 resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
-                httpResponseBuilder.withBody(httpRequest.getBody());
+                httpResponseBuilder.withBody(httpRequest.getBody().getBytes());
             }
 
             if (httpRequest.getMethod().equals(HttpMethods.PUT.name())) {
                 System.out.println("PUT /FORM");
                 resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
-                httpResponseBuilder.withBody(httpRequest.getBody());
+                httpResponseBuilder.withBody(httpRequest.getBody().getBytes());
             }
 
             if (httpRequest.getMethod().equals(HttpMethods.DELETE.name())) {

@@ -1,4 +1,5 @@
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class HttpResponseFormatter implements ResponseFormatter {
@@ -13,21 +14,23 @@ public class HttpResponseFormatter implements ResponseFormatter {
 
     protected byte[] createFormatted(HttpResponse response) throws UnsupportedEncodingException {
         String formattedHeader = createHeader(response);
-        String formattedBody = createBody(response);
-        String formattedResponse = createWholeResponse(formattedHeader, formattedBody);
-        System.out.println("formatted response is  " + formattedResponse + "\n--------------\n");
-        return formattedResponse.getBytes("UTF-8");
+        System.out.println("formatted header is  " + formattedHeader + "\n--------------\n");
+        byte[] formattedBody = createBody(response);
+        return createWholeResponse(formattedHeader.getBytes("UTF-8"), formattedBody);
     }
 
-    private String createWholeResponse(String formattedHeader, String formattedBody) {
-        if (formattedBody != null) {
-            return formattedHeader + formattedBody;
+    private byte[] createWholeResponse(byte[] headerBytes, byte[] bodyBytes) {
+        if (bodyBytes != null) {
+            ByteBuffer entireResponse = ByteBuffer.allocate(headerBytes.length + bodyBytes.length);
+            entireResponse.put(headerBytes);
+            entireResponse.put(bodyBytes);
+            return entireResponse.array();
         } else {
-            return formattedHeader;
+            return headerBytes;
         }
     }
 
-    private String createBody(HttpResponse response) {
+    private byte[] createBody(HttpResponse response) {
         return response.body();
     }
 
@@ -37,8 +40,8 @@ public class HttpResponseFormatter implements ResponseFormatter {
             formattedHeader += addAllowLineToHeader(response);
         }
 
-        if(hasLocation(response)) {
-           formattedHeader += addLocationToHeader(response);
+        if (hasLocation(response)) {
+            formattedHeader += addLocationToHeader(response);
         }
 
         formattedHeader += endOfHeader();
@@ -54,9 +57,9 @@ public class HttpResponseFormatter implements ResponseFormatter {
         return !(location == null || location.equals(""));
     }
 
-   private String addLocationToHeader(HttpResponse response) {
-      return endOfLine() + "Location: " + response.location();
-   }
+    private String addLocationToHeader(HttpResponse response) {
+        return endOfLine() + "Location: " + response.location();
+    }
 
     private boolean hasAllowMethods(HttpResponse response) {
         return response.allowedMethods().size() > 0;

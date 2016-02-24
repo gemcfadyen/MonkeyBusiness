@@ -28,15 +28,15 @@ public class FileFinderTest {
     public void looksupExistingResource() throws IOException {
         File resource = setupResourceWithContent();
         ResourceFinder resourceFinder = new FileFinder(absolutePath);
-        String resourceContent = resourceFinder.getContentOf("/" + resource.getName());
+        byte[] resourceContent = resourceFinder.getContentOf("/" + resource.getName());
 
-        assertThat(resourceContent, is("My=Data"));
+        assertThat(resourceContent, is("My=Data".getBytes()));
     }
 
     @Test
     public void looksupNonExistingResource() {
         ResourceFinder resourceFinder = new FileFinder(absolutePath);
-        String resourceContent = resourceFinder.getContentOf("non-existing-resource");
+        byte[] resourceContent = resourceFinder.getContentOf("non-existing-resource");
 
         assertThat(resourceContent, CoreMatchers.nullValue());
     }
