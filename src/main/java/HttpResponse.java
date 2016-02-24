@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-class HttpResponse {
+public class HttpResponse {
     private final int statusCode;
     private String location;
     private final List<HttpMethods> allowedMethods;
