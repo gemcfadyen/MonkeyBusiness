@@ -2,9 +2,9 @@ public class ResourceFinderSpy implements ResourceFinder {
     private boolean hasLookedUpResource;
 
     @Override
-    public String getContentOf(String resourcePath) {
+    public byte[] getContentOf(String resourcePath) {
         hasLookedUpResource = true;
-        return "My=Data";
+        return "My=Data".getBytes();
     }
 
     public boolean hasLookedupResource() {

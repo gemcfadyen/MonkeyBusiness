@@ -55,7 +55,7 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void bodyIncludedOnResponse() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withBody("My=Data").build();
+        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatus(200).withReasonPhrase("OK").withBody("My=Data".getBytes()).build();
 
         byte[] formattedResponse = formatter.format(response);
 

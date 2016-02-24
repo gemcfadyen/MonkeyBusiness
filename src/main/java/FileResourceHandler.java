@@ -22,17 +22,17 @@ public class FileResourceHandler implements ResourceHandler {
 
     @Override
     public boolean delete(String fileName) {
-        File resource = new File(filename(fileName));
+        File resource = new File(fullPath(fileName));
         return resource.delete();
     }
 
-    private String filename(String fileName) {
+    private String fullPath(String fileName) {
         return absolutePath + fileName;
     }
 
     //TODO should this be injected, but then what is the responsibilities of this class
     protected void writeContentToFile(String filename, String content) throws IOException {
-        File resource = new File(filename(filename));
+        File resource = new File(fullPath(filename));
         FileWriter fileWriter = new FileWriter(resource);
         fileWriter.write(content);
         fileWriter.flush();

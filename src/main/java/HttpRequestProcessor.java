@@ -18,7 +18,7 @@ public class HttpRequestProcessor implements RequestProcessor {
             System.out.println("routing at /form with " + httpRequest.getMethod());
             if (httpRequest.getMethod().equals(HttpMethods.GET.name())) {
                 System.out.println("GET /FORM");
-                String body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+                byte[] body = resourceFinder.getContentOf(httpRequest.getRequestUri());
                 System.out.println("BODY FROM THE GET IS " + body);
                 httpResponseBuilder.withBody(body);
             }
@@ -26,13 +26,13 @@ public class HttpRequestProcessor implements RequestProcessor {
             if (httpRequest.getMethod().equals(HttpMethods.POST.name())) {
                 System.out.println("POST /FORM");
                 resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
-                httpResponseBuilder.withBody(httpRequest.getBody());
+                httpResponseBuilder.withBody(httpRequest.getBody().getBytes());
             }
 
             if (httpRequest.getMethod().equals(HttpMethods.PUT.name())) {
                 System.out.println("PUT /FORM");
                 resourceHandler.write(httpRequest.getRequestUri(), httpRequest.getBody());
-                httpResponseBuilder.withBody(httpRequest.getBody());
+                httpResponseBuilder.withBody(httpRequest.getBody().getBytes());
             }
 
             if (httpRequest.getMethod().equals(HttpMethods.DELETE.name())) {
@@ -44,6 +44,9 @@ public class HttpRequestProcessor implements RequestProcessor {
             httpResponseBuilder.withStatus(200).withReasonPhrase("OK").withAllowMethods(HttpMethods.values());
         } else if(httpRequest.getRequestUri().equals("/redirect")) {
             httpResponseBuilder.withStatus(302).withReasonPhrase("Found").withLocation("http://localhost:5000/");
+        } else if(httpRequest.getRequestUri().contains("/image")) {
+            byte[] body = resourceFinder.getContentOf(httpRequest.getRequestUri());
+            httpResponseBuilder.withStatus(200).withBody(body);
         }
 
         else {
