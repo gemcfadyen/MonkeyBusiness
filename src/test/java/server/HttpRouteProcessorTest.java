@@ -220,4 +220,16 @@ public class HttpRouteProcessorTest {
 
         assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
     }
+
+    @Test
+    public void bogusRequestResultsInMethodNotAllowed() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/file1")
+                .withRequestLine("BOGUS_METHOD")
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
+    }
 }
