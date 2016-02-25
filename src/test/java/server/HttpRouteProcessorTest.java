@@ -5,7 +5,6 @@ import org.junit.Test;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
-import static java.util.Collections.EMPTY_MAP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -34,7 +33,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void simpleGetReturnsCode200() {
+    public void listsDirectoryContent() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/")
                 .withRequestLine(HttpMethods.GET.name())
@@ -43,6 +42,7 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
 
     @Test

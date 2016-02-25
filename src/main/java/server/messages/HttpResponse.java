@@ -21,7 +21,6 @@ public class HttpResponse {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
         this.location = location;
-        this.location = location;
         this.allowedMethods = allowedMethods;
         this.body = body;
     }

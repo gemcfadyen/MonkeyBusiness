@@ -19,7 +19,7 @@ public class HttpRouteProcessor implements RouteProcessor {
     }
 
     private void configureRoutes() {
-        routes.put(new RoutingCriteria("/", GET.name()), new Ok());
+        routes.put(new RoutingCriteria("/", GET.name()), new ListResourcesInPublicDirectory(resourceHandler));
         routes.put(new RoutingCriteria("/form", GET.name()), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/form", POST.name()), new WriteResource(resourceHandler));
         routes.put(new RoutingCriteria("/form", PUT.name()), new WriteResource(resourceHandler));

@@ -40,6 +40,13 @@ public class FileResourceHandler implements ResourceHandler {
             return noResourceContentAvailable();
         }
     }
+
+    @Override
+    public String[] directoryContent() {
+        File rootDirectory = new File(absolutePath);
+        return rootDirectory.list();
+    }
+
     private byte[] noResourceContentAvailable() {
         return new byte[0];
     }

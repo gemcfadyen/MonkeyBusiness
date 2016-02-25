@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -97,6 +96,17 @@ public class FileResourceHandlerTest {
         assertThat(resourceContent.length, is(0));
     }
 
+    @Test
+    public void listsContentOfDirectory() throws IOException {
+        temporaryFolder.newFile("file-one");
+        temporaryFolder.newFile("file-two");
+        temporaryFolder.newFile("file-three");
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
+
+        String[] filenames = resourceHandler.directoryContent();
+        assertThat(filenames.length, is(4));
+    }
+
     private File setupResourceWithContent() throws IOException {
         File resource = temporaryFolder.newFile("resource");
         Writer fileWriter = new FileWriter(resource.getPath());
@@ -108,7 +118,7 @@ public class FileResourceHandlerTest {
     }
 
     private byte[] getContentOfResource() {
-        ResourceHandler resourceHandler= new FileResourceHandler(absolutePath);
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
         return resourceHandler.read(resourceName);
     }
 }
