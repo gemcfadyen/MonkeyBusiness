@@ -2,10 +2,10 @@ package server.messages;
 
 import server.HttpMethods;
 import server.ResponseFormatter;
+import server.actions.FormatListAsCommaDelimitedContent;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.util.List;
 
 public class HttpResponseFormatter implements ResponseFormatter {
     @Override
@@ -58,7 +58,8 @@ public class HttpResponseFormatter implements ResponseFormatter {
     }
 
     private String addAllowLineToHeader(HttpResponse response) {
-        return endOfLine() + commaDelimitAllowParameters(response);
+        FormatListAsCommaDelimitedContent listFormatter = new FormatListAsCommaDelimitedContent<HttpMethods>();
+        return endOfLine() + "Allow: " + listFormatter.commaDelimitAllowParameters(response.allowedMethods());
     }
 
     private boolean hasLocation(HttpResponse response) {
@@ -72,20 +73,6 @@ public class HttpResponseFormatter implements ResponseFormatter {
 
     private boolean hasAllowMethods(HttpResponse response) {
         return response.allowedMethods().size() > 0;
-    }
-
-    private String commaDelimitAllowParameters(HttpResponse response) {
-        List<HttpMethods> allowMethods = response.allowedMethods();
-        String allowedLine = "";
-        HttpMethods firstMethod;
-        if (allowMethods.size() > 0) {
-            firstMethod = allowMethods.get(0);
-            for (int i = 1; i < allowMethods.size(); i++) {
-                allowedLine += "," + allowMethods.get(i);
-            }
-            return "Allow: " + firstMethod + allowedLine;
-        }
-        return allowedLine;
     }
 
     private String formatStatusLine(HttpResponse response) {
