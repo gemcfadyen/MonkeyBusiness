@@ -41,7 +41,7 @@ public class FileResourceHandler implements ResourceHandler {
         }
     }
     private byte[] noResourceContentAvailable() {
-        return null;
+        return new byte[0];
     }
     private String fullPath(String fileName) {
         return absolutePath + fileName;
