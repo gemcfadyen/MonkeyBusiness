@@ -9,6 +9,7 @@ import org.junit.rules.ExpectedException;
 import java.io.*;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -16,26 +17,18 @@ public class HttpRequestParserTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     private InputStream getRequestInputStream;
-    private HttpRequestParser parser;
+    private InputStream getWithParametersInputStream;
     private InputStream postRequestInputStream;
+
+    private HttpRequestParser parser;
 
     @Before
     public void setupFixture() {
+        getRequestInputStream = setupGetRequest();
+        postRequestInputStream = setupPostRequest();
+        getWithParametersInputStream = setupGetWithParametersRequest();
 
-        String getRequest = "GET / HTTP/1.1\r\n" +
-                "Host: localhost:5000\r\n" +
-                "Connection: Keep-Alive\r\n" +
-                "User-Agent: Apache-HttpClient/4.3.5 (java 1.5)\r\n" +
-                "Accept-Encoding: gzip,deflate\r\n\r\n";
-        getRequestInputStream = new ByteArrayInputStream(getRequest.getBytes());
         parser = new HttpRequestParser();
-
-        String postFixture = "POST /path/script.cgi HTTP/1.1\r\n" +
-                "From: frog@jmarshall.com\r\n" +
-                "User-Agent: HTTPTool/1.1\r\n" +
-                "Content-Type: application/x-www-form-urlencoded\r\n" +
-                "Content-Length: 32\r\n\r\nhome=Cosby&favorite+flavor=flies";
-        postRequestInputStream = new ByteArrayInputStream(postFixture.getBytes());
     }
 
     @Test
@@ -78,6 +71,60 @@ public class HttpRequestParserTest {
         HttpRequest request = parser.parse(postRequestInputStream);
 
         assertThat(request.getBody(), is("home=Cosby&favorite+flavor=flies"));
+    }
+
+    @Test
+    public void parsesHeaderContainingParameters() {
+        HttpRequest request = parser.parse(getWithParametersInputStream);
+
+        assertThat(request.getRequestUri(), is("/parameters"));
+        Map<String, String> requestParams = request.params();
+        assertThat(requestParams.size(), is(2));
+        assertThat(requestParams.get("variable_1"), is("Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?"));
+        assertThat(requestParams.get("variable_2"), is("stuff"));
+    }
+
+    @Test
+    public void exceptionIsThrownWhenErrorInDecodingParameters() {
+        expectedException.expect(HttpRequestParsingException.class);
+        expectedException.expectMessage("Error in parsing Http Request");
+        expectedException.expectCause(instanceOf(UnsupportedEncodingException.class));
+
+        HttpRequestParser parserWhichThrowsExceptionOnDecoding = new HttpRequestParser() {
+            protected String decodeUsingUtf8(String parameter) throws UnsupportedEncodingException {
+                throw new UnsupportedEncodingException("Throws exception for test");
+            }
+        };
+
+        parserWhichThrowsExceptionOnDecoding.getRequestParams(new String[]{"GET", "/routeToResource?key=value&otherKey=otherValue"});
+    }
+
+    private InputStream setupGetWithParametersRequest() {
+        String getWithParameters = "GET /parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n" +
+                "User-Agent: Apache-HttpClient/4.3.5 (java 1.5)\r\n" +
+                "Accept-Encoding: gzip,deflate\r\n\r\n";
+
+        return new ByteArrayInputStream(getWithParameters.getBytes());
+    }
+
+    private InputStream setupPostRequest() {
+        String postFixture = "POST /path/script.cgi HTTP/1.1\r\n" +
+                "From: frog@jmarshall.com\r\n" +
+                "User-Agent: HTTPTool/1.1\r\n" +
+                "Content-Type: application/x-www-form-urlencoded\r\n" +
+                "Content-Length: 32\r\n\r\nhome=Cosby&favorite+flavor=flies";
+        return new ByteArrayInputStream(postFixture.getBytes());
+    }
+
+    private InputStream setupGetRequest() {
+        String getRequest = "GET / HTTP/1.1\r\n" +
+                "Host: localhost:5000\r\n" +
+                "Connection: Keep-Alive\r\n" +
+                "User-Agent: Apache-HttpClient/4.3.5 (java 1.5)\r\n" +
+                "Accept-Encoding: gzip,deflate\r\n\r\n";
+        return new ByteArrayInputStream(getRequest.getBytes());
     }
 }
 

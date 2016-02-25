@@ -33,6 +33,7 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/file1", PUT.name()), new MethodNotAllowed());
         routes.put(new RoutingCriteria("/text-file.txt", GET.name()), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/text-file.txt", POST.name()), new MethodNotAllowed());
+        routes.put(new RoutingCriteria("/parameters", GET.name()), new IncludeParametersInBody());
     }
 
     @Override
