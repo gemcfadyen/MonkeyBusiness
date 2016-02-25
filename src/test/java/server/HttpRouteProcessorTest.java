@@ -194,4 +194,18 @@ public class HttpRouteProcessorTest {
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
+    @Test
+    public void getFileContents() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/file1")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.body(), is("My=Data".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+
+    }
 }
