@@ -1,4 +1,7 @@
-package server;
+package server.messages;
+
+import server.HttpMethods;
+import server.StatusCode;
 
 import java.util.ArrayList;
 import java.util.Collections;

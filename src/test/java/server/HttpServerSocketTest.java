@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import server.messages.HttpResponseFormatter;
 
 import java.io.IOException;
 import java.net.ServerSocket;

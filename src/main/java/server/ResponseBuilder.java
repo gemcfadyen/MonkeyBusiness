@@ -1,5 +1,7 @@
 package server;
 
+import server.messages.HttpResponse;
+
 interface ResponseBuilder {
     HttpResponse build();
     ResponseBuilder withStatus(int statusCode);

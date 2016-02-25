@@ -1,5 +1,7 @@
 package server;
 
+import server.messages.HttpRequest;
+
 public class HttpServer {
     private final String host;
     private final int port;

@@ -1,9 +1,13 @@
 package server;
 
 import server.actions.*;
+import server.messages.HttpRequest;
+import server.messages.HttpResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static server.HttpMethods.*;
 
 public class HttpRouteProcessor implements RouteProcessor {
     private Map<RouteKey, Action> routes = new HashMap<>();
@@ -15,16 +19,16 @@ public class HttpRouteProcessor implements RouteProcessor {
     }
 
     private void configureRoutes() {
-        routes.put(new RouteKey("/", HttpMethods.GET.name()), new Ok());
-        routes.put(new RouteKey("/form", HttpMethods.GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RouteKey("/form", HttpMethods.POST.name()), new WriteResource(resourceHandler));
-        routes.put(new RouteKey("/form", HttpMethods.PUT.name()), new WriteResource(resourceHandler));
-        routes.put(new RouteKey("/form", HttpMethods.DELETE.name()), new DeleteResource(resourceHandler));
-        routes.put(new RouteKey("/method_options", HttpMethods.OPTIONS.name()), new MethodOptions());
-        routes.put(new RouteKey("/redirect", HttpMethods.GET.name()), new Redirect());
-        routes.put(new RouteKey("/image.jpeg", HttpMethods.GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RouteKey("/image.png", HttpMethods.GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RouteKey("/image.gif", HttpMethods.GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RouteKey("/", GET.name()), new Ok());
+        routes.put(new RouteKey("/form", GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RouteKey("/form", POST.name()), new WriteResource(resourceHandler));
+        routes.put(new RouteKey("/form", PUT.name()), new WriteResource(resourceHandler));
+        routes.put(new RouteKey("/form", DELETE.name()), new DeleteResource(resourceHandler));
+        routes.put(new RouteKey("/method_options", OPTIONS.name()), new MethodOptions());
+        routes.put(new RouteKey("/redirect", GET.name()), new Redirect());
+        routes.put(new RouteKey("/image.jpeg", GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RouteKey("/image.png", GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RouteKey("/image.gif", GET.name()), new ReadResource(resourceHandler));
     }
 
     @Override

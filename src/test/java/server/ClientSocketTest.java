@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import server.messages.HttpResponse;
+import server.messages.HttpResponseBuilder;
+import server.messages.HttpResponseFormatter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

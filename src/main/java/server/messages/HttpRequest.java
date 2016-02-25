@@ -1,4 +1,4 @@
-package server;
+package server.messages;
 
 import java.util.Map;
 

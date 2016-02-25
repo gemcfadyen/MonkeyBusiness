@@ -1,10 +1,17 @@
-package server;
+package server.messages;
 
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import server.HttpMethods;
+import server.ResponseFormatter;
+import server.StatusCode;
+import server.messages.HttpResponse;
+import server.messages.HttpResponseBuilder;
+import server.messages.HttpResponseException;
+import server.messages.HttpResponseFormatter;
 
 import java.io.UnsupportedEncodingException;
 

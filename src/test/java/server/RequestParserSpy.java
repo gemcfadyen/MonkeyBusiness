@@ -1,5 +1,7 @@
 package server;
 
+import server.messages.HttpRequest;
+
 import java.io.InputStream;
 
 public class RequestParserSpy implements RequestParser {

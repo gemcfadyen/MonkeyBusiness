@@ -1,4 +1,9 @@
-package server;
+package server.messages;
+
+import server.HttpMethods;
+import server.ResponseFormatter;
+import server.messages.HttpResponse;
+import server.messages.HttpResponseException;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;

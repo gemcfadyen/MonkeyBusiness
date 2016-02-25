@@ -1,5 +1,7 @@
 package server;
 
+import server.messages.HttpResponse;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;

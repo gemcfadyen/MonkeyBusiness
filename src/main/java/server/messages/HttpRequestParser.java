@@ -1,4 +1,6 @@
-package server;
+package server.messages;
+
+import server.RequestParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

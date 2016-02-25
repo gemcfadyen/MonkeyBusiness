@@ -1,7 +1,8 @@
-package server;
+package server.messages;
 
 import org.junit.Before;
 import org.junit.Test;
+import server.messages.HttpRequestParsingException;
 
 import java.io.IOException;
 

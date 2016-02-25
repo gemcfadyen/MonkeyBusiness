@@ -1,7 +1,9 @@
 package server;
 
+import server.messages.HttpRequest;
+
 import java.io.InputStream;
 
-interface RequestParser {
+public interface RequestParser {
     HttpRequest parse(InputStream inputStream);
 }

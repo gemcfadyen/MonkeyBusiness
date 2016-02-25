@@ -1,5 +1,7 @@
 package server;
 
+import server.messages.HttpResponse;
+
 import java.io.InputStream;
 
 public interface HttpSocket {

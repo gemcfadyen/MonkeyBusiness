@@ -2,11 +2,14 @@ package server;
 
 import org.junit.Before;
 import org.junit.Test;
+import server.messages.HttpRequest;
+import server.messages.HttpResponse;
 
 import static java.util.Collections.EMPTY_MAP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class HttpRouteProcessorTest {
     private HttpRouteProcessor requestProcessor;
@@ -20,7 +23,10 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void provides404WhenNoRoutesMet() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/unknown/route", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/unknown/route")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
@@ -29,7 +35,10 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void simpleGetReturnsCode200() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
@@ -38,7 +47,12 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void simplePutReturnsCode200() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.POST.name(), "/form", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withBody("image")
+                .withRequestLine(HttpMethods.POST.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -46,7 +60,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void simpleOptionReturns200Code() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.OPTIONS.name(), "/method_options", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/method_options")
+                .withRequestLine(HttpMethods.OPTIONS.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -54,7 +72,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void simpleOptionReturnsMethodsInAllow() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.OPTIONS.name(), "/method_options", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/method_options")
+                .withRequestLine(HttpMethods.OPTIONS.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT, HttpMethods.DELETE));
@@ -62,7 +84,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void getMethodLooksUpResourceForResponseBody() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/form", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -71,7 +97,12 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void postMethodCreatesAResource() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.POST.name(), "/form", EMPTY_MAP, "content");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withBody("content")
+                .withRequestLine(HttpMethods.POST.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -81,7 +112,12 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void putMethodUpdatesAResource() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.PUT.name(), "/form", EMPTY_MAP, "content");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withRequestLine(HttpMethods.PUT.name())
+                .withBody("content")
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -91,7 +127,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void deleteMethodRemovesResource() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.DELETE.name(), "/form", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withRequestLine(HttpMethods.DELETE.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -100,7 +140,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void redirectReturns302() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/redirect", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/redirect")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.FOUND));
@@ -109,7 +153,12 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void getImageContentForJpeg() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.jpeg", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/image.jpeg")
+                .withRequestLine(HttpMethods.GET.name())
+                .withBody("My=Data")
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -119,7 +168,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void getImageContentForPng() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.png", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/image.png")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
@@ -129,7 +182,11 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void getImageContentForGif() {
-        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.gif", EMPTY_MAP, "");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/image.gif")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));

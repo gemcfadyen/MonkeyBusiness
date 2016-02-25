@@ -1,5 +1,7 @@
 package server;
 
+import server.messages.HttpResponseFormatter;
+
 class ServerSocketSpy extends HttpServerSocket {
     private boolean isAcceptingRequests = false;
     private ClientSpy clientToReturn;

@@ -1,4 +1,4 @@
-package server;
+package server.messages;
 
 public class HttpRequestParsingException extends RuntimeException {
 

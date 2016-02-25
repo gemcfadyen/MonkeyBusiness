@@ -1,4 +1,4 @@
-package server;
+package server.messages;
 
 public class HttpResponseException extends RuntimeException {
     public HttpResponseException(String message, Throwable cause) {

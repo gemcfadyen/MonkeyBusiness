@@ -1,4 +1,4 @@
-package server;
+package server.messages;
 
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
