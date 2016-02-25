@@ -30,6 +30,9 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/image.png", GET.name()), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/image.gif", GET.name()), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/file1", GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/file1", PUT.name()), new MethodNotAllowed());
+        routes.put(new RoutingCriteria("/text-file.txt", GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/text-file.txt", POST.name()), new MethodNotAllowed());
     }
 
     @Override
@@ -37,10 +40,18 @@ public class HttpRouteProcessor implements RouteProcessor {
         System.out.println("Routing key is: " + httpRequest.getRequestUri() + httpRequest.getMethod());
         RoutingCriteria routingCriteria = new RoutingCriteria(httpRequest.getRequestUri(), httpRequest.getMethod());
 
-        return routes.get(routingCriteria) != null ?
-                routes.get(routingCriteria).process(httpRequest) :
-                new UnknownRoute().process(httpRequest);
+        if (routes.get(routingCriteria) != null) {
+            return routes.get(routingCriteria).process(httpRequest);
+        } else if (isBogusMethod(httpRequest)) {
+            return new MethodNotAllowed().process(httpRequest);
+        } else {
+            return new UnknownRoute().process(httpRequest);
+        }
+    }
+
+    private boolean isBogusMethod(HttpRequest httpRequest) {
+        return isBogus(httpRequest.getMethod());
+
     }
 }
-
 

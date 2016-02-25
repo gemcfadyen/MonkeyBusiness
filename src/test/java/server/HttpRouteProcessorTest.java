@@ -8,6 +8,8 @@ import server.messages.HttpResponse;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.HttpMethods.*;
+import static server.StatusCode.*;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class HttpRouteProcessorTest {
@@ -21,191 +23,215 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void provides404WhenNoRoutesMet() {
+    public void routesNotConfiguredResultIn404Response() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/unknown/route")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.NOT_FOUND));
+        assertThat(httpResponse.statusCode(), is(NOT_FOUND));
     }
 
     @Test
-    public void listsDirectoryContent() {
+    public void routesHomeToDirectoryListing() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
 
     @Test
-    public void simplePutReturnsCode200() {
+    public void routesFormAndGetToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
-                .withBody("image")
-                .withRequestLine(HttpMethods.POST.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
-    }
-
-    @Test
-    public void simpleOptionReturns200Code() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/method_options")
-                .withRequestLine(HttpMethods.OPTIONS.name())
-                .build();
-
-        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
-    }
-
-    @Test
-    public void simpleOptionReturnsMethodsInAllow() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/method_options")
-                .withRequestLine(HttpMethods.OPTIONS.name())
-                .build();
-
-        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT, HttpMethods.DELETE));
-    }
-
-    @Test
-    public void getMethodLooksUpResourceForResponseBody() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
-                .withRequestLine(HttpMethods.GET.name())
-                .build();
-
-        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
-    public void postMethodCreatesAResource() {
+    public void routesFormAndPostToWriteResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withBody("content")
-                .withRequestLine(HttpMethods.POST.name())
+                .withRequestLine(POST.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("content".getBytes()));
         assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
-    public void putMethodUpdatesAResource() {
+    public void routesFormAndPutToWriteResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
-                .withRequestLine(HttpMethods.PUT.name())
+                .withRequestLine(PUT.name())
                 .withBody("content")
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("content".getBytes()));
         assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
-    public void deleteMethodRemovesResource() {
+    public void routesFormAndDeleteToRemoveResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
-                .withRequestLine(HttpMethods.DELETE.name())
+                .withRequestLine(DELETE.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(resourceHandlerSpy.hasDeletedResource(), is(true));
     }
 
     @Test
-    public void redirectReturns302() {
+    public void routesMethodOptionsReturningAllowHeaders() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/redirect")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestUri("/method_options")
+                .withRequestLine(OPTIONS.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.FOUND));
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE));
+    }
+
+    @Test
+    public void routesRedirecToNewUrl() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/redirect")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(FOUND));
         assertThat(httpResponse.location(), is("http://localhost:5000/"));
     }
 
     @Test
-    public void getImageContentForJpeg() {
+    public void routesJpegImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.jpeg")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .withBody("My=Data")
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
-    public void getImageContentForPng() {
+    public void routesPngImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.png")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
-    public void getImageContentForGif() {
+    public void routesGifImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.gif")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
-    public void getFileContents() {
+    public void routesFile1ToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
 
+    @Test
+    public void routesFileOneAndPutToMethodNotAllowed() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/file1")
+                .withRequestLine(PUT.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
+    }
+
+    @Test
+    public void routesUnknownHttpMethodToMethodNotAllowed() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/file1")
+                .withRequestLine("BOGUS_METHOD")
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
+    }
+
+    @Test
+    public void routesTextFileToReadRequest() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/text-file.txt")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
+
+    @Test
+    public void routesTextFilePostToMethodNotAllowed() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/text-file.txt")
+                .withRequestLine(POST.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
     }
 }

@@ -6,5 +6,14 @@ public enum HttpMethods {
     OPTIONS,
     POST,
     PUT,
-    DELETE
+    DELETE;
+
+    public static boolean isBogus(String method) {
+        try {
+            HttpMethods.valueOf(method);
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
 }

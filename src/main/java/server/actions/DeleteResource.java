@@ -1,9 +1,12 @@
 package server.actions;
 
-import server.*;
+import server.Action;
+import server.ResourceHandler;
+import server.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
-import server.messages.HttpResponseBuilder;
+
+import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class DeleteResource implements Action {
     private final ResourceHandler resourceHandler;
@@ -14,10 +17,9 @@ public class DeleteResource implements Action {
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        System.out.println("DELETE/FORM");
         resourceHandler.delete(request.getRequestUri());
 
-        return HttpResponseBuilder.anHttpResponseBuilder()
+        return anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
                 .build();
     }
