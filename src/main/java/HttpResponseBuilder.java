@@ -3,8 +3,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class HttpResponseBuilder {
-    private int statusCode;
-    private String reasonPhrase;
+    private StatusCode statusCode;
     private List<HttpMethods> allowedMethods = new ArrayList<>();
     private byte[] body;
     private String location;
@@ -14,16 +13,11 @@ public final class HttpResponseBuilder {
     }
 
     public HttpResponse build() {
-        return new HttpResponse(statusCode, "HTTP/1.1", reasonPhrase, location, allowedMethods, body);
+        return new HttpResponse(statusCode, "HTTP/1.1", location, allowedMethods, body);
     }
 
-    public HttpResponseBuilder withStatus(int statusCode) {
+    public HttpResponseBuilder withStatusCode(StatusCode statusCode) {
         this.statusCode = statusCode;
-        return this;
-    }
-
-    public HttpResponseBuilder withReasonPhrase(String phrase) {
-        this.reasonPhrase = phrase;
         return this;
     }
 

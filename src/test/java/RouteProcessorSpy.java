@@ -1,4 +1,4 @@
-public class RequestProcessorSpy implements RequestProcessor {
+public class RouteProcessorSpy implements RouteProcessor {
     private boolean hasProcessed = false;
 
     public boolean hasProcessed() {
@@ -9,8 +9,7 @@ public class RequestProcessorSpy implements RequestProcessor {
     public HttpResponse process(HttpRequest httpRequest) {
         hasProcessed = true;
         return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
-                .withReasonPhrase("OK")
+                .withStatusCode(StatusCode.OK)
                 .build();
     }
 }

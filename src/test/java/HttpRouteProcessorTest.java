@@ -6,16 +6,14 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class HttpRequestProcessorTest {
-    private HttpRequestProcessor requestProcessor;
-    private ResourceFinderSpy resourceFinderSpy;
-    private ResourceHandlerSpy resourceWriterSpy;
+public class HttpRouteProcessorTest {
+    private HttpRouteProcessor requestProcessor;
+    private ResourceHandlerSpy resourceHandlerSpy;
 
     @Before
     public void setup() {
-        resourceFinderSpy = new ResourceFinderSpy();
-        resourceWriterSpy = new ResourceHandlerSpy();
-        requestProcessor = new HttpRequestProcessor(resourceFinderSpy, resourceWriterSpy);
+        resourceHandlerSpy = new ResourceHandlerSpy();
+        requestProcessor = new HttpRouteProcessor(resourceHandlerSpy);
     }
 
     @Test
@@ -24,7 +22,7 @@ public class HttpRequestProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(404));
+        assertThat(httpResponse.statusCode(), is(StatusCode.NOT_FOUND));
     }
 
     @Test
@@ -33,7 +31,7 @@ public class HttpRequestProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
     }
 
     @Test
@@ -41,7 +39,7 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.POST.name(), "/form", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
     }
 
     @Test
@@ -49,7 +47,7 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.OPTIONS.name(), "/method_options", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
     }
 
     @Test
@@ -65,9 +63,8 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/form", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
-        assertThat(httpResponse.body(), is("My=Data".getBytes()));
-        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
@@ -75,9 +72,9 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.POST.name(), "/form", EMPTY_MAP, "content");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
         assertThat(httpResponse.body(), is("content".getBytes()));
-        assertThat(resourceWriterSpy.hasWrittenToResource(), is(true));
+        assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
@@ -85,9 +82,9 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.PUT.name(), "/form", EMPTY_MAP, "content");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
         assertThat(httpResponse.body(), is("content".getBytes()));
-        assertThat(resourceWriterSpy.hasWrittenToResource(), is(true));
+        assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
 
     @Test
@@ -95,8 +92,8 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.DELETE.name(), "/form", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
-        assertThat(resourceWriterSpy.hasDeletedResource(), is(true));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(resourceHandlerSpy.hasDeletedResource(), is(true));
     }
 
     @Test
@@ -104,7 +101,7 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/redirect", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(302));
+        assertThat(httpResponse.statusCode(), is(StatusCode.FOUND));
         assertThat(httpResponse.location(), is("http://localhost:5000/"));
     }
 
@@ -113,8 +110,9 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.jpeg", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
-        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.body(), is("My=Data".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
@@ -122,8 +120,19 @@ public class HttpRequestProcessorTest {
         HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.png", EMPTY_MAP, "");
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(200));
-        assertThat(resourceFinderSpy.hasLookedupResource(), is(true));
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.body(), is("My=Data".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
+
+    @Test
+    public void getImageContentForGif() {
+        HttpRequest httpRequest = new HttpRequest(HttpMethods.GET.name(), "/image.gif", EMPTY_MAP, "");
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.body(), is("My=Data".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
 }

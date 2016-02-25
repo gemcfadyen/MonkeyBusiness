@@ -10,28 +10,19 @@ public class HttpResponseBuilderTest {
     @Test
     public void buildsResponseWithStatus200() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
+                .withStatusCode(StatusCode.OK)
                 .build();
 
-        assertThat(response.statusCode(), is(200));
+        assertThat(response.statusCode(), is(StatusCode.OK));
     }
 
     @Test
     public void buildsResponseWithHttpVersion() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
+                .withStatusCode(StatusCode.OK)
                 .build();
 
         assertThat(response.httpVersion(), is("HTTP/1.1"));
-    }
-
-    @Test
-    public void buildsResponseWithReasonPhrase() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
-                .withReasonPhrase("OK")
-                .build();
-
-        assertThat(response.reasonPhrase(), is("OK"));
     }
 
     @Test
@@ -46,7 +37,7 @@ public class HttpResponseBuilderTest {
     @Test
     public void buildsResponseWithBody() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(200)
+                .withStatusCode(StatusCode.OK)
                 .withBody("My=Data".getBytes())
                 .build();
 
@@ -56,7 +47,7 @@ public class HttpResponseBuilderTest {
     @Test
     public void buildsResponseWithRedirectLocation() {
         HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatus(302)
+                .withStatusCode(StatusCode.FOUND)
                 .withLocation("new-url")
                 .build();
 

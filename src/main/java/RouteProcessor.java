@@ -1,3 +1,3 @@
-public interface RequestProcessor {
+public interface RouteProcessor {
     HttpResponse process(HttpRequest httpRequest);
 }
