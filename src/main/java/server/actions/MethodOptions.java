@@ -1,16 +1,19 @@
 package server.actions;
 
-import server.*;
+import server.Action;
+import server.HttpMethods;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
-import server.messages.HttpResponseBuilder;
+
+import static server.StatusCode.OK;
+import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class MethodOptions implements Action {
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatusCode(StatusCode.OK)
+        return anHttpResponseBuilder()
+                .withStatusCode(OK)
                 .withAllowMethods(HttpMethods.values())
                 .build();
     }

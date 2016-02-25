@@ -23,7 +23,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void provides404WhenNoRoutesMet() {
+    public void routesNotConfiguredResultIn404Response() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/unknown/route")
                 .withRequestLine(GET.name())
@@ -35,7 +35,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void listsDirectoryContent() {
+    public void routesHomeToDirectoryListing() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/")
                 .withRequestLine(GET.name())
@@ -48,44 +48,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void simplePutReturnsCode200() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
-                .withBody("image")
-                .withRequestLine(POST.name())
-                .build();
-
-        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-
-        assertThat(httpResponse.statusCode(), is(OK));
-    }
-
-    @Test
-    public void simpleOptionReturns200Code() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/method_options")
-                .withRequestLine(OPTIONS.name())
-                .build();
-
-        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-
-        assertThat(httpResponse.statusCode(), is(OK));
-    }
-
-    @Test
-    public void simpleOptionReturnsMethodsInAllow() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/method_options")
-                .withRequestLine(OPTIONS.name())
-                .build();
-
-        HttpResponse httpResponse = requestProcessor.process(httpRequest);
-
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE));
-    }
-
-    @Test
-    public void getMethodLooksUpResourceForResponseBody() {
+    public void routesFormAndGetToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withRequestLine(GET.name())
@@ -98,7 +61,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void postMethodCreatesAResource() {
+    public void routesFormAndPostToWriteResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withBody("content")
@@ -113,7 +76,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void putMethodUpdatesAResource() {
+    public void routesFormAndPutToWriteResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withRequestLine(PUT.name())
@@ -128,7 +91,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void deleteMethodRemovesResource() {
+    public void routesFormAndDeleteToRemoveResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withRequestLine(DELETE.name())
@@ -141,7 +104,20 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void redirectReturns302() {
+    public void routesMethodOptionsReturningAllowHeaders() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/method_options")
+                .withRequestLine(OPTIONS.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE));
+    }
+
+    @Test
+    public void routesRedirecToNewUrl() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/redirect")
                 .withRequestLine(GET.name())
@@ -154,7 +130,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void getImageContentForJpeg() {
+    public void routesJpegImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.jpeg")
                 .withRequestLine(GET.name())
@@ -169,7 +145,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void getImageContentForPng() {
+    public void routesPngImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.png")
                 .withRequestLine(GET.name())
@@ -183,7 +159,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void getImageContentForGif() {
+    public void routesGifImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.gif")
                 .withRequestLine(GET.name())
@@ -197,7 +173,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void getFileContents() {
+    public void routesFile1ToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
                 .withRequestLine(GET.name())
@@ -211,7 +187,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void methodNotAllowed() {
+    public void routesFileOneAndPutToMethodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
                 .withRequestLine(PUT.name())
@@ -223,7 +199,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void bogusRequestResultsInMethodNotAllowed() {
+    public void routesUnknownHttpMethodToMethodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
                 .withRequestLine("BOGUS_METHOD")
@@ -235,7 +211,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void readsResourceFromTextFile() {
+    public void routesTextFileToReadRequest() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/text-file.txt")
                 .withRequestLine(GET.name())
@@ -244,10 +220,11 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
     @Test
-    public void bogusRequestAtRouteTextFile() {
+    public void routesTextFilePostToMethodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/text-file.txt")
                 .withRequestLine(POST.name())
