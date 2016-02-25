@@ -1,13 +1,13 @@
-package server;
+package server.actions;
 
-class Redirect implements Action {
+import server.*;
 
+public class UnknownRoute implements Action {
     @Override
     public HttpResponse process(HttpRequest request) {
 
         return HttpResponseBuilder.anHttpResponseBuilder()
-                .withStatusCode(StatusCode.FOUND)
-                .withLocation("http://localhost:5000/")
+                .withStatusCode(StatusCode.NOT_FOUND)
                 .build();
     }
 }

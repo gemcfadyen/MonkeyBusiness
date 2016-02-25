@@ -1,6 +1,8 @@
-package server;
+package server.actions;
 
-class Ok implements Action {
+import server.*;
+
+public class Ok implements Action {
     public HttpResponse process(HttpRequest request) {
         return HttpResponseBuilder
                 .anHttpResponseBuilder()

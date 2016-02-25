@@ -1,5 +1,7 @@
 package server;
 
+import server.actions.*;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,18 +1,21 @@
-package server;
+package server.actions;
 
-class ReadResource implements Action {
+import server.*;
+
+public class DeleteResource implements Action {
     private final ResourceHandler resourceHandler;
 
-    public ReadResource(ResourceHandler resourceHandler) {
+    public DeleteResource(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
     }
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        byte[] body = resourceHandler.read(request.getRequestUri());
+        System.out.println("DELETE/FORM");
+        resourceHandler.delete(request.getRequestUri());
+
         return HttpResponseBuilder.anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
-                .withBody(body)
                 .build();
     }
 }

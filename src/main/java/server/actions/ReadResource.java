@@ -1,20 +1,20 @@
-package server;
+package server.actions;
 
-class WriteResource implements Action {
+import server.*;
+
+public class ReadResource implements Action {
     private final ResourceHandler resourceHandler;
 
-    public WriteResource(ResourceHandler resourceHandler) {
+    public ReadResource(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
     }
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        System.out.println("PUT /FORM");
-        resourceHandler.write(request.getRequestUri(), request.getBody());
-
+        byte[] body = resourceHandler.read(request.getRequestUri());
         return HttpResponseBuilder.anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
-                .withBody(request.getBody().getBytes())
+                .withBody(body)
                 .build();
     }
 }

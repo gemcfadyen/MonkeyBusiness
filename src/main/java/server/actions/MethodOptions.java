@@ -1,6 +1,8 @@
-package server;
+package server.actions;
 
-class MethodOptions implements Action {
+import server.*;
+
+public class MethodOptions implements Action {
 
     @Override
     public HttpResponse process(HttpRequest request) {
