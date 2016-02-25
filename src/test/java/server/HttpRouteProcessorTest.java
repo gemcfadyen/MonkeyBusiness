@@ -8,6 +8,7 @@ import server.messages.HttpResponse;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.HttpMethods.*;
 import static server.StatusCode.*;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
@@ -25,7 +26,7 @@ public class HttpRouteProcessorTest {
     public void provides404WhenNoRoutesMet() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/unknown/route")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -37,7 +38,7 @@ public class HttpRouteProcessorTest {
     public void listsDirectoryContent() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -51,7 +52,7 @@ public class HttpRouteProcessorTest {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withBody("image")
-                .withRequestLine(HttpMethods.POST.name())
+                .withRequestLine(POST.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -63,7 +64,7 @@ public class HttpRouteProcessorTest {
     public void simpleOptionReturns200Code() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/method_options")
-                .withRequestLine(HttpMethods.OPTIONS.name())
+                .withRequestLine(OPTIONS.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -75,19 +76,19 @@ public class HttpRouteProcessorTest {
     public void simpleOptionReturnsMethodsInAllow() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/method_options")
-                .withRequestLine(HttpMethods.OPTIONS.name())
+                .withRequestLine(OPTIONS.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.OPTIONS, HttpMethods.PUT, HttpMethods.DELETE));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE));
     }
 
     @Test
     public void getMethodLooksUpResourceForResponseBody() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -101,7 +102,7 @@ public class HttpRouteProcessorTest {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
                 .withBody("content")
-                .withRequestLine(HttpMethods.POST.name())
+                .withRequestLine(POST.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -115,7 +116,7 @@ public class HttpRouteProcessorTest {
     public void putMethodUpdatesAResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
-                .withRequestLine(HttpMethods.PUT.name())
+                .withRequestLine(PUT.name())
                 .withBody("content")
                 .build();
 
@@ -130,7 +131,7 @@ public class HttpRouteProcessorTest {
     public void deleteMethodRemovesResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")
-                .withRequestLine(HttpMethods.DELETE.name())
+                .withRequestLine(DELETE.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -143,7 +144,7 @@ public class HttpRouteProcessorTest {
     public void redirectReturns302() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/redirect")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -156,7 +157,7 @@ public class HttpRouteProcessorTest {
     public void getImageContentForJpeg() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.jpeg")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .withBody("My=Data")
                 .build();
 
@@ -171,7 +172,7 @@ public class HttpRouteProcessorTest {
     public void getImageContentForPng() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.png")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -185,7 +186,7 @@ public class HttpRouteProcessorTest {
     public void getImageContentForGif() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/image.gif")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -199,7 +200,7 @@ public class HttpRouteProcessorTest {
     public void getFileContents() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
-                .withRequestLine(HttpMethods.GET.name())
+                .withRequestLine(GET.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -213,7 +214,7 @@ public class HttpRouteProcessorTest {
     public void methodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
-                .withRequestLine(HttpMethods.PUT.name())
+                .withRequestLine(PUT.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -226,6 +227,30 @@ public class HttpRouteProcessorTest {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/file1")
                 .withRequestLine("BOGUS_METHOD")
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
+    }
+
+    @Test
+    public void readsResourceFromTextFile() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/text-file.txt")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+    }
+
+    @Test
+    public void bogusRequestAtRouteTextFile() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/text-file.txt")
+                .withRequestLine(POST.name())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
