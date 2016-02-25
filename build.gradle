@@ -38,7 +38,7 @@ jacocoTestReport {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'HttpServerRunner'
+                'Main-Class': 'server.HttpServerRunner'
         )
     }
 }
