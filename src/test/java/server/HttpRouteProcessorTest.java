@@ -8,6 +8,7 @@ import server.messages.HttpResponse;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.StatusCode.*;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class HttpRouteProcessorTest {
@@ -29,7 +30,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.NOT_FOUND));
+        assertThat(httpResponse.statusCode(), is(NOT_FOUND));
     }
 
     @Test
@@ -41,7 +42,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
 
@@ -55,7 +56,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
     }
 
     @Test
@@ -91,7 +92,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 
@@ -105,7 +106,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("content".getBytes()));
         assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
@@ -120,7 +121,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("content".getBytes()));
         assertThat(resourceHandlerSpy.hasWrittenToResource(), is(true));
     }
@@ -134,7 +135,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(resourceHandlerSpy.hasDeletedResource(), is(true));
     }
 
@@ -147,7 +148,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.FOUND));
+        assertThat(httpResponse.statusCode(), is(FOUND));
         assertThat(httpResponse.location(), is("http://localhost:5000/"));
     }
 
@@ -161,7 +162,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
@@ -175,7 +176,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
@@ -189,7 +190,7 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
@@ -203,9 +204,20 @@ public class HttpRouteProcessorTest {
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), is("My=Data".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
 
+    @Test
+    public void methodNotAllowed() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/file1")
+                .withRequestLine(HttpMethods.PUT.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(METHOD_NOT_ALLOWED));
     }
 }

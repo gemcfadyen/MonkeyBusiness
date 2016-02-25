@@ -30,6 +30,7 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/image.png", GET.name()), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/image.gif", GET.name()), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/file1", GET.name()), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/file1", PUT.name()), new MethodNotAllowed());
     }
 
     @Override
