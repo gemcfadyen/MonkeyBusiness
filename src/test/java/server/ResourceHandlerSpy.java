@@ -4,6 +4,7 @@ public class ResourceHandlerSpy implements ResourceHandler {
     private boolean hasWrittenFile;
     private boolean hasDeletedResource;
     private boolean hasReadResource;
+    private boolean hasGotDirectoryContent;
 
     @Override
     public void write(String fileName, String content) {
@@ -23,8 +24,9 @@ public class ResourceHandlerSpy implements ResourceHandler {
     }
 
     @Override
-    public String[] listDirectoryContent() {
-        return null;
+    public String[] directoryContent() {
+        hasGotDirectoryContent = true;
+        return new String[] {"file"};
     }
 
     public boolean hasWrittenToResource() {
@@ -37,5 +39,9 @@ public class ResourceHandlerSpy implements ResourceHandler {
 
     public boolean hasReadResource() {
         return hasReadResource;
+    }
+
+    public boolean hasGotDirectoryContent() {
+        return hasGotDirectoryContent;
     }
 }

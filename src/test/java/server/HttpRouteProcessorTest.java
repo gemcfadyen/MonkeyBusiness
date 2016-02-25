@@ -33,7 +33,7 @@ public class HttpRouteProcessorTest {
     }
 
     @Test
-    public void simpleGetReturnsCode200() {
+    public void listsDirectoryContent() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/")
                 .withRequestLine(HttpMethods.GET.name())
@@ -42,6 +42,8 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
+        assertThat(httpResponse.body(), is("file".getBytes()));
+        assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
 
     @Test

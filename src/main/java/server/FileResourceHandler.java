@@ -42,7 +42,7 @@ public class FileResourceHandler implements ResourceHandler {
     }
 
     @Override
-    public String[] listDirectoryContent() {
+    public String[] directoryContent() {
         File rootDirectory = new File(absolutePath);
         return rootDirectory.list();
     }

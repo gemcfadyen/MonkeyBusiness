@@ -103,7 +103,7 @@ public class FileResourceHandlerTest {
         temporaryFolder.newFile("file-three");
         ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
 
-        String[] filenames = resourceHandler.listDirectoryContent();
+        String[] filenames = resourceHandler.directoryContent();
         assertThat(filenames.length, is(4));
     }
 
