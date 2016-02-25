@@ -94,7 +94,7 @@ public class FileResourceHandlerTest {
         ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
         byte[] resourceContent = resourceHandler.read("non-existing-resource");
 
-        assertThat(resourceContent, nullValue());
+        assertThat(resourceContent.length, is(0));
     }
 
     private File setupResourceWithContent() throws IOException {

@@ -1,10 +1,10 @@
 package server;
 
-class RouteKey {
+class RoutingCriteria {
     private final String route;
     private final String method;
 
-    public RouteKey(String route, String method) {
+    public RoutingCriteria(String route, String method) {
         this.route = route;
         this.method = method;
     }
@@ -14,10 +14,10 @@ class RouteKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RouteKey routeKey = (RouteKey) o;
+        RoutingCriteria routingCriteria = (RoutingCriteria) o;
 
-        if (route != null ? !route.equals(routeKey.route) : routeKey.route != null) return false;
-        return !(method != null ? !method.equals(routeKey.method) : routeKey.method != null);
+        if (route != null ? !route.equals(routingCriteria.route) : routingCriteria.route != null) return false;
+        return !(method != null ? !method.equals(routingCriteria.method) : routingCriteria.method != null);
 
     }
 

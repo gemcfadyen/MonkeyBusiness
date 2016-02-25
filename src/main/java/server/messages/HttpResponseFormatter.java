@@ -2,8 +2,6 @@ package server.messages;
 
 import server.HttpMethods;
 import server.ResponseFormatter;
-import server.messages.HttpResponse;
-import server.messages.HttpResponseException;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -27,7 +25,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
     }
 
     private byte[] createWholeResponse(byte[] headerBytes, byte[] bodyBytes) {
-        if (bodyBytes != null) {
+        if (hasBody(bodyBytes)) {
             ByteBuffer entireResponse = ByteBuffer.allocate(headerBytes.length + bodyBytes.length);
             entireResponse.put(headerBytes);
             entireResponse.put(bodyBytes);
@@ -35,6 +33,10 @@ public class HttpResponseFormatter implements ResponseFormatter {
         } else {
             return headerBytes;
         }
+    }
+
+    private boolean hasBody(byte[] bodyBytes) {
+        return bodyBytes != null;
     }
 
     private byte[] createBody(HttpResponse response) {
