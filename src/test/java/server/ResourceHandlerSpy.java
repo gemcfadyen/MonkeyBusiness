@@ -26,7 +26,7 @@ public class ResourceHandlerSpy implements ResourceHandler {
     @Override
     public String[] directoryContent() {
         hasGotDirectoryContent = true;
-        return new String[] {"file1,file2"};
+        return new String[]{"file1", "file2"};
     }
 
     public boolean hasWrittenToResource() {

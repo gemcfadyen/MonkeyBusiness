@@ -42,7 +42,6 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
-        assertThat(httpResponse.body(), is("file1,file2".getBytes()));
         assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
 

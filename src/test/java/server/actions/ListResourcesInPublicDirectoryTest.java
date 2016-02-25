@@ -13,7 +13,7 @@ import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class ListResourcesInPublicDirectoryTest {
     @Test
-    public void filnames() {
+    public void responseContainsFilenamesAsLinks() {
         ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
         ListResourcesInPublicDirectory listResources = new ListResourcesInPublicDirectory(resourceHandlerSpy);
 
@@ -25,9 +25,7 @@ public class ListResourcesInPublicDirectoryTest {
         HttpResponse httpResponse = listResources.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
-        assertThat(httpResponse.body(), is("file1,file2".getBytes()));
+        assertThat(httpResponse.body(), is("<a href=/file1>file1</a>,<a href=/file2>file2</a>".getBytes()));
         assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
-
-
 }
