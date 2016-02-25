@@ -96,6 +96,17 @@ public class FileResourceHandlerTest {
         assertThat(resourceContent.length, is(0));
     }
 
+    @Test
+    public void listsContentOfDirectory() throws IOException {
+        temporaryFolder.newFile("file-one");
+        temporaryFolder.newFile("file-two");
+        temporaryFolder.newFile("file-three");
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
+
+        String[] filenames = resourceHandler.listDirectoryContent();
+        assertThat(filenames.length, is(4));
+    }
+
     private File setupResourceWithContent() throws IOException {
         File resource = temporaryFolder.newFile("resource");
         Writer fileWriter = new FileWriter(resource.getPath());
@@ -107,7 +118,7 @@ public class FileResourceHandlerTest {
     }
 
     private byte[] getContentOfResource() {
-        ResourceHandler resourceHandler= new FileResourceHandler(absolutePath);
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
         return resourceHandler.read(resourceName);
     }
 }

@@ -22,6 +22,11 @@ public class ResourceHandlerSpy implements ResourceHandler {
         return "My=Data".getBytes();
     }
 
+    @Override
+    public String[] listDirectoryContent() {
+        return null;
+    }
+
     public boolean hasWrittenToResource() {
         return hasWrittenFile;
     }
