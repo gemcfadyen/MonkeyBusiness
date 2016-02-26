@@ -259,6 +259,7 @@ public class HttpRouteProcessorTest {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/logs")
                 .withRequestLine(GET.name())
+                .withHeaderParameters(new HashMap<>())
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
@@ -292,8 +293,3 @@ public class HttpRouteProcessorTest {
         assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
     }
 }
-
-//REMINDER OF WHERE I AM
-//Basic Auth - at the moment he resource handler overwrites the body each time, wherease with the logging request it needs
-//to append rather than log.
-//last request to read /logs needs to be authenticated.
