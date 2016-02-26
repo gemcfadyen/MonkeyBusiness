@@ -8,7 +8,6 @@ import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +50,7 @@ public class AuthorisationTest {
     @Test
     public void authenticatesIfRequestContainsCredentials() {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("Authorization", "YWRtaW46aHVudGVyMg==");
+        parameters.put("Authorization", "Basic YWRtaW46aHVudGVyMg==");
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/logs")
                 .withRequestLine(GET.name())
@@ -88,7 +87,7 @@ public class AuthorisationTest {
                 .withHeaderParameters(parameters)
                 .build();
         authorisation = new Authorisation(readResourceSpy) {
-            protected boolean authenticated(String decryptedCredentials) {
+            protected boolean decode(byte[] bytes) {
                 throw new RuntimeException("Exception thrown for test");
             }
         };

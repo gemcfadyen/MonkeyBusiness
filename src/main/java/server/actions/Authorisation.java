@@ -1,12 +1,11 @@
 package server.actions;
 
-import com.google.common.base.Strings;
 import server.Action;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
-import sun.misc.BASE64Decoder;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Map;
 
 import static server.StatusCode.UNAUTHORISED;
@@ -26,35 +25,53 @@ public class Authorisation implements Action {
         Map<String, String> headerParams = request.headerParameters();
         String credentials = headerParams.get("Authorization");
 
-        return authorised(credentials) ?
+        return isAuthorised(credentials) ?
                 readResource.process(request) :
                 anHttpResponseBuilder().withStatusCode(UNAUTHORISED)
                         .withAuthorisationRequest()
                         .build();
     }
 
-    private boolean authorised(String credentials) {
-        return hasAuthorisation(credentials) && isCorrect(credentials);
+    private boolean isAuthorised(String credentials) {
+        return hasAuthorisationParam(credentials)
+                && isCorrect(credentials);
     }
 
-    private boolean hasAuthorisation(String authorisationParam) {
-        return !Strings.isNullOrEmpty(authorisationParam);
+    private boolean hasAuthorisationParam(String authorisationParam) {
+        return !(authorisationParam == null);
     }
 
     private boolean isCorrect(String credentials) {
-        BASE64Decoder decoder = new BASE64Decoder();
-        try {
-            byte[] decodedBytes = decoder.decodeBuffer(credentials);
-            if (authenticated(new String(decodedBytes, "UTF-8"))) {
+        String[] encrypted = credentials.split(space());
+        for (String encryptedParam : encrypted) {
+            if (isCredentials(encryptedParam)
+                    && authenticated(encryptedParam)) {
                 return true;
             }
-        } catch (Exception e) {
-            return false;
         }
+
         return false;
     }
 
-    protected boolean authenticated(String decryptedCredentials) {
-        return decryptedCredentials.equals("admin:hunter2");
+    private String space() {
+        return " ";
+    }
+
+    private boolean isCredentials(String encryptedParam) {
+        return !encryptedParam.equals("Basic");
+    }
+
+    private boolean authenticated(String encryptedParam) {
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(encryptedParam.trim());
+            return decode(decodedBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    protected boolean decode(byte[] decodedBytes) throws UnsupportedEncodingException {
+        return new String(decodedBytes, "UTF-8").equals("admin:hunter2");
     }
 }

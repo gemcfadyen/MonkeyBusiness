@@ -37,6 +37,7 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/logs", GET), new Authorisation(new ReadResource(resourceHandler)));
         routes.put(new RoutingCriteria("/log", GET), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/these", PUT), new LogRequest(resourceHandler));
+        routes.put(new RoutingCriteria("/requests", HEAD), new LogRequest(resourceHandler));
     }
 
     @Override
@@ -47,7 +48,6 @@ public class HttpRouteProcessor implements RouteProcessor {
         } else if (supportedRoute(httpRequest)) {
             return routes.get(routingCriteria(httpRequest)).process(httpRequest);
         } else {
-            System.out.println("Unknown route selected");
             return new UnknownRoute().process(httpRequest);
         }
     }
@@ -58,7 +58,6 @@ public class HttpRouteProcessor implements RouteProcessor {
     }
 
     private RoutingCriteria routingCriteria(HttpRequest httpRequest) {
-        System.out.println("Getting the request uri: " + httpRequest.getRequestUri() + " method " + httpRequest.getMethod());
         return new RoutingCriteria(httpRequest.getRequestUri(), HttpMethods.valueOf(httpRequest.getMethod()));
     }
 

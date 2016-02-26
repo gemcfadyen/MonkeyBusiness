@@ -16,10 +16,8 @@ public class FileResourceHandler implements ResourceHandler {
     @Override
     public void write(String filename, String content) {
         try {
-            System.out.println("Going to write " + content + " to  " + absolutePath + filename);
             writeContentToFile(filename, content, false);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new ResourceWriteException("Exception in writing to file " + filename, e);
         }
     }
@@ -27,10 +25,8 @@ public class FileResourceHandler implements ResourceHandler {
     @Override
     public void append(String filename, String content) {
         try {
-            System.out.println("Going to append" + content + " to  " + absolutePath + filename);
             writeContentToFile(filename, content, true);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new ResourceWriteException("Exception in appending to file " + filename, e);
         }
     }
@@ -44,10 +40,8 @@ public class FileResourceHandler implements ResourceHandler {
     @Override
     public byte[] read(String filename) {
         try {
-            System.out.println("Looking up resource at location: " + fullPath(filename));
             return Files.readAllBytes(Paths.get(fullPath(filename)));
         } catch (IOException e) {
-            System.out.println("FILE IS NOT Found!!!");
             return noResourceContentAvailable();
         }
     }
@@ -61,6 +55,7 @@ public class FileResourceHandler implements ResourceHandler {
     private byte[] noResourceContentAvailable() {
         return new byte[0];
     }
+
     private String fullPath(String fileName) {
         return absolutePath + fileName;
     }

@@ -66,6 +66,7 @@ public class HttpRequestParser implements RequestParser {
             headerParams.put(headerParameterKey(mapEntry), headerParameterValue(mapEntry));
             line = readLine(reader);
         }
+
         return headerParams;
     }
 

@@ -7,12 +7,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import server.HttpMethods;
 import server.ResponseFormatter;
-import server.StatusCode;
 
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.StatusCode.FOUND;
+import static server.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class HttpResponseFormatterTest {
@@ -34,7 +35,7 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void statusLineResponseFormat() {
-        HttpResponse response = anHttpResponseBuilder().withStatusCode(StatusCode.OK).build();
+        HttpResponse response = anHttpResponseBuilder().withStatusCode(OK).build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -45,7 +46,7 @@ public class HttpResponseFormatterTest {
     public void statusLineWithAllowMethodsResponseFormat() {
         HttpResponse response =
                 anHttpResponseBuilder()
-                .withStatusCode(StatusCode.OK)
+                .withStatusCode(OK)
                 .withAllowMethods(HttpMethods.GET, HttpMethods.PUT)
                 .build();
 
@@ -58,7 +59,7 @@ public class HttpResponseFormatterTest {
     public void locationLineResponseFormat() {
         HttpResponse response =
                 anHttpResponseBuilder()
-                .withStatusCode(StatusCode.FOUND)
+                .withStatusCode(FOUND)
                 .withLocation("www.newurl.com")
                 .build();
 
@@ -70,7 +71,7 @@ public class HttpResponseFormatterTest {
     @Test
     public void authenticationRequest() {
         HttpResponse response = anHttpResponseBuilder()
-                .withStatusCode(StatusCode.FOUND)
+                .withStatusCode(FOUND)
                 .withAuthorisationRequest()
                 .build();
 
@@ -83,7 +84,7 @@ public class HttpResponseFormatterTest {
     public void bodyIncludedOnResponse() {
         HttpResponse response =
                 anHttpResponseBuilder()
-                .withStatusCode(StatusCode.OK)
+                .withStatusCode(OK)
                 .withBody("My=Data".getBytes())
                 .build();
 
@@ -100,7 +101,7 @@ public class HttpResponseFormatterTest {
 
         HttpResponse response =
                 anHttpResponseBuilder()
-                .withStatusCode(StatusCode.OK)
+                .withStatusCode(OK)
                 .withAllowMethods(HttpMethods.GET, HttpMethods.PUT)
                 .build();
 
