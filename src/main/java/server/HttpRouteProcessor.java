@@ -34,17 +34,19 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/text-file.txt", GET), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/text-file.txt", POST), new MethodNotAllowed());
         routes.put(new RoutingCriteria("/parameters", GET), new IncludeParametersInBody());
+        routes.put(new RoutingCriteria("/logs", GET), new Authorisation());
     }
 
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
         System.out.println("Routing key is: " + httpRequest.getRequestUri() + httpRequest.getMethod());
-
+        System.out.println("Check what to do with it...");
         if (isBogusMethod(httpRequest)) {
             return new MethodNotAllowed().process(httpRequest);
         } else if (supportedRoute(httpRequest)) {
             return routes.get(routingCriteria(httpRequest)).process(httpRequest);
         } else {
+            System.out.println("Unknown route selected");
             return new UnknownRoute().process(httpRequest);
         }
     }
@@ -55,6 +57,7 @@ public class HttpRouteProcessor implements RouteProcessor {
     }
 
     private RoutingCriteria routingCriteria(HttpRequest httpRequest) {
+        System.out.println("Getting the request uri: " + httpRequest.getRequestUri() + " method " + httpRequest.getMethod());
         return new RoutingCriteria(httpRequest.getRequestUri(), HttpMethods.valueOf(httpRequest.getMethod()));
     }
 

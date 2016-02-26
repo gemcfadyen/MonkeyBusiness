@@ -40,6 +40,6 @@ public class HttpRequestBuilder {
     }
 
     public HttpRequest build() {
-       return new HttpRequest(requestLine, requestUri, requestParams, headerParameters, body);
+        return new HttpRequest(requestLine, requestUri, requestParams, headerParameters, body);
     }
 }

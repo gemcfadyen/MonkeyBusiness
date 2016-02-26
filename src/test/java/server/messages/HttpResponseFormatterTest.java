@@ -8,15 +8,12 @@ import org.junit.rules.ExpectedException;
 import server.HttpMethods;
 import server.ResponseFormatter;
 import server.StatusCode;
-import server.messages.HttpResponse;
-import server.messages.HttpResponseBuilder;
-import server.messages.HttpResponseException;
-import server.messages.HttpResponseFormatter;
 
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class HttpResponseFormatterTest {
     @Rule
@@ -37,7 +34,7 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void statusLineResponseFormat() {
-        HttpResponse response = HttpResponseBuilder.anHttpResponseBuilder().withStatusCode(StatusCode.OK).build();
+        HttpResponse response = anHttpResponseBuilder().withStatusCode(StatusCode.OK).build();
 
         byte[] formattedResponse = formatter.format(response);
 
@@ -46,8 +43,8 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void statusLineWithAllowMethodsResponseFormat() {
-        HttpResponse response = HttpResponseBuilder
-                .anHttpResponseBuilder()
+        HttpResponse response =
+                anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
                 .withAllowMethods(HttpMethods.GET, HttpMethods.PUT)
                 .build();
@@ -59,8 +56,8 @@ public class HttpResponseFormatterTest {
 
     @Test
     public void locationLineResponseFormat() {
-        HttpResponse response = HttpResponseBuilder
-                .anHttpResponseBuilder()
+        HttpResponse response =
+                anHttpResponseBuilder()
                 .withStatusCode(StatusCode.FOUND)
                 .withLocation("www.newurl.com")
                 .build();
@@ -71,9 +68,21 @@ public class HttpResponseFormatterTest {
     }
 
     @Test
+    public void authenticationRequest() {
+        HttpResponse response = anHttpResponseBuilder()
+                .withStatusCode(StatusCode.FOUND)
+                .withAuthorisationRequest()
+                .build();
+
+        byte[] formattedResponse = formatter.format(response);
+
+        assertThat(formattedResponse, is("HTTP/1.1 302 Found\r\nWWW-Authenticate: Basic realm=\"My Server\"\r\n\r\n".getBytes()));
+    }
+
+    @Test
     public void bodyIncludedOnResponse() {
-        HttpResponse response = HttpResponseBuilder
-                .anHttpResponseBuilder()
+        HttpResponse response =
+                anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
                 .withBody("My=Data".getBytes())
                 .build();
@@ -89,8 +98,8 @@ public class HttpResponseFormatterTest {
         expectedException.expectMessage("Error in creating HTTP Response");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(UnsupportedEncodingException.class));
 
-        HttpResponse response = HttpResponseBuilder
-                .anHttpResponseBuilder()
+        HttpResponse response =
+                anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
                 .withAllowMethods(HttpMethods.GET, HttpMethods.PUT)
                 .build();

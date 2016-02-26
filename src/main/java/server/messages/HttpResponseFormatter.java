@@ -58,6 +58,10 @@ public class HttpResponseFormatter implements ResponseFormatter {
             formattedHeader += addLocationToHeader(response);
         }
 
+        if (response.authorisationRequest()) {
+            formattedHeader += addAuthorisationRequestToHeader();
+        }
+
         formattedHeader += endOfHeader();
         return formattedHeader;
     }
@@ -77,6 +81,10 @@ public class HttpResponseFormatter implements ResponseFormatter {
 
     private boolean hasAllowMethods(HttpResponse response) {
         return response.allowedMethods().size() > 0;
+    }
+
+    private String addAuthorisationRequestToHeader() {
+        return endOfLine() + "WWW-Authenticate: Basic realm=\"My Server\"";
     }
 
     private String formatStatusLine(HttpResponse response) {

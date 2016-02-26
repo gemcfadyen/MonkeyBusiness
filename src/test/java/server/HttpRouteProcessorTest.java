@@ -252,6 +252,17 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(OK));
+    }
 
+    @Test
+    public void routesToLogsWithNoAuthenticationReturnsUnauthorised() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/logs")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(UNAUTHORISED));
     }
 }
