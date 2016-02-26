@@ -1,13 +1,18 @@
 package server.messages;
 
+import server.DelimitedFormatter;
 import server.HttpMethods;
 import server.ResponseFormatter;
-import server.actions.FormatListAsCommaDelimitedContent;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
+import static server.Delimiter.COMMA;
+
 public class HttpResponseFormatter implements ResponseFormatter {
+
+    private DelimitedFormatter listFormatter = new DelimitedFormatter<HttpMethods>();
+
     @Override
     public byte[] format(HttpResponse response) {
         try {
@@ -58,8 +63,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
     }
 
     private String addAllowLineToHeader(HttpResponse response) {
-        FormatListAsCommaDelimitedContent listFormatter = new FormatListAsCommaDelimitedContent<HttpMethods>();
-        return endOfLine() + "Allow: " + listFormatter.commaDelimitAllowParameters(response.allowedMethods());
+        return endOfLine() + "Allow: " + listFormatter.delimitedValues(response.allowedMethods(), COMMA);
     }
 
     private boolean hasLocation(HttpResponse response) {

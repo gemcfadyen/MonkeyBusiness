@@ -7,9 +7,10 @@ import static org.junit.Assert.assertThat;
 
 public class CommandLineArgumentParserTest {
 
+    private final CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser("homeDir");
+
     @Test
     public void portParameter() {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
         String[] commandLineArguments = new String[]{"-p", "8080"};
         int port = commandLineArgumentParser.extractPort(commandLineArguments);
 
@@ -18,7 +19,6 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void defaultsPortTo5000IfInvalidValueProvided() {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
         String commandLineArguments = "-p banana";
         int port = commandLineArgumentParser.extractPort(commandLineArguments);
 
@@ -27,7 +27,6 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void defaultHostIsSetTo5000() {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
         String[] commandLineArguments = new String[]{};
         int port = commandLineArgumentParser.extractPort(commandLineArguments);
 
@@ -36,7 +35,6 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void publicDirectoryParameter() {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
         String[] commandLineArguments = new String[]{"-d", "/some/path/here"};
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(commandLineArguments);
 
@@ -45,10 +43,9 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void publicDirectoryDefaultsWhenNotSpecified() {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
         String[] commandLineArguments = new String[]{};
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(commandLineArguments);
 
-        assertThat(publicDirectory, is("/Users/Georgina/Documents/Projects/cob-server/cob_spec/public"));
+        assertThat(publicDirectory, is("homeDir/Documents/Projects/cob-server/cob_spec/public"));
     }
 }

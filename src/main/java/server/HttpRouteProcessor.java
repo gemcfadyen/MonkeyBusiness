@@ -19,32 +19,31 @@ public class HttpRouteProcessor implements RouteProcessor {
     }
 
     private void configureRoutes() {
-        routes.put(new RoutingCriteria("/", GET.name()), new ListResourcesInPublicDirectory(resourceHandler));
-        routes.put(new RoutingCriteria("/form", GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/form", POST.name()), new WriteResource(resourceHandler));
-        routes.put(new RoutingCriteria("/form", PUT.name()), new WriteResource(resourceHandler));
-        routes.put(new RoutingCriteria("/form", DELETE.name()), new DeleteResource(resourceHandler));
-        routes.put(new RoutingCriteria("/method_options", OPTIONS.name()), new MethodOptions());
-        routes.put(new RoutingCriteria("/redirect", GET.name()), new Redirect());
-        routes.put(new RoutingCriteria("/image.jpeg", GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/image.png", GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/image.gif", GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/file1", GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/file1", PUT.name()), new MethodNotAllowed());
-        routes.put(new RoutingCriteria("/text-file.txt", GET.name()), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/text-file.txt", POST.name()), new MethodNotAllowed());
-        routes.put(new RoutingCriteria("/parameters", GET.name()), new IncludeParametersInBody());
+        routes.put(new RoutingCriteria("/", GET), new ListResourcesInPublicDirectory(resourceHandler));
+        routes.put(new RoutingCriteria("/form", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/form", POST), new WriteResource(resourceHandler));
+        routes.put(new RoutingCriteria("/form", PUT), new WriteResource(resourceHandler));
+        routes.put(new RoutingCriteria("/form", DELETE), new DeleteResource(resourceHandler));
+        routes.put(new RoutingCriteria("/method_options", OPTIONS), new MethodOptions());
+        routes.put(new RoutingCriteria("/redirect", GET), new Redirect());
+        routes.put(new RoutingCriteria("/image.jpeg", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/image.png", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/image.gif", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/file1", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/file1", PUT), new MethodNotAllowed());
+        routes.put(new RoutingCriteria("/text-file.txt", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/text-file.txt", POST), new MethodNotAllowed());
+        routes.put(new RoutingCriteria("/parameters", GET), new IncludeParametersInBody());
     }
 
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
         System.out.println("Routing key is: " + httpRequest.getRequestUri() + httpRequest.getMethod());
-        RoutingCriteria routingCriteria = new RoutingCriteria(httpRequest.getRequestUri(), httpRequest.getMethod());
 
-        if (routes.get(routingCriteria) != null) {
-            return routes.get(routingCriteria).process(httpRequest);
-        } else if (isBogusMethod(httpRequest)) {
+        if (isBogusMethod(httpRequest)) {
             return new MethodNotAllowed().process(httpRequest);
+        } else if (supportedRoute(httpRequest)) {
+            return routes.get(routingCriteria(httpRequest)).process(httpRequest);
         } else {
             return new UnknownRoute().process(httpRequest);
         }
@@ -53,6 +52,14 @@ public class HttpRouteProcessor implements RouteProcessor {
     private boolean isBogusMethod(HttpRequest httpRequest) {
         return isBogus(httpRequest.getMethod());
 
+    }
+
+    private RoutingCriteria routingCriteria(HttpRequest httpRequest) {
+        return new RoutingCriteria(httpRequest.getRequestUri(), HttpMethods.valueOf(httpRequest.getMethod()));
+    }
+
+    private boolean supportedRoute(HttpRequest httpRequest) {
+        return routes.get(routingCriteria(httpRequest)) != null;
     }
 }
 

@@ -2,9 +2,9 @@ package server;
 
 class RoutingCriteria {
     private final String route;
-    private final String method;
+    private final HttpMethods method;
 
-    public RoutingCriteria(String route, String method) {
+    public RoutingCriteria(String route, HttpMethods method) {
         this.route = route;
         this.method = method;
     }

@@ -25,7 +25,7 @@ public class ListResourcesInPublicDirectoryTest {
         HttpResponse httpResponse = listResources.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(StatusCode.OK));
-        assertThat(httpResponse.body(), is("<a href=/file1>file1</a>,<a href=/file2>file2</a>".getBytes()));
+        assertThat(httpResponse.body(), is("<a href=/file1>file1</a><br><a href=/file2>file2</a>".getBytes()));
         assertThat(resourceHandlerSpy.hasGotDirectoryContent(), is(true));
     }
 }
