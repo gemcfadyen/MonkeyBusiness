@@ -2,14 +2,16 @@ package server.messages;
 
 import server.RequestParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+
 public class HttpRequestParser implements RequestParser {
+    private static final String QUESTION_MARK = "\\?";
+
     @Override
     public HttpRequest parse(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -30,9 +32,10 @@ public class HttpRequestParser implements RequestParser {
         char[] bodyContents = getBody(reader, getContentLength(headerParams));
         System.out.println("body is: " + String.valueOf(bodyContents));
 
-        return HttpRequestBuilder.anHttpRequestBuilder()
+        return anHttpRequestBuilder()
                 .withRequestLine(getMethod(requestLine))
                 .withRequestUri(getRequestUri(requestLine))
+                .withParameters(getRequestParams(requestLine))
                 .withHeaderParameters(headerParams)
                 .withBody(String.valueOf(bodyContents))
                 .build();
@@ -41,11 +44,13 @@ public class HttpRequestParser implements RequestParser {
     private String[] getRequestLine(BufferedReader reader) throws IOException {
         String firstLine = readLine(reader);
         System.out.println("REQUEST LINE " + firstLine);
-        return split(firstLine, space());
+        return splitUsing(space(), firstLine);
     }
 
     private String getRequestUri(String[] requestLine) {
-        return requestLine[1];
+        String firstLine = requestLine[1];
+        String[] splitOnQuestionMark = splitUsing(QUESTION_MARK, firstLine);
+        return splitOnQuestionMark[0];
     }
 
     private String getMethod(String[] requestLine) {
@@ -57,13 +62,47 @@ public class HttpRequestParser implements RequestParser {
 
         String line = readLine(reader);
         while (hasContent(line)) {
-            String[] mapEntry = split(line, ":");
-            System.out.println("Header Parameter Map: " + mapEntry[0].trim() + " => " + mapEntry[1].trim());
+            String[] mapEntry = splitUsing(":", line);
             headerParams.put(headerParameterKey(mapEntry), headerParameterValue(mapEntry));
 
             line = readLine(reader);
         }
         return headerParams;
+    }
+
+    protected Map<String, String> getRequestParams(String[] methodLine) {
+        Map<String, String> decodedParameters = new HashMap<>();
+        String[] lineContainingAllParameters = parameterLine(methodLine[1]);
+        for (int i = 1; i < lineContainingAllParameters.length; i++) {
+            String[] parameterPair = splitUsing("&", lineContainingAllParameters[i]);
+
+            for (String s : parameterPair) {
+                String[] keyValueParameter = splitUsing("=", s);
+                decodedParameters.put(keyValueParameter[0], decode(keyValueParameter[1]));
+            }
+        }
+        return decodedParameters;
+    }
+
+    private String[] splitUsing(String delimiter, String line) {
+        return line.split(delimiter);
+    }
+
+    private String[] parameterLine(String line) {
+        return splitUsing(QUESTION_MARK, line);
+    }
+
+    private String decode(String parameter) {
+        try {
+            return decodeUsingUtf8(parameter);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new HttpRequestParsingException("Error in parsing Http Request", e);
+        }
+    }
+
+    protected String decodeUsingUtf8(String parameter) throws UnsupportedEncodingException {
+        return URLDecoder.decode(parameter, "UTF-8");
     }
 
     private String headerParameterKey(String[] params) {
@@ -82,10 +121,6 @@ public class HttpRequestParser implements RequestParser {
 
     private String readLine(BufferedReader reader) throws IOException {
         return reader.readLine();
-    }
-
-    private String[] split(String line, String delimeter) {
-        return line.split(delimeter);
     }
 
     private boolean hasContent(String headerLine) {

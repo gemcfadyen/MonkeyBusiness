@@ -5,16 +5,19 @@ import java.util.Map;
 public class HttpRequest {
 
     private final String method;
-    private String requestUri;
-    private Map<String, String> headerParams;
-    private String body;
+    private final Map<String, String> requestParams;
+    private final String requestUri;
+    private final Map<String, String> headerParams;
+    private final String body;
 
     protected HttpRequest(String method,
-                       String requestUri,
-                       Map<String, String> headerParams,
-                       String bodyContent) {
+                          String requestUri,
+                          Map<String, String> requestParams,
+                          Map<String, String> headerParams,
+                          String bodyContent) {
         this.method = method;
         this.requestUri = requestUri;
+        this.requestParams = requestParams;
         this.headerParams = headerParams;
         this.body = bodyContent;
     }
@@ -33,6 +36,10 @@ public class HttpRequest {
 
     public Map<String, String> headerParameters() {
         return headerParams;
+    }
+
+    public Map<String, String> params() {
+        return requestParams;
     }
 }
 

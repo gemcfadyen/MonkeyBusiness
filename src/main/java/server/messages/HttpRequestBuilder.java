@@ -6,6 +6,7 @@ public class HttpRequestBuilder {
 
     private String requestLine;
     private String requestUri;
+    private Map<String, String> requestParams;
     private Map<String, String> headerParameters;
     private String body;
 
@@ -33,7 +34,12 @@ public class HttpRequestBuilder {
         return this;
     }
 
+    public HttpRequestBuilder withParameters(Map<String, String> requestParams) {
+        this.requestParams = requestParams;
+        return this;
+    }
+
     public HttpRequest build() {
-       return new HttpRequest(requestLine, requestUri, headerParameters, body);
+       return new HttpRequest(requestLine, requestUri, requestParams, headerParameters, body);
     }
 }
