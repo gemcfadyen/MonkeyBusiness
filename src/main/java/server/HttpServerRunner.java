@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 public class HttpServerRunner {
 
     public static void main(String... args) throws IOException {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser();
+        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(System.getProperty("user.home"));
 
         String host = "localhost";
         int port = commandLineArgumentParser.extractPort(args);
