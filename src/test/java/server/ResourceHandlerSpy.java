@@ -5,10 +5,22 @@ public class ResourceHandlerSpy implements ResourceHandler {
     private boolean hasDeletedResource;
     private boolean hasReadResource;
     private boolean hasGotDirectoryContent;
+    private boolean hasAppended;
+
+    private String fileName;
+    private String contentAppendedToResource;
 
     @Override
-    public void write(String fileName, String content) {
+    public void write(String filename, String content) {
+        this.fileName = filename;
         hasWrittenFile = true;
+    }
+
+    @Override
+    public void append(String filename, String content) {
+        this.fileName = filename;
+        this.contentAppendedToResource = content;
+        hasAppended = true;
     }
 
     @Override
@@ -43,5 +55,17 @@ public class ResourceHandlerSpy implements ResourceHandler {
 
     public boolean hasGotDirectoryContent() {
         return hasGotDirectoryContent;
+    }
+
+    public String getNameOfResourceThatWasChanged() {
+       return fileName;
+    }
+
+    public boolean hasAppendedToResource() {
+       return hasAppended;
+    }
+
+    public String getContentAppendedToResource() {
+        return contentAppendedToResource;
     }
 }

@@ -265,4 +265,35 @@ public class HttpRouteProcessorTest {
 
         assertThat(httpResponse.statusCode(), is(UNAUTHORISED));
     }
+
+    @Test
+    public void getLogWritesAResource() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/log")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
+    }
+
+    @Test
+    public void putTheseWritesToResource() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/these")
+                .withRequestLine(PUT.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
+    }
 }
+
+//REMINDER OF WHERE I AM
+//Basic Auth - at the moment he resource handler overwrites the body each time, wherease with the logging request it needs
+//to append rather than log.
+//last request to read /logs needs to be authenticated.

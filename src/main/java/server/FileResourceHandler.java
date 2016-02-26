@@ -17,10 +17,21 @@ public class FileResourceHandler implements ResourceHandler {
     public void write(String filename, String content) {
         try {
             System.out.println("Going to write " + content + " to  " + absolutePath + filename);
-            writeContentToFile(filename, content);
+            writeContentToFile(filename, content, false);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ResourceWriteException("Exception in writing to file " + filename, e);
+        }
+    }
+
+    @Override
+    public void append(String filename, String content) {
+        try {
+            System.out.println("Going to append" + content + " to  " + absolutePath + filename);
+            writeContentToFile(filename, content, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResourceWriteException("Exception in appending to file " + filename, e);
         }
     }
 
@@ -54,9 +65,9 @@ public class FileResourceHandler implements ResourceHandler {
         return absolutePath + fileName;
     }
 
-    protected void writeContentToFile(String filename, String content) throws IOException {
+    protected void writeContentToFile(String filename, String content, boolean shouldAppend) throws IOException {
         File resource = new File(fullPath(filename));
-        FileWriter fileWriter = new FileWriter(resource);
+        FileWriter fileWriter = new FileWriter(resource, shouldAppend);
         fileWriter.write(content);
         fileWriter.flush();
         fileWriter.close();
