@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class CommandLineArgumentParser {
     private static final int DEFAULT_PORT = 5000;
-    private static final String DEFAULT_PUBLIC_DIRECTORY = "/Users/Georgina/Documents/Projects/cob-server/cob_spec/public";
+    private static final String DEFAULT_PUBLIC_DIRECTORY = System.getProperty("user.home") + "/Documents/Projects/cob-server/cob_spec/public";
 
     public int extractPort(String... commandLineArgs) {
         int indexOfPortFlag = Arrays.asList(commandLineArgs).indexOf("-p");
@@ -42,5 +42,4 @@ public class CommandLineArgumentParser {
     private boolean parameterKeyIsfound(int indexOfPublicDirectoryFlag) {
         return indexOfPublicDirectoryFlag != -1;
     }
-
 }
