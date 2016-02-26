@@ -1,6 +1,7 @@
 package server.actions;
 
 import server.Action;
+import server.DelimitedFormatter;
 import server.ResourceHandler;
 import server.StatusCode;
 import server.messages.HttpRequest;
@@ -11,25 +12,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static server.Delimiter.BREAK;
+
 public class ListResourcesInPublicDirectory implements Action {
     private ResourceHandler resourceHandler;
+    private final DelimitedFormatter listFormatter;
 
     public ListResourcesInPublicDirectory(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
+        listFormatter = new DelimitedFormatter<String>();
     }
 
     public HttpResponse process(HttpRequest request) {
         return HttpResponseBuilder
                 .anHttpResponseBuilder()
                 .withStatusCode(StatusCode.OK)
-                .withBody(getCommaSeparatedContentsOfDirectory().getBytes())
+                .withBody(getDelimitedContentsOfDirectory().getBytes())
                 .build();
     }
 
-    private String getCommaSeparatedContentsOfDirectory() {
+    private String getDelimitedContentsOfDirectory() {
         String[] filenames = resourceHandler.directoryContent();
-        FormatListAsCommaDelimitedContent listFormatter = new FormatListAsCommaDelimitedContent<String>();
-        return listFormatter.commaDelimitAllowParameters(Arrays.asList(transformToLinks(filenames)));
+        return listFormatter.delimitedValues(Arrays.asList(transformToLinks(filenames)), BREAK);
     }
 
     private String[] transformToLinks(String[] filenames) {
