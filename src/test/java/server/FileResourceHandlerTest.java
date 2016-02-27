@@ -72,7 +72,7 @@ public class FileResourceHandlerTest {
         expectedException.expectCause(instanceOf(IOException.class));
 
         ResourceHandler resourceHandler = new FileResourceHandler(absolutePath) {
-            protected void writeContentToFile(String filename, String content) throws IOException {
+            protected void writeContentToFile(String filename, String content, boolean shouldAppend) throws IOException {
                 throw new IOException("Throws exception for test");
             }
         };
@@ -106,6 +106,33 @@ public class FileResourceHandlerTest {
         String[] filenames = resourceHandler.directoryContent();
         assertThat(filenames.length, is(4));
     }
+
+    @Test
+    public void appendToContentOfResource() throws IOException {
+        File resource = setupResourceWithContent();
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
+
+        resourceHandler.append("/" + resource.getName(), "\nhello=world\n");
+        resourceHandler.append("/" + resource.getName(), "good=bye\n");
+
+        assertThat(resourceHandler.read("/" + resource.getName()),
+                is("My=Data\nhello=world\ngood=bye\n".getBytes()));
+    }
+
+    @Test
+    public void exceptionThrownWhenErrorInAppendingToResource() {
+        expectedException.expect(ResourceWriteException.class);
+        expectedException.expectMessage("Exception in appending to file " + resourceName);
+        expectedException.expectCause(instanceOf(IOException.class));
+
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath) {
+            protected void writeContentToFile(String filename, String content, boolean shouldAppend) throws IOException {
+                throw new IOException("Throws exception for test");
+            }
+        };
+        resourceHandler.append(resourceName, "anything");
+    }
+
 
     private File setupResourceWithContent() throws IOException {
         File resource = temporaryFolder.newFile("resource");

@@ -64,9 +64,9 @@ public class HttpRequestParser implements RequestParser {
         while (hasContent(line)) {
             String[] mapEntry = splitUsing(":", line);
             headerParams.put(headerParameterKey(mapEntry), headerParameterValue(mapEntry));
-
             line = readLine(reader);
         }
+
         return headerParams;
     }
 
@@ -106,10 +106,12 @@ public class HttpRequestParser implements RequestParser {
     }
 
     private String headerParameterKey(String[] params) {
+        System.out.println("KEY: " + params[0]);
         return params[0].trim();
     }
 
     private String headerParameterValue(String[] params) {
+        System.out.println("VALUE: " + params[1]);
         return params[1].trim();
     }
 

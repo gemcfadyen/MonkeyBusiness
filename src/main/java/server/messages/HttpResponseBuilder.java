@@ -12,13 +12,14 @@ public final class HttpResponseBuilder {
     private List<HttpMethods> allowedMethods = new ArrayList<>();
     private byte[] body;
     private String location;
+    private boolean includeAuthorisation;
 
     public static HttpResponseBuilder anHttpResponseBuilder() {
         return new HttpResponseBuilder();
     }
 
     public HttpResponse build() {
-        return new HttpResponse(statusCode, "HTTP/1.1", location, allowedMethods, body);
+        return new HttpResponse(statusCode, "HTTP/1.1", location, allowedMethods, includeAuthorisation, body);
     }
 
     public HttpResponseBuilder withStatusCode(StatusCode statusCode) {
@@ -33,6 +34,11 @@ public final class HttpResponseBuilder {
 
     public HttpResponseBuilder withLocation(String redirectUrl) {
         this.location = redirectUrl;
+        return this;
+    }
+
+    public HttpResponseBuilder withAuthorisationRequest() {
+        this.includeAuthorisation = true;
         return this;
     }
 

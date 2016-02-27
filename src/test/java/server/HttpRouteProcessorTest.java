@@ -1,5 +1,6 @@
 package server;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import server.messages.HttpRequest;
@@ -8,6 +9,7 @@ import server.messages.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -252,6 +254,59 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(OK));
+    }
+
+    @Test
+    public void routesToLogsWithNoAuthenticationReturnsUnauthorised() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/logs")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(new HashMap<>())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(UNAUTHORISED));
+    }
+
+    @Test
+    public void getLogWritesToLog() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/log")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
+    }
+
+    @Test
+    public void putTheseWritesToLog() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/these")
+                .withRequestLine(PUT.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
+    }
+
+    @Test
+    public void headRequestsWritesToLog() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/requests")
+                .withRequestLine(HEAD.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(httpResponse.body(), nullValue());
+        assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
 
     }
 }

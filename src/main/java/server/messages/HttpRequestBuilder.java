@@ -1,13 +1,14 @@
 package server.messages;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequestBuilder {
 
     private String requestLine;
     private String requestUri;
-    private Map<String, String> requestParams;
-    private Map<String, String> headerParameters;
+    private Map<String, String> requestParams = new HashMap<>();
+    private Map<String, String> headerParameters = new HashMap<>();
     private String body;
 
     public static HttpRequestBuilder anHttpRequestBuilder() {
@@ -40,6 +41,6 @@ public class HttpRequestBuilder {
     }
 
     public HttpRequest build() {
-       return new HttpRequest(requestLine, requestUri, requestParams, headerParameters, body);
+        return new HttpRequest(requestLine, requestUri, requestParams, headerParameters, body);
     }
 }

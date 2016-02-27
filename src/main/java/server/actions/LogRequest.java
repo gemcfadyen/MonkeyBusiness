@@ -8,19 +8,21 @@ import server.messages.HttpResponse;
 import static server.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
-public class ReadResource implements Action {
-    private final ResourceHandler resourceHandler;
+public class LogRequest implements Action {
+    private ResourceHandler resourceHandler;
 
-    public ReadResource(ResourceHandler resourceHandler) {
+    public LogRequest(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
     }
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        byte[] body = resourceHandler.read(request.getRequestUri());
+// TODO get the version from the request
+        String resourceContent = String.format("%s %s %s\n", request.getMethod(), request.getRequestUri(), "HTTP/1.1");
+        resourceHandler.append("/logs", resourceContent);
+
         return anHttpResponseBuilder()
                 .withStatusCode(OK)
-                .withBody(body)
                 .build();
     }
 }

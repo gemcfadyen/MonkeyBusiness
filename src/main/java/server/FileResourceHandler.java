@@ -16,11 +16,18 @@ public class FileResourceHandler implements ResourceHandler {
     @Override
     public void write(String filename, String content) {
         try {
-            System.out.println("Going to write " + content + " to  " + absolutePath + filename);
-            writeContentToFile(filename, content);
+            writeContentToFile(filename, content, false);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new ResourceWriteException("Exception in writing to file " + filename, e);
+        }
+    }
+
+    @Override
+    public void append(String filename, String content) {
+        try {
+            writeContentToFile(filename, content, true);
+        } catch (IOException e) {
+            throw new ResourceWriteException("Exception in appending to file " + filename, e);
         }
     }
 
@@ -33,10 +40,8 @@ public class FileResourceHandler implements ResourceHandler {
     @Override
     public byte[] read(String filename) {
         try {
-            System.out.println("Looking up resource at location: " + fullPath(filename));
             return Files.readAllBytes(Paths.get(fullPath(filename)));
         } catch (IOException e) {
-            System.out.println("FILE IS NOT Found!!!");
             return noResourceContentAvailable();
         }
     }
@@ -50,13 +55,14 @@ public class FileResourceHandler implements ResourceHandler {
     private byte[] noResourceContentAvailable() {
         return new byte[0];
     }
+
     private String fullPath(String fileName) {
         return absolutePath + fileName;
     }
 
-    protected void writeContentToFile(String filename, String content) throws IOException {
+    protected void writeContentToFile(String filename, String content, boolean shouldAppend) throws IOException {
         File resource = new File(fullPath(filename));
-        FileWriter fileWriter = new FileWriter(resource);
+        FileWriter fileWriter = new FileWriter(resource, shouldAppend);
         fileWriter.write(content);
         fileWriter.flush();
         fileWriter.close();
