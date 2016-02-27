@@ -4,8 +4,8 @@ import server.Range;
 
 import java.util.Map;
 
-import static server.messages.RequestHeaderProperties.AUTHORISATION;
-import static server.messages.RequestHeaderProperties.PARTIAL_CONTENT_RANGE;
+import static server.messages.HttpMessageHeaderProperties.AUTHORISATION;
+import static server.messages.HttpMessageHeaderProperties.PARTIAL_CONTENT_RANGE;
 
 public class HeaderParameterExtractor {
 

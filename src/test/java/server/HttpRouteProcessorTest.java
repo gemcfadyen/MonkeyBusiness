@@ -1,6 +1,5 @@
 package server;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import server.messages.HttpRequest;
@@ -16,6 +15,7 @@ import static org.junit.Assert.assertThat;
 import static server.HttpMethods.*;
 import static server.StatusCode.*;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.HttpMessageHeaderProperties.*;
 
 public class HttpRouteProcessorTest {
     private HttpRouteProcessor requestProcessor;
@@ -312,7 +312,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesPartialContent() {
         Map headerParams = new HashMap<>();
-        headerParams.put("Range", "byte=0-3");
+        headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "byte=0-3");
 
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/partial_content.txt")

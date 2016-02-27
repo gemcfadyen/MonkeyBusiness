@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static server.HttpMethods.GET;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.HttpMessageHeaderProperties.AUTHORISATION;
 
 public class AuthorisationTest {
     private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
@@ -50,7 +51,7 @@ public class AuthorisationTest {
     @Test
     public void authenticatesIfRequestContainsCredentials() {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("Authorization", "Basic YWRtaW46aHVudGVyMg==");
+        parameters.put(AUTHORISATION.getPropertyName(), "Basic YWRtaW46aHVudGVyMg==");
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/logs")
                 .withRequestLine(GET.name())
@@ -65,7 +66,7 @@ public class AuthorisationTest {
     @Test
     public void requestNotAuthorisedIfIncorrectCredentialsSupplied() {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("Authorization", "Something-Wrong");
+        parameters.put(AUTHORISATION.getPropertyName(), "Something-Wrong");
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/logs")
                 .withRequestLine(GET.name())
@@ -80,7 +81,7 @@ public class AuthorisationTest {
     @Test
     public void requestNotAuthorisedIfExceptionThrownWhenDecrypting() {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("Authorization", "YWRtaW46aHVudGVyMg==");
+        parameters.put(AUTHORISATION.getPropertyName(), "YWRtaW46aHVudGVyMg==");
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/logs")
                 .withRequestLine(GET.name())
