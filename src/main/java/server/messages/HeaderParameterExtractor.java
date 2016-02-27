@@ -4,9 +4,15 @@ import server.Range;
 
 import java.util.Map;
 
+import static server.messages.RequestHeaderProperties.AUTHORISATION;
 import static server.messages.RequestHeaderProperties.PARTIAL_CONTENT_RANGE;
 
 public class HeaderParameterExtractor {
+
+
+   public String getAuthenticationCredentials(Map<String, String> headerParams) {
+      return headerParams.get(AUTHORISATION.getPropertyName());
+   }
 
     public Range getPartialContentRange(Map<String, String> headerParams, int resourceLength) {
         String contentRange = getRangeProperty(headerParams);

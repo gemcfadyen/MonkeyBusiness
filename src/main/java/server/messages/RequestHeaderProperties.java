@@ -1,7 +1,9 @@
 package server.messages;
 
 public enum RequestHeaderProperties {
-    PARTIAL_CONTENT_RANGE("Range");
+    PARTIAL_CONTENT_RANGE("Range"),
+    AUTHORISATION("Authorization");
+
     private String property;
 
     RequestHeaderProperties(String property) {

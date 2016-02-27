@@ -1,12 +1,12 @@
 package server.actions;
 
 import server.Action;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
-import java.util.Map;
 
 import static server.StatusCode.UNAUTHORISED;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
@@ -22,8 +22,8 @@ public class Authorisation implements Action {
     public HttpResponse process(HttpRequest request) {
         System.out.println("Checking Authentication...");
 
-        Map<String, String> headerParams = request.headerParameters();
-        String credentials = headerParams.get("Authorization");
+        HeaderParameterExtractor headerParameterExtractor = new HeaderParameterExtractor();
+        String credentials = headerParameterExtractor.getAuthenticationCredentials(request.headerParameters());
 
         return isAuthorised(credentials) ?
                 readResource.process(request) :
