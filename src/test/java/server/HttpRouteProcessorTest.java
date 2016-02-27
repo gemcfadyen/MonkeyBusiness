@@ -118,7 +118,7 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(OK));
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE, PATCH));
     }
 
     @Test
@@ -311,7 +311,7 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void routesPartialContent() {
-        Map headerParams = new HashMap<>();
+        Map<String, String> headerParams = new HashMap<>();
         headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "byte=0-3");
 
         HttpRequest httpRequest = anHttpRequestBuilder()
@@ -323,5 +323,30 @@ public class HttpRouteProcessorTest {
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(PARTIAL_CONTENT));
+    }
+
+    @Test
+    public void routesGetPatchContentToReadResource() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/patch-content.txt")
+                .withRequestLine(GET.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(OK));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
+
+    @Test
+    public void routesPatchContentToPatchResource() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/patch-content.txt")
+                .withRequestLine(PATCH.name())
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(PRECONDITION_FAILED));
     }
 }

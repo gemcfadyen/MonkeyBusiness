@@ -6,7 +6,8 @@ public enum HttpMethods {
     OPTIONS,
     POST,
     PUT,
-    DELETE;
+    DELETE,
+    PATCH;
 
     public static boolean isBogus(String method) {
         try {

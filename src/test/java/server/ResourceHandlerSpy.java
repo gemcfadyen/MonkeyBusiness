@@ -9,6 +9,7 @@ public class ResourceHandlerSpy implements ResourceHandler {
 
     private String fileName;
     private String contentAppendedToResource;
+    private boolean hasPatchedResource;
 
     @Override
     public void write(String filename, String content) {
@@ -21,6 +22,11 @@ public class ResourceHandlerSpy implements ResourceHandler {
         this.fileName = filename;
         this.contentAppendedToResource = content;
         hasAppended = true;
+    }
+
+    @Override
+    public void patch(String filename, String content, int contentLength) {
+        hasPatchedResource = true;
     }
 
     @Override
@@ -58,14 +64,18 @@ public class ResourceHandlerSpy implements ResourceHandler {
     }
 
     public String getNameOfResourceThatWasChanged() {
-       return fileName;
+        return fileName;
     }
 
     public boolean hasAppendedToResource() {
-       return hasAppended;
+        return hasAppended;
     }
 
     public String getContentAppendedToResource() {
         return contentAppendedToResource;
+    }
+
+    public boolean hasPatchedResource() {
+        return hasPatchedResource;
     }
 }

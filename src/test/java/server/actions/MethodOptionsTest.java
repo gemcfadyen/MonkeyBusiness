@@ -35,7 +35,7 @@ public class MethodOptionsTest {
 
         HttpResponse httpResponse = methodOptions.process(httpRequest);
 
-        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE));
+        assertThat(httpResponse.allowedMethods(), containsInAnyOrder(GET, HEAD, POST, OPTIONS, PUT, DELETE, PATCH));
     }
 
 }

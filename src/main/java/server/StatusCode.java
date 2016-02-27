@@ -2,11 +2,13 @@ package server;
 
 public enum StatusCode {
     OK(200, "OK"),
-    NOT_FOUND(404, "Not Found"),
+    NO_CONTENT(204, "No Content"),
+    PARTIAL_CONTENT(206, "Partial Content"),
     FOUND(302, "Found"),
-    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
     UNAUTHORISED(401, "Unauthorized"),
-    PARTIAL_CONTENT(206, "Partial Content");
+    NOT_FOUND(404, "Not Found"),
+    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
+    PRECONDITION_FAILED(412, "Precondition Failed");
 
     private final int statusCode;
     private final String reasonPhrase;

@@ -40,6 +40,8 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/these", PUT), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/requests", HEAD), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/partial_content.txt", GET), new PartialContent(resourceHandler, new HeaderParameterExtractor()));
+        routes.put(new RoutingCriteria("/patch-content.txt", GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria("/patch-content.txt", PATCH), new PatchResource(resourceHandler, new EtagDictionary()));
     }
 
     @Override
