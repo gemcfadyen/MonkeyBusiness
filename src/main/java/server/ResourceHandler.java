@@ -5,5 +5,6 @@ public interface ResourceHandler {
     void append(String filename, String content);
     boolean delete(String filename);
     byte[] read(String filename);
+    byte[] readByteRange(String filename, int startingByte, int finishingByte);
     String[] directoryContent();
 }

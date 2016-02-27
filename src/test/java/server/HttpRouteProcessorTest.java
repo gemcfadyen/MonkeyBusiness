@@ -307,6 +307,21 @@ public class HttpRouteProcessorTest {
         assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), nullValue());
         assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
+    }
 
+    @Test
+    public void routesPartialContent() {
+        Map headerParams = new HashMap<>();
+        headerParams.put("Range", "byte=0-3");
+
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(headerParams)
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(PARTIAL_CONTENT));
     }
 }

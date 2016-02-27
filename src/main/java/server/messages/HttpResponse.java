@@ -13,18 +13,21 @@ public class HttpResponse {
     private String httpVersion;
     private boolean authorisationRequest;
     private byte[] body;
+    private String contentRange;
 
     protected HttpResponse(StatusCode statusCode,
                            String httpVersion,
                            String location,
                            List<HttpMethods> allowedMethods,
                            boolean authorisationRequest,
+                           String contentRange,
                            byte[] body) {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
         this.location = location;
         this.allowedMethods = allowedMethods;
         this.authorisationRequest = authorisationRequest;
+        this.contentRange = contentRange;
         this.body = body;
     }
 
@@ -50,6 +53,10 @@ public class HttpResponse {
 
     public boolean authorisationRequest() {
         return authorisationRequest;
+    }
+
+    public String contentRange() {
+        return contentRange;
     }
 }
 
