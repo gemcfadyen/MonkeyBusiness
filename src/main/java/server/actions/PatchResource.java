@@ -16,11 +16,11 @@ import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class PatchResource implements Action {
     private ResourceHandler resourceHandler;
-    private EtagDictionary etagDictionary;
+    private EtagGenerator etagGenerator;
 
-    public PatchResource(ResourceHandler resourceHandler, EtagDictionary eTagDictionary) {
+    public PatchResource(ResourceHandler resourceHandler, EtagGenerator eTagGenerator) {
         this.resourceHandler = resourceHandler;
-        this.etagDictionary = eTagDictionary;
+        this.etagGenerator = eTagGenerator;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class PatchResource implements Action {
         Map<String, String> headerParams = request.headerParameters();
         HttpResponseBuilder httpResponseBuilder = anHttpResponseBuilder();
 
-        if (canUpdateResource(getResource(request.getRequestUri()))) {
+        if (canUpdateResource(getResource(request.getRequestUri()), etagFromRequest(headerParams))) {
             patchResource(request, headerParams);
             httpResponseBuilder.withETag(etagFromRequest(headerParams));
             httpResponseBuilder.withStatusCode(NO_CONTENT);
@@ -55,7 +55,9 @@ public class PatchResource implements Action {
         return headerParams.get(IF_MATCH.getPropertyName());
     }
 
-    private boolean canUpdateResource(byte[] originalContent) {
-        return etagDictionary.has(originalContent);
+    private boolean canUpdateResource(byte[] originalContent, String requestEtag) {
+        String generatedEtag = etagGenerator.calculateEtag(originalContent);
+
+        return generatedEtag.equals(requestEtag);
     }
 }

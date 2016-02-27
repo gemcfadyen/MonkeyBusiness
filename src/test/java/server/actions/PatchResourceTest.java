@@ -20,13 +20,13 @@ import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class PatchResourceTest {
 
-    private final EtagDictionary etagDictionary = new EtagDictionary() {
-        public boolean has(byte[] value) {
-            return true;
+    private final EtagGenerator etagGenerator = new EtagGenerator() {
+        public String calculateEtag(byte[] value) {
+            return "anEtagValue";
         }
     };
     private final ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
-    private final PatchResource patchResource = new PatchResource(resourceHandlerSpy, etagDictionary);
+    private final PatchResource patchResource = new PatchResource(resourceHandlerSpy, etagGenerator);
 
     @Test
     public void patchingResourceReturns204() {
@@ -89,10 +89,10 @@ public class PatchResourceTest {
         assertThat(resourceHandlerSpy.hasPatchedResource(), is(false));
     }
 
-    private EtagDictionary eTagDictionaryReturningNotFound() {
-        return new EtagDictionary() {
-                public boolean has(byte[] value) {
-                    return false;
+    private EtagGenerator eTagDictionaryReturningNotFound() {
+        return new EtagGenerator() {
+                public String calculateEtag(byte[] value) {
+                    return "the wrong value";
                 }
             };
     }
