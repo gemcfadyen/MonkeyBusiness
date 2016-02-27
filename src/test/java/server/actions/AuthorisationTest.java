@@ -4,6 +4,7 @@ import org.junit.Test;
 import server.ResourceHandler;
 import server.ResourceHandlerSpy;
 import server.StatusCode;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
@@ -20,7 +21,7 @@ import static server.messages.HttpMessageHeaderProperties.AUTHORISATION;
 public class AuthorisationTest {
     private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
     private ReadResourceSpy readResourceSpy = new ReadResourceSpy(resourceHandlerSpy);
-    private Authorisation authorisation = new Authorisation(readResourceSpy);
+    private Authorisation authorisation = new Authorisation(readResourceSpy, new HeaderParameterExtractor());
 
     @Test
     public void returns403WhenRequestDoesNotContainAuthorisationFields() {
@@ -87,7 +88,7 @@ public class AuthorisationTest {
                 .withRequestLine(GET.name())
                 .withHeaderParameters(parameters)
                 .build();
-        authorisation = new Authorisation(readResourceSpy) {
+        authorisation = new Authorisation(readResourceSpy, new HeaderParameterExtractor()) {
             protected boolean decode(byte[] bytes) {
                 throw new RuntimeException("Exception thrown for test");
             }

@@ -35,7 +35,7 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/text-file.txt", GET), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria("/text-file.txt", POST), new MethodNotAllowed());
         routes.put(new RoutingCriteria("/parameters", GET), new IncludeParametersInBody());
-        routes.put(new RoutingCriteria("/logs", GET), new Authorisation(new ReadResource(resourceHandler)));
+        routes.put(new RoutingCriteria("/logs", GET), new Authorisation(new ReadResource(resourceHandler), new HeaderParameterExtractor()));
         routes.put(new RoutingCriteria("/log", GET), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/these", PUT), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/requests", HEAD), new LogRequest(resourceHandler));
