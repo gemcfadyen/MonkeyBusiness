@@ -9,7 +9,6 @@ public class ResourceHandlerSpy implements ResourceHandler {
 
     private String fileName;
     private String contentAppendedToResource;
-    private boolean hasReadPortionOfResource;
 
     @Override
     public void write(String filename, String content) {
@@ -34,12 +33,6 @@ public class ResourceHandlerSpy implements ResourceHandler {
     public byte[] read(String filename) {
         hasReadResource = true;
         return "My=Data".getBytes();
-    }
-
-    @Override
-    public byte[] readByteRange(String filename, int startingByte, int finishingByte) {
-        hasReadPortionOfResource = true;
-        return "My".getBytes();
     }
 
     @Override
@@ -74,9 +67,5 @@ public class ResourceHandlerSpy implements ResourceHandler {
 
     public String getContentAppendedToResource() {
         return contentAppendedToResource;
-    }
-
-    public boolean hasReadPortionOfResource() {
-       return hasReadPortionOfResource;
     }
 }

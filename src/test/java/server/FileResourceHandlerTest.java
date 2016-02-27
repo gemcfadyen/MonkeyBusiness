@@ -133,17 +133,6 @@ public class FileResourceHandlerTest {
         resourceHandler.append(resourceName, "anything");
     }
 
-    @Test
-    public void readsARangeOfDataFromResource() throws IOException {
-        File resource = setupResourceWithContent("hello everybody today we are reading a little story\n");
-        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
-
-        byte[] rangeRead = resourceHandler.readByteRange("/" + resource.getName(), 0, 4);
-
-        assertThat(rangeRead, is("hell".getBytes()));
-    }
-
-
     private File setupResourceWithContent(String resourceContent) throws IOException {
         File resource = temporaryFolder.newFile("resource");
         Writer fileWriter = new FileWriter(resource.getPath());

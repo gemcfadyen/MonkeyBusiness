@@ -6,6 +6,7 @@ import server.ResourceHandlerSpy;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,21 +20,22 @@ public class PartialContentTest {
 
     private final ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
     private final PartialContent partialContentAction = new PartialContent(resourceHandlerSpy);
-    private final Map<String, String> requestedRange = new HashMap<>();
 
 
     @Before
     public void setup() {
-        requestedRange.put("Range", "bytes=0-4");
     }
 
     @Test
     public void partialContentRequestContainsStatus206() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Range", "bytes=0-4");
+
         ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
         PartialContent partialContentAction = new PartialContent(resourceHandlerSpy);
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/partial_content.txt")
-                .withHeaderParameters(requestedRange)
+                .withHeaderParameters(headerParams)
                 .withRequestLine(GET.name())
                 .build();
 
@@ -44,16 +46,59 @@ public class PartialContentTest {
 
     @Test
     public void responseContainsTheContentRange() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Range", "bytes=0-4");
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/partial_content.txt")
                 .withRequestLine(GET.name())
-                .withHeaderParameters(requestedRange)
+                .withHeaderParameters(headerParams)
                 .build();
 
         HttpResponse httpResponse = partialContentAction.process(httpRequest);
 
         assertThat(httpResponse.contentRange(), is("bytes=0-4"));
-        assertThat(httpResponse.body(), is("My".getBytes()));
-        assertThat(resourceHandlerSpy.hasReadPortionOfResource(), is(true));
+        assertThat(httpResponse.body(), is("My=Da".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
+
+    @Test
+    public void requestWithNoEndRangeReadsUntilEndOfResource() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Range", "bytes=4-");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(headerParams)
+                .build();
+
+        HttpResponse httpResponse = partialContentAction.process(httpRequest);
+
+        assertThat(httpResponse.contentRange(), is("bytes=4-7"));
+
+        assertThat(httpResponse.body(), is("ata".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
+    }
+
+    @Test
+    public void correctPortionOfResourceReturnedWhenOnlyFirstIndexGiven() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put("Range", "bytes=-2");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(headerParams)
+                .build();
+
+        HttpResponse httpResponse = partialContentAction.process(httpRequest);
+
+        assertThat(httpResponse.contentRange(), is("bytes=5-7"));
+
+        try {
+            System.out.println("Body is " + new String(httpResponse.body(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        assertThat(httpResponse.body(), is("ta".getBytes()));
+        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
 }
