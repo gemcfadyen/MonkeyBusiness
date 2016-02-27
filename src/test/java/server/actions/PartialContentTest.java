@@ -3,6 +3,7 @@ package server.actions;
 import org.junit.Before;
 import org.junit.Test;
 import server.ResourceHandlerSpy;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
@@ -19,7 +20,7 @@ import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 public class PartialContentTest {
 
     private final ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
-    private final PartialContent partialContentAction = new PartialContent(resourceHandlerSpy);
+    private final PartialContent partialContentAction = new PartialContent(resourceHandlerSpy, new HeaderParameterExtractor());
 
 
     @Before
@@ -32,7 +33,7 @@ public class PartialContentTest {
         headerParams.put("Range", "bytes=0-4");
 
         ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
-        PartialContent partialContentAction = new PartialContent(resourceHandlerSpy);
+        PartialContent partialContentAction = new PartialContent(resourceHandlerSpy, new HeaderParameterExtractor());
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/partial_content.txt")
                 .withHeaderParameters(headerParams)

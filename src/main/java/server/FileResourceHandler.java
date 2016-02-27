@@ -1,9 +1,10 @@
 package server;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class FileResourceHandler implements ResourceHandler {
     private String absolutePath;
@@ -43,29 +44,6 @@ public class FileResourceHandler implements ResourceHandler {
         } catch (IOException e) {
             return noResourceContentAvailable();
         }
-    }
-
-   // @Override
-    public byte[] readByteRange(String filename, int startingByte, int finishingByte) {
-
-        byte[] readResource = read(filename);
-
-        byte[] portionToReturn = new byte[finishingByte - startingByte];
-       return  Arrays.copyOfRange(readResource, startingByte, finishingByte);
-
-
-//        try {
-//            FileReader fileReader = new FileReader(fullPath(filename));
-//            char[] readRange = new char[finishingByte - startingByte];
-//            BufferedReader bufferedReader = new BufferedReader(fileReader);
-//            bufferedReader.read(readRange, startingByte, finishingByte);
-//            System.out.println("READ TEH RANGE : " + String.valueOf(readRange));
-//            return String.valueOf(readRange).getBytes();
-//
-//        } catch (IOException e) { //TODO test for custom exception thrown here
-//            e.printStackTrace();
-//        }
-//        return new byte[0]; //TODO is this sensible?
     }
 
     @Override

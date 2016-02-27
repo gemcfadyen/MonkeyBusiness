@@ -1,6 +1,7 @@
 package server;
 
 import server.actions.*;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
@@ -38,7 +39,7 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/log", GET), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/these", PUT), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/requests", HEAD), new LogRequest(resourceHandler));
-        routes.put(new RoutingCriteria("/partial_content.txt", GET), new PartialContent(resourceHandler));
+        routes.put(new RoutingCriteria("/partial_content.txt", GET), new PartialContent(resourceHandler, new HeaderParameterExtractor()));
     }
 
     @Override

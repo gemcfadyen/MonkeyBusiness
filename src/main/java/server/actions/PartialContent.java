@@ -1,78 +1,54 @@
 package server.actions;
 
 import server.Action;
+import server.Range;
 import server.ResourceHandler;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Map;
 
 import static server.StatusCode.PARTIAL_CONTENT;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class PartialContent implements Action {
+    private HeaderParameterExtractor headerParameterExtractor;
     private ResourceHandler resourceHandler;
 
-    public PartialContent(ResourceHandler resourceHandler) {
+    public PartialContent(ResourceHandler resourceHandler, HeaderParameterExtractor headerParameterExtractor) {
         this.resourceHandler = resourceHandler;
+        this. headerParameterExtractor = headerParameterExtractor;
     }
 
     @Override
     public HttpResponse process(HttpRequest request) {
-        Map<String, String> headerParams = request.headerParameters();
-        String contentRange = headerParams.get("Range");
-        System.out.println("content range is " + contentRange);
-//TODO move to a parameter extracting class
-        String[] byteRange = contentRange.split("=");
         byte[] readResource = resourceHandler.read(request.getRequestUri());
-        try {
-            System.out.println("Content read is: " + new String(readResource, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        int startingIndex;
-        int finishingIndex;
-        String[] startingByteAndFinishingByte = byteRange[1].split("-");
-
-        if (startingByteAndFinishingByte.length == 2 && !startingByteAndFinishingByte[0].equals("")) {
-            System.out.println("both are provided...");
-            String startingByte = startingByteAndFinishingByte[0];
-            startingIndex = Integer.valueOf(startingByte);
-            System.out.println("first is: " + startingByte);
-            String finishingByte = startingByteAndFinishingByte[1];
-            finishingIndex = Integer.valueOf(finishingByte);
-            System.out.println("second is" + finishingByte);
-        } else if (startingByteAndFinishingByte.length == 2) {
-            startingIndex = readResource.length - Integer.valueOf(startingByteAndFinishingByte[1]);
-            finishingIndex = readResource.length;
-        } else {
-            System.out.println("only first one provided");
-            String startingByte = startingByteAndFinishingByte[0];
-            startingIndex = Integer.valueOf(startingByte);
-            finishingIndex = readResource.length;
-
-        }
-
-        byte[] portionToReturn = Arrays.copyOfRange(readResource, startingIndex, checkForEndOfResource(readResource.length, finishingIndex));
-        try {
-            System.out.println("PORTION RETURNED IS [" + new String(portionToReturn, "UTF-8") + "]");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        Range partialContentRange = getRangeFrom(request, readResource);
 
         return anHttpResponseBuilder()
                 .withStatusCode(PARTIAL_CONTENT)
-                .withContentRange(startingIndex, finishingIndex)
-                .withBody(portionToReturn)
+                .withContentRange(partialContentRange.getStartingIndex(), partialContentRange.getFinishingIndex())
+                .withBody(extractPortionOfResource(readResource, partialContentRange.getStartingIndex(), partialContentRange.getFinishingIndex()))
                 .build();
     }
 
+    private Range getRangeFrom(HttpRequest request, byte[] readResource) {
+        return headerParameterExtractor.getPartialContentRange(request.headerParameters(), readResource.length);
+    }
+
+    private byte[] extractPortionOfResource(byte[] readResource, int startingIndex, int finishingIndex) {
+        return Arrays.copyOfRange(readResource, startingIndex, checkForEndOfResource(readResource.length, finishingIndex));
+    }
+
     private int checkForEndOfResource(int length, int finishingIndex) {
-        if(finishingIndex + 1 > length) {
-            return length;
+        if (finishIndexIsNotBeyondLengthOfResource(length, finishingIndex)) {
+            return finishingIndex + 1;
         }
-        return finishingIndex+1;
+        return length;
+    }
+
+    private boolean finishIndexIsNotBeyondLengthOfResource(int length, int finishingIndex) {
+        return finishingIndex + 1 <= length;
     }
 }
