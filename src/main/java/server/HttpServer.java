@@ -31,18 +31,39 @@ public class HttpServer {
 
     public void processRequest() {
         System.out.println("Listening for request.....");
+
         ExecutorService executor = Executors.newFixedThreadPool(4);
-        // for (int i = 0; i <= 5; i++)
-        // {
         ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
-        executor.execute(task);
-        //}
-        executor.shutdown();
-        //  HttpSocket client = serverSocket.accept();
-//        HttpRequest httpRequest = requestParser.parse(client.getRawHttpRequest());
-//
-//        client.setHttpResponse(httpRouteProcessor.process(httpRequest));
-//        client.close();
+
+        Executor ce = new RequestExecutor(executor);
+        ce.execute(task);
+        ce.shutdown();
+//        executor.execute(task);
+//        executor.shutdown();
     }
 }
 
+interface Executor {
+    void execute(Runnable r);
+
+    void shutdown();
+}
+
+class RequestExecutor implements Executor {
+
+    private final ExecutorService executor;
+
+    public RequestExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
+
+    @Override
+    public void execute(Runnable task) {
+        executor.execute(task);
+    }
+
+    @Override
+    public void shutdown() {
+        executor.shutdown();
+    }
+}
