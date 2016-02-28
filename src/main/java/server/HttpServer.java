@@ -32,16 +32,28 @@ public class HttpServer {
     public void processRequest() {
         System.out.println("Listening for request.....");
 
-        ExecutorService executor = Executors.newFixedThreadPool(4);
-        ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
+        EService maservice = new RequestExecutorService();
+        ExecutorService executor = maservice.initialise(4);
 
+        ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
         Executor ce = new RequestExecutor(executor);
         ce.execute(task);
         ce.shutdown();
-//        executor.execute(task);
-//        executor.shutdown();
     }
 }
+
+interface EService {
+    ExecutorService initialise(int numberOfThreads);
+}
+
+class RequestExecutorService implements EService {
+
+    @Override
+    public ExecutorService initialise(int numberOfThreads) {
+        return Executors.newFixedThreadPool(numberOfThreads);
+    }
+}
+
 
 interface Executor {
     void execute(Runnable r);
