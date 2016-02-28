@@ -9,13 +9,13 @@ public class HttpServer {
     private final HttpServerSocket serverSocket;
     private final RequestParser requestParser;
     private RouteProcessor httpRouteProcessor;
-    private EService maservice;
+    private ExecutorServiceFactory maservice;
 
     public HttpServer(String host, int port,
                       HttpServerSocket serverSocket,
                       RequestParser requestParser,
                       RouteProcessor httpRouteProcessor,
-                      RequestExecutorService requestExecutorService) {
+                      FixedThreadPoolExecutorService requestExecutorService) {
         this.host = host;
         this.port = port;
         this.serverSocket = serverSocket;
@@ -35,44 +35,43 @@ public class HttpServer {
     public void processRequest() {
         System.out.println("Listening for request.....");
 
-        ExecutorService executor = maservice.initialise();
+        ExecutorService executor = maservice.create();
 
         ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
-        Executor ce = new RequestExecutor(executor);
+        ThreadExecutorService ce = new RequestThreadExecutorService(executor);
         ce.execute(task);
         ce.shutdown();
     }
 }
 
-interface EService {
-    ExecutorService initialise();
+interface ExecutorServiceFactory {
+    ExecutorService create();
 }
 
-class RequestExecutorService implements EService {
+class FixedThreadPoolExecutorService implements ExecutorServiceFactory {
     private final int numberOfThreads;
 
-    public RequestExecutorService(int numberOfThreads) {
+    public FixedThreadPoolExecutorService(int numberOfThreads) {
         this.numberOfThreads = numberOfThreads;
     }
 
     @Override
-    public ExecutorService initialise() {
+    public ExecutorService create() {
         return Executors.newFixedThreadPool(numberOfThreads);
     }
 }
 
 
-interface Executor {
+interface ThreadExecutorService {
     void execute(Runnable r);
-
     void shutdown();
 }
 
-class RequestExecutor implements Executor {
+class RequestThreadExecutorService implements ThreadExecutorService {
 
     private final ExecutorService executor;
 
-    public RequestExecutor(ExecutorService executor) {
+    public RequestThreadExecutorService(ExecutorService executor) {
         this.executor = executor;
     }
 

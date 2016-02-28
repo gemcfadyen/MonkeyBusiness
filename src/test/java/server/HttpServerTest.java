@@ -19,7 +19,7 @@ public class HttpServerTest {
         serverSocketSpy = new ServerSocketSpy(clientSpy);
         httpRequestParserSpy = new RequestParserSpy();
         httpRequestProcessorSpy = new RouteProcessorSpy();
-        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy, new RequestExecutorService(4));
+        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy, new FixedThreadPoolExecutorService(4));
     }
 
 //    @Test
