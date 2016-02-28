@@ -9,16 +9,19 @@ public class HttpServer {
     private final HttpServerSocket serverSocket;
     private final RequestParser requestParser;
     private RouteProcessor httpRouteProcessor;
+    private EService maservice;
 
     public HttpServer(String host, int port,
                       HttpServerSocket serverSocket,
                       RequestParser requestParser,
-                      RouteProcessor httpRouteProcessor) {
+                      RouteProcessor httpRouteProcessor,
+                      RequestExecutorService requestExecutorService) {
         this.host = host;
         this.port = port;
         this.serverSocket = serverSocket;
         this.requestParser = requestParser;
         this.httpRouteProcessor = httpRouteProcessor;
+        this.maservice = requestExecutorService;
     }
 
     public String getHost() {
@@ -32,8 +35,7 @@ public class HttpServer {
     public void processRequest() {
         System.out.println("Listening for request.....");
 
-        EService maservice = new RequestExecutorService();
-        ExecutorService executor = maservice.initialise(4);
+        ExecutorService executor = maservice.initialise();
 
         ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
         Executor ce = new RequestExecutor(executor);
@@ -43,13 +45,18 @@ public class HttpServer {
 }
 
 interface EService {
-    ExecutorService initialise(int numberOfThreads);
+    ExecutorService initialise();
 }
 
 class RequestExecutorService implements EService {
+    private final int numberOfThreads;
+
+    public RequestExecutorService(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
+    }
 
     @Override
-    public ExecutorService initialise(int numberOfThreads) {
+    public ExecutorService initialise() {
         return Executors.newFixedThreadPool(numberOfThreads);
     }
 }

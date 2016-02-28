@@ -22,7 +22,7 @@ public class HttpServerRunner {
                 port,
                 httpServerSocket,
                 new HttpRequestParser(),
-                new HttpRouteProcessor(new FileResourceHandler(publicDirectory))
+                new HttpRouteProcessor(new FileResourceHandler(publicDirectory)), new RequestExecutorService(4)
         );
 
         start(httpServer);

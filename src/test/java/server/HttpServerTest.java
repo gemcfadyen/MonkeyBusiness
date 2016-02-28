@@ -1,7 +1,6 @@
 package server;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -20,7 +19,7 @@ public class HttpServerTest {
         serverSocketSpy = new ServerSocketSpy(clientSpy);
         httpRequestParserSpy = new RequestParserSpy();
         httpRequestProcessorSpy = new RouteProcessorSpy();
-        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy);
+        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy, new RequestExecutorService(4));
     }
 
 //    @Test
