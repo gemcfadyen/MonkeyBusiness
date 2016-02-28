@@ -5,7 +5,9 @@ public enum HttpMessageHeaderProperties {
     AUTHORISATION("Authorization"),
     AUTHENTICATE("WWW-Authenticate"),
     ALLOW("Allow"),
-    LOCATION("Location");
+    LOCATION("Location"),
+    CONTENT_LENGTH("Content-Length"),
+    IF_MATCH("If-Match");
 
     private String property;
 

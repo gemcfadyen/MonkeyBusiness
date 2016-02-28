@@ -133,6 +133,30 @@ public class FileResourceHandlerTest {
         resourceHandler.append(resourceName, "anything");
     }
 
+    @Test
+    public void patchAResource() throws IOException {
+        File resource = setupResourceWithContent("My=Data");
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
+
+        resourceHandler.patch("/" + resource.getName(), "New Content", 3);
+
+        byte[] read = resourceHandler.read("/" + resource.getName());
+        assertThat(read, is("NewData".getBytes()));
+    }
+
+    @Test
+    public void exceptionThrownWhenErrorInPatchingToResource() {
+        expectedException.expect(ResourceWriteException.class);
+        expectedException.expectMessage("Exception in patching file " + resourceName);
+        expectedException.expectCause(instanceOf(IOException.class));
+
+        ResourceHandler resourceHandler = new FileResourceHandler(absolutePath) {
+            protected void updateResource(String filename, String content, int contentLength) throws IOException {
+                throw new IOException("Throws exception for test");
+            }
+        };
+        resourceHandler.patch(resourceName, "anything", 3);
+    }
     private File setupResourceWithContent(String resourceContent) throws IOException {
         File resource = temporaryFolder.newFile("resource");
         Writer fileWriter = new FileWriter(resource.getPath());

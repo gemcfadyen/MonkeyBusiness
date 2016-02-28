@@ -3,6 +3,7 @@ package server;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -28,6 +29,15 @@ public class FileResourceHandler implements ResourceHandler {
             writeContentToFile(filename, content, true);
         } catch (IOException e) {
             throw new ResourceWriteException("Exception in appending to file " + filename, e);
+        }
+    }
+
+    @Override
+    public void patch(String filename, String content, int contentLength) {
+        try {
+            updateResource(filename, content, contentLength);
+        } catch (IOException e) {
+            throw new ResourceWriteException("Exception in patching file " + filename, e);
         }
     }
 
@@ -66,5 +76,11 @@ public class FileResourceHandler implements ResourceHandler {
         fileWriter.write(content);
         fileWriter.flush();
         fileWriter.close();
+    }
+
+    protected void updateResource(String filename, String content, int contentLength) throws IOException {
+        RandomAccessFile randomAccessFile = new RandomAccessFile(fullPath(filename), "rw");
+        randomAccessFile.write(content.getBytes(), 0, contentLength);
+        randomAccessFile.close();
     }
 }

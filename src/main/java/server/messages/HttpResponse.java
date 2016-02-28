@@ -14,6 +14,7 @@ public class HttpResponse {
     private boolean authorisationRequest;
     private byte[] body;
     private String contentRange;
+    private String eTag;
 
     protected HttpResponse(StatusCode statusCode,
                            String httpVersion,
@@ -21,6 +22,7 @@ public class HttpResponse {
                            List<HttpMethods> allowedMethods,
                            boolean authorisationRequest,
                            String contentRange,
+                           String eTag,
                            byte[] body) {
         this.statusCode = statusCode;
         this.httpVersion = httpVersion;
@@ -28,6 +30,7 @@ public class HttpResponse {
         this.allowedMethods = allowedMethods;
         this.authorisationRequest = authorisationRequest;
         this.contentRange = contentRange;
+        this.eTag = eTag;
         this.body = body;
     }
 
@@ -57,6 +60,10 @@ public class HttpResponse {
 
     public String contentRange() {
         return contentRange;
+    }
+
+    public String eTag() {
+        return eTag;
     }
 }
 
