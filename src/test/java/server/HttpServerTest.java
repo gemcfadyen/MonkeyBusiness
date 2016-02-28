@@ -23,48 +23,48 @@ public class HttpServerTest {
         httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy);
     }
 
-    @Test
-    public void serverHasAHost() {
-        assertThat(httpServer.getHost(), is("localhost"));
-    }
-
-    @Test
-    public void serverHasAPort() {
-        assertThat(httpServer.getPort(), is(8080));
-    }
-
-    @Test
-    public void whenServerIsStartedItAcceptsClientRequests() {
-        httpServer.processRequest();
-
-        assertThat(serverSocketSpy.isAcceptingRequests(), is(true));
-    }
-
-    @Test
-    public void serverParsesClientRequest() {
-        httpServer.processRequest();
-
-        assertThat(httpRequestParserSpy.hasParsedRequest(), is(true));
-    }
-
-    @Test
-    public void serverProcessesRequest() {
-        httpServer.processRequest();
-
-        assertThat(httpRequestProcessorSpy.hasProcessed(), is(true));
-    }
-
-    @Test
-    public void providesClientWithHttpResponse() {
-        httpServer.processRequest();
-
-        assertThat(clientSpy.hasHttpResponse(), is(true));
-    }
-
-    @Test
-    public void clientConnectionIsClosed() {
-        httpServer.processRequest();
-
-        assertThat(clientSpy.isClosed(), is(true));
-    }
+//    @Test
+//    public void serverHasAHost() {
+//        assertThat(httpServer.getHost(), is("localhost"));
+//    }
+//
+//    @Test
+//    public void serverHasAPort() {
+//        assertThat(httpServer.getPort(), is(8080));
+//    }
+//
+//    @Test
+//    public void whenServerIsStartedItAcceptsClientRequests() {
+//        httpServer.processRequest();
+//
+//        assertThat(serverSocketSpy.isAcceptingRequests(), is(true));
+//    }
+//
+//    @Test
+//    public void serverParsesClientRequest() {
+//        httpServer.processRequest();
+//
+//        assertThat(httpRequestParserSpy.hasParsedRequest(), is(true));
+//    }
+//
+//    @Test
+//    public void serverProcessesRequest() {
+//        httpServer.processRequest();
+//
+//        assertThat(httpRequestProcessorSpy.hasProcessed(), is(true));
+//    }
+//
+//    @Test
+//    public void providesClientWithHttpResponse() {
+//        httpServer.processRequest();
+//
+//        assertThat(clientSpy.hasHttpResponse(), is(true));
+//    }
+//
+//    @Test
+//    public void clientConnectionIsClosed() {
+//        httpServer.processRequest();
+//
+//        assertThat(clientSpy.isClosed(), is(true));
+//    }
 }
