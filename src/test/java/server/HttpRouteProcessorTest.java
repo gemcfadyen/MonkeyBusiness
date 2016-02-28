@@ -1,6 +1,5 @@
 package server;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import server.messages.HttpRequest;
@@ -16,6 +15,7 @@ import static org.junit.Assert.assertThat;
 import static server.HttpMethods.*;
 import static server.StatusCode.*;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.HttpMessageHeaderProperties.*;
 
 public class HttpRouteProcessorTest {
     private HttpRouteProcessor requestProcessor;
@@ -307,6 +307,21 @@ public class HttpRouteProcessorTest {
         assertThat(httpResponse.statusCode(), is(OK));
         assertThat(httpResponse.body(), nullValue());
         assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
+    }
 
+    @Test
+    public void routesPartialContent() {
+        Map headerParams = new HashMap<>();
+        headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "byte=0-3");
+
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(headerParams)
+                .build();
+
+        HttpResponse httpResponse = requestProcessor.process(httpRequest);
+
+        assertThat(httpResponse.statusCode(), is(PARTIAL_CONTENT));
     }
 }

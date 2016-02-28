@@ -81,7 +81,7 @@ public class FileResourceHandlerTest {
 
     @Test
     public void readsContentOfExistingResource() throws IOException {
-        File resource = setupResourceWithContent();
+        File resource = setupResourceWithContent("My=Data");
         ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
         byte[] resourceContent = resourceHandler.read("/" + resource.getName());
 
@@ -109,7 +109,7 @@ public class FileResourceHandlerTest {
 
     @Test
     public void appendToContentOfResource() throws IOException {
-        File resource = setupResourceWithContent();
+        File resource = setupResourceWithContent("My=Data");
         ResourceHandler resourceHandler = new FileResourceHandler(absolutePath);
 
         resourceHandler.append("/" + resource.getName(), "\nhello=world\n");
@@ -133,11 +133,10 @@ public class FileResourceHandlerTest {
         resourceHandler.append(resourceName, "anything");
     }
 
-
-    private File setupResourceWithContent() throws IOException {
+    private File setupResourceWithContent(String resourceContent) throws IOException {
         File resource = temporaryFolder.newFile("resource");
         Writer fileWriter = new FileWriter(resource.getPath());
-        fileWriter.write("My=Data");
+        fileWriter.write(resourceContent);
         fileWriter.flush();
         fileWriter.close();
 

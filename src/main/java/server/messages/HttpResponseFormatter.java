@@ -8,6 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 import static server.Delimiter.COMMA;
+import static server.messages.HttpMessageHeaderProperties.ALLOW;
+import static server.messages.HttpMessageHeaderProperties.AUTHENTICATE;
+import static server.messages.HttpMessageHeaderProperties.LOCATION;
 
 public class HttpResponseFormatter implements ResponseFormatter {
 
@@ -67,7 +70,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
     }
 
     private String addAllowLineToHeader(HttpResponse response) {
-        return endOfLine() + "Allow: " + listFormatter.delimitedValues(response.allowedMethods(), COMMA);
+        return endOfLine() + ALLOW.getPropertyName() + ": " + listFormatter.delimitedValues(response.allowedMethods(), COMMA);
     }
 
     private boolean hasLocation(HttpResponse response) {
@@ -76,7 +79,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
     }
 
     private String addLocationToHeader(HttpResponse response) {
-        return endOfLine() + "Location: " + response.location();
+        return endOfLine() + LOCATION.getPropertyName() + ": " + response.location();
     }
 
     private boolean hasAllowMethods(HttpResponse response) {
@@ -84,7 +87,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
     }
 
     private String addAuthorisationRequestToHeader() {
-        return endOfLine() + "WWW-Authenticate: Basic realm=\"My Server\"";
+        return endOfLine() + AUTHENTICATE.getPropertyName() + ": Basic realm=\"My Server\"";
     }
 
     private String formatStatusLine(HttpResponse response) {

@@ -13,13 +13,14 @@ public final class HttpResponseBuilder {
     private byte[] body;
     private String location;
     private boolean includeAuthorisation;
+    private String contentRange;
 
     public static HttpResponseBuilder anHttpResponseBuilder() {
         return new HttpResponseBuilder();
     }
 
     public HttpResponse build() {
-        return new HttpResponse(statusCode, "HTTP/1.1", location, allowedMethods, includeAuthorisation, body);
+        return new HttpResponse(statusCode, "HTTP/1.1", location, allowedMethods, includeAuthorisation, contentRange, body);
     }
 
     public HttpResponseBuilder withStatusCode(StatusCode statusCode) {
@@ -39,6 +40,11 @@ public final class HttpResponseBuilder {
 
     public HttpResponseBuilder withAuthorisationRequest() {
         this.includeAuthorisation = true;
+        return this;
+    }
+
+    public HttpResponseBuilder withContentRange(int startingIndex, int finishingIndex) {
+        this.contentRange = "bytes=" + startingIndex + "-" + finishingIndex;
         return this;
     }
 
