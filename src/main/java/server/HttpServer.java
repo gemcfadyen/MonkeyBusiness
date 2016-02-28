@@ -9,19 +9,19 @@ public class HttpServer {
     private final HttpServerSocket serverSocket;
     private final RequestParser requestParser;
     private RouteProcessor httpRouteProcessor;
-    private ExecutorServiceFactory maservice;
+    private ExecutorServiceFactory executorServiceFactory;
 
     public HttpServer(String host, int port,
                       HttpServerSocket serverSocket,
                       RequestParser requestParser,
                       RouteProcessor httpRouteProcessor,
-                      FixedThreadPoolExecutorService requestExecutorService) {
+                      ExecutorServiceFactory requestExecutorService) {
         this.host = host;
         this.port = port;
         this.serverSocket = serverSocket;
         this.requestParser = requestParser;
         this.httpRouteProcessor = httpRouteProcessor;
-        this.maservice = requestExecutorService;
+        this.executorServiceFactory = requestExecutorService;
     }
 
     public String getHost() {
@@ -34,13 +34,11 @@ public class HttpServer {
 
     public void processRequest() {
         System.out.println("Listening for request.....");
-
-        ExecutorService executor = maservice.create();
-
+        ExecutorService executor = executorServiceFactory.create();
         ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
-        ThreadExecutorService ce = new RequestThreadExecutorService(executor);
-        ce.execute(task);
-        ce.shutdown();
+        ThreadExecutorService requestProcessorThread = new RequestThreadExecutorService(executor);
+        requestProcessorThread.execute(task);
+        requestProcessorThread.shutdown();
     }
 }
 
@@ -64,6 +62,7 @@ class FixedThreadPoolExecutorService implements ExecutorServiceFactory {
 
 interface ThreadExecutorService {
     void execute(Runnable r);
+
     void shutdown();
 }
 
