@@ -24,7 +24,7 @@ public class HttpServerTest {
         httpRequestProcessorSpy = new RouteProcessorSpy();
         executorServiceSpy = new ExecutorServiceSpy();
         executorServiceFactorySpy = new ExecutorServiceFactorySpy(executorServiceSpy);
-        httpServer = new HttpServer("localhost", 8080, serverSocketSpy,
+        httpServer = new HttpServer(serverSocketSpy,
                 httpRequestParserSpy,
                 httpRequestProcessorSpy,
                 executorServiceFactorySpy
