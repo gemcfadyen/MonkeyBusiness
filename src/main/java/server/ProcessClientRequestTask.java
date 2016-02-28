@@ -2,12 +2,12 @@ package server;
 
 import server.messages.HttpRequest;
 
-public class ExecutorTask implements Runnable {
+public class ProcessClientRequestTask implements Runnable {
     private final HttpSocket client;
     private final RequestParser requestParser;
     private final RouteProcessor routeProcessor;
 
-    public ExecutorTask(HttpSocket client, RequestParser requestParser, RouteProcessor routeProcessor) {
+    public ProcessClientRequestTask(HttpSocket client, RequestParser requestParser, RouteProcessor routeProcessor) {
         this.client = client;
         this.requestParser = requestParser;
         this.routeProcessor = routeProcessor;

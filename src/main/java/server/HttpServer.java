@@ -1,10 +1,7 @@
 package server;
 
-import server.messages.HttpRequest;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class HttpServer {
     private final String host;
@@ -37,7 +34,7 @@ public class HttpServer {
         ExecutorService executor = Executors.newFixedThreadPool(4);
         // for (int i = 0; i <= 5; i++)
         // {
-        ExecutorTask task = new ExecutorTask(serverSocket.accept(), requestParser, httpRouteProcessor);
+        ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
         executor.execute(task);
         //}
         executor.shutdown();
