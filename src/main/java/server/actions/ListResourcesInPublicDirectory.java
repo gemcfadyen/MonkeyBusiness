@@ -2,13 +2,17 @@ package server.actions;
 
 import server.Action;
 import server.ResourceHandler;
-import server.messages.*;
+import server.messages.DelimitedFormatter;
+import server.messages.HttpRequest;
+import server.messages.HttpResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static server.messages.Delimiter.BREAK;
+import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
+import static server.messages.StatusCode.OK;
 
 public class ListResourcesInPublicDirectory implements Action {
     private ResourceHandler resourceHandler;
@@ -20,9 +24,8 @@ public class ListResourcesInPublicDirectory implements Action {
     }
 
     public HttpResponse process(HttpRequest request) {
-        return HttpResponseBuilder
-                .anHttpResponseBuilder()
-                .withStatusCode(StatusCode.OK)
+        return anHttpResponseBuilder()
+                .withStatusCode(OK)
                 .withBody(getDelimitedContentsOfDirectory().getBytes())
                 .build();
     }
