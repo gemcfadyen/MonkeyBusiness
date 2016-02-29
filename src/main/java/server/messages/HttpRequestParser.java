@@ -12,7 +12,6 @@ import static server.messages.HttpMessageHeaderProperties.CONTENT_LENGTH;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class HttpRequestParser implements RequestParser {
-   // private static final String QUESTION_MARK = "\\?";
 
     @Override
     public HttpRequest parse(InputStream inputStream) {
@@ -48,13 +47,17 @@ public class HttpRequestParser implements RequestParser {
     }
 
     private String getRequestUri(String[] requestLine) {
-        String firstLine = requestLine[1];
+        String firstLine = getValueAtIndex(1, requestLine);
         String[] splitOnQuestionMark = splitUsing(QUESTION_MARK.get(), firstLine);
-        return splitOnQuestionMark[0];
+        return getValueAtIndex(0, splitOnQuestionMark);
+    }
+
+    private String getValueAtIndex(int index, String[] values) {
+        return values[index];
     }
 
     private String getMethod(String[] requestLine) {
-        return requestLine[0];
+        return getValueAtIndex(0, requestLine);
     }
 
     private Map<String, String> getHeaderParameters(BufferedReader reader) throws IOException {
@@ -78,7 +81,7 @@ public class HttpRequestParser implements RequestParser {
 
             for (String parameters : parameterPair) {
                 String[] keyValueParameter = splitUsing(EQUALS.get(), parameters);
-                decodedParameters.put(keyValueParameter[0], decode(keyValueParameter[1]));
+                decodedParameters.put(getValueAtIndex(0, keyValueParameter), decode(keyValueParameter[1]));
             }
         }
         return decodedParameters;
@@ -106,11 +109,11 @@ public class HttpRequestParser implements RequestParser {
     }
 
     private String headerParameterKey(String[] params) {
-        return params[0].trim();
+        return getValueAtIndex(0, params).trim();
     }
 
     private String headerParameterValue(String[] params) {
-        return params[1].trim();
+        return getValueAtIndex(1, params).trim();
     }
 
     private char[] getBody(BufferedReader reader, int contentLength) throws IOException {
