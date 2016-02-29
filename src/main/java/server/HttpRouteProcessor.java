@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static server.HttpMethods.*;
+import static server.Route.*;
 import static server.actions.EtagGenerationAlgorithm.SHA_1;
 
 public class HttpRouteProcessor implements RouteProcessor {
@@ -21,51 +22,63 @@ public class HttpRouteProcessor implements RouteProcessor {
     }
 
     private void configureRoutes() {
-        routes.put(new RoutingCriteria("/", GET), new ListResourcesInPublicDirectory(resourceHandler));
-        routes.put(new RoutingCriteria("/form", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/form", POST), new WriteResource(resourceHandler));
-        routes.put(new RoutingCriteria("/form", PUT), new WriteResource(resourceHandler));
-        routes.put(new RoutingCriteria("/form", DELETE), new DeleteResource(resourceHandler));
-        routes.put(new RoutingCriteria("/method_options", OPTIONS), new MethodOptions());
-        routes.put(new RoutingCriteria("/redirect", GET), new Redirect());
-        routes.put(new RoutingCriteria("/image.jpeg", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/image.png", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/image.gif", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/file1", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/file1", PUT), new MethodNotAllowed());
-        routes.put(new RoutingCriteria("/text-file.txt", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/text-file.txt", POST), new MethodNotAllowed());
-        routes.put(new RoutingCriteria("/parameters", GET), new IncludeParametersInBody());
-        routes.put(new RoutingCriteria("/logs", GET), new Authorisation(new ReadResource(resourceHandler), new HeaderParameterExtractor()));
-        routes.put(new RoutingCriteria("/log", GET), new LogRequest(resourceHandler));
-        routes.put(new RoutingCriteria("/these", PUT), new LogRequest(resourceHandler));
-        routes.put(new RoutingCriteria("/requests", HEAD), new LogRequest(resourceHandler));
-        routes.put(new RoutingCriteria("/partial_content.txt", GET), new PartialContent(resourceHandler, new HeaderParameterExtractor()));
-        routes.put(new RoutingCriteria("/patch-content.txt", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/patch-content.txt", PATCH), new PatchResource(resourceHandler, new EtagGenerator(SHA_1)));
+        routes.put(new RoutingCriteria(HOME, GET), new ListResourcesInPublicDirectory(resourceHandler));
+        routes.put(new RoutingCriteria(FORM, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(FORM, POST), new WriteResource(resourceHandler));
+        routes.put(new RoutingCriteria(FORM, PUT), new WriteResource(resourceHandler));
+        routes.put(new RoutingCriteria(FORM, DELETE), new DeleteResource(resourceHandler));
+        routes.put(new RoutingCriteria(METHOD_OPTIONS, OPTIONS), new MethodOptions());
+        routes.put(new RoutingCriteria(REDIRECT, GET), new Redirect());
+        routes.put(new RoutingCriteria(IMAGE_JPEG, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(IMAGE_PNG, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(IMAGE_GIF, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(FILE, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(FILE, PUT), new MethodNotAllowed());
+        routes.put(new RoutingCriteria(TEXT_FILE, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(TEXT_FILE, POST), new MethodNotAllowed());
+        routes.put(new RoutingCriteria(PARAMETERS, GET), new IncludeParametersInBody());
+        routes.put(new RoutingCriteria(LOGS, GET), new Authorisation(new ReadResource(resourceHandler), new HeaderParameterExtractor()));
+        routes.put(new RoutingCriteria(LOG, GET), new LogRequest(resourceHandler));
+        routes.put(new RoutingCriteria(THESE, PUT), new LogRequest(resourceHandler));
+        routes.put(new RoutingCriteria(REQUESTS, HEAD), new LogRequest(resourceHandler));
+        routes.put(new RoutingCriteria(PARTIAL_CONTENT, GET), new PartialContent(resourceHandler, new HeaderParameterExtractor()));
+        routes.put(new RoutingCriteria(PATCH_CONTENT, GET), new ReadResource(resourceHandler));
+        routes.put(new RoutingCriteria(PATCH_CONTENT, PATCH), new PatchResource(resourceHandler, new EtagGenerator(SHA_1)));
     }
 
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
         if (isBogusMethod(httpRequest)) {
-            return new MethodNotAllowed().process(httpRequest);
+            return methodNotSupported(httpRequest);
         } else if (supportedRoute(httpRequest)) {
-            return routes.get(routingCriteria(httpRequest)).process(httpRequest);
+            return processRoute(httpRequest);
         } else {
-            return new UnknownRoute().process(httpRequest);
+            return fourOFour(httpRequest);
         }
     }
 
     private boolean isBogusMethod(HttpRequest httpRequest) {
         return isBogus(httpRequest.getMethod());
-
     }
 
-    private RoutingCriteria routingCriteria(HttpRequest httpRequest) {
-        return new RoutingCriteria(httpRequest.getRequestUri(), HttpMethods.valueOf(httpRequest.getMethod()));
+    private HttpResponse methodNotSupported(HttpRequest httpRequest) {
+        return new MethodNotAllowed().process(httpRequest);
     }
 
     private boolean supportedRoute(HttpRequest httpRequest) {
-        return routes.get(routingCriteria(httpRequest)) != null;
+        return Route.isSupported(httpRequest.getRequestUri())
+                && routes.get(routingCriteria(httpRequest)) != null;
+    }
+
+    private HttpResponse processRoute(HttpRequest httpRequest) {
+        return routes.get(routingCriteria(httpRequest)).process(httpRequest);
+    }
+
+    private RoutingCriteria routingCriteria(HttpRequest httpRequest) {
+        return new RoutingCriteria(Route.getRouteFor(httpRequest.getRequestUri()), HttpMethods.valueOf(httpRequest.getMethod()));
+    }
+
+    private HttpResponse fourOFour(HttpRequest httpRequest) {
+        return new UnknownRoute().process(httpRequest);
     }
 }
