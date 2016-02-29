@@ -14,13 +14,7 @@ public class CommandLineArgumentParser {
         int indexOfPortFlag = Arrays.asList(commandLineArgs).indexOf("-p");
         if (parameterKeyIsfound(indexOfPortFlag)) {
             String portAsString = extractParameterValue(commandLineArgs, indexOfPortFlag);
-
-            try {
-                return convertToInteger(portAsString);
-            } catch (NumberFormatException e) {
-                return DEFAULT_PORT;
-            }
-
+            return translatePortToNumericValue(portAsString);
         } else {
             return DEFAULT_PORT;
         }
@@ -35,15 +29,23 @@ public class CommandLineArgumentParser {
         }
     }
 
+    private boolean parameterKeyIsfound(int indexOfFlag) {
+        return indexOfFlag != -1;
+    }
+
+    private String extractParameterValue(String[] args, int indexOfFlag) {
+        return Arrays.asList(args).get(indexOfFlag + 1);
+    }
+
+    private int translatePortToNumericValue(String portAsString) {
+        try {
+            return convertToInteger(portAsString);
+        } catch (NumberFormatException e) {
+            return DEFAULT_PORT;
+        }
+    }
+
     private Integer convertToInteger(String portAsString) {
         return Integer.valueOf(portAsString);
-    }
-
-    private String extractParameterValue(String[] args, int indexOfPublicDirectoryFlag) {
-        return Arrays.asList(args).get(indexOfPublicDirectoryFlag + 1);
-    }
-
-    private boolean parameterKeyIsfound(int indexOfPublicDirectoryFlag) {
-        return indexOfPublicDirectoryFlag != -1;
     }
 }
