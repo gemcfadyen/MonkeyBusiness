@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static server.HttpMethods.*;
+import static server.actions.EtagGenerationAlgorithm.SHA_1;
 
 public class HttpRouteProcessor implements RouteProcessor {
     private Map<RoutingCriteria, Action> routes = new HashMap<>();
@@ -41,7 +42,7 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria("/requests", HEAD), new LogRequest(resourceHandler));
         routes.put(new RoutingCriteria("/partial_content.txt", GET), new PartialContent(resourceHandler, new HeaderParameterExtractor()));
         routes.put(new RoutingCriteria("/patch-content.txt", GET), new ReadResource(resourceHandler));
-        routes.put(new RoutingCriteria("/patch-content.txt", PATCH), new PatchResource(resourceHandler, new EtagGenerator()));
+        routes.put(new RoutingCriteria("/patch-content.txt", PATCH), new PatchResource(resourceHandler, new EtagGenerator(SHA_1)));
     }
 
     @Override

@@ -14,13 +14,14 @@ import static org.junit.Assert.assertThat;
 import static server.HttpMethods.PATCH;
 import static server.StatusCode.NO_CONTENT;
 import static server.StatusCode.PRECONDITION_FAILED;
+import static server.actions.EtagGenerationAlgorithm.SHA_1;
 import static server.messages.HttpMessageHeaderProperties.CONTENT_LENGTH;
 import static server.messages.HttpMessageHeaderProperties.IF_MATCH;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class PatchResourceTest {
 
-    private final EtagGenerator etagGenerator = new EtagGenerator() {
+    private final EtagGenerator etagGenerator = new EtagGenerator(SHA_1) {
         public String calculateEtag(byte[] value) {
             return "anEtagValue";
         }
@@ -90,7 +91,7 @@ public class PatchResourceTest {
     }
 
     private EtagGenerator eTagDictionaryReturningNotFound() {
-        return new EtagGenerator() {
+        return new EtagGenerator(SHA_1) {
                 public String calculateEtag(byte[] value) {
                     return "the wrong value";
                 }
