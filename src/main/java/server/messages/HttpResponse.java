@@ -1,7 +1,6 @@
 package server.messages;
 
-import server.HttpMethods;
-import server.StatusCode;
+import server.router.HttpMethods;
 
 import java.util.List;
 

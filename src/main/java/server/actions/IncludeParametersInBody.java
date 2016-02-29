@@ -1,8 +1,8 @@
 package server.actions;
 
 import server.Action;
-import server.DelimitedFormatter;
-import server.StatusCode;
+import server.messages.DelimitedFormatter;
+import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static server.Delimiter.COMMA;
+import static server.messages.Delimiter.COMMA;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class IncludeParametersInBody implements Action {

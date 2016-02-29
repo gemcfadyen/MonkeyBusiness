@@ -2,7 +2,6 @@ package server.messages;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.messages.HttpResponseException;
 
 import java.io.IOException;
 

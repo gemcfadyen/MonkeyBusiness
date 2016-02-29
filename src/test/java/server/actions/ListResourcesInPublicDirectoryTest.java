@@ -1,9 +1,9 @@
 package server.actions;
 
 import org.junit.Test;
-import server.HttpMethods;
+import server.router.HttpMethods;
 import server.ResourceHandlerSpy;
-import server.StatusCode;
+import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 

@@ -8,8 +8,8 @@ import server.messages.HttpResponseBuilder;
 
 import java.util.Map;
 
-import static server.StatusCode.NO_CONTENT;
-import static server.StatusCode.PRECONDITION_FAILED;
+import static server.messages.StatusCode.NO_CONTENT;
+import static server.messages.StatusCode.PRECONDITION_FAILED;
 import static server.messages.HttpMessageHeaderProperties.CONTENT_LENGTH;
 import static server.messages.HttpMessageHeaderProperties.IF_MATCH;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;

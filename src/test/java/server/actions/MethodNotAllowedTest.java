@@ -1,8 +1,8 @@
 package server.actions;
 
 import org.junit.Test;
-import server.HttpMethods;
-import server.StatusCode;
+import server.router.HttpMethods;
+import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 

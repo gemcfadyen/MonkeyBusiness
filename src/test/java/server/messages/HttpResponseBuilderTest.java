@@ -1,10 +1,7 @@
 package server.messages;
 
 import org.junit.Test;
-import server.HttpMethods;
-import server.StatusCode;
-import server.messages.HttpResponse;
-import server.messages.HttpResponseBuilder;
+import server.router.HttpMethods;
 
 import java.util.Arrays;
 

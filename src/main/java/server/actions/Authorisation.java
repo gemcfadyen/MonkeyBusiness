@@ -8,7 +8,7 @@ import server.messages.HttpResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
-import static server.StatusCode.UNAUTHORISED;
+import static server.messages.StatusCode.UNAUTHORISED;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class Authorisation implements Action {

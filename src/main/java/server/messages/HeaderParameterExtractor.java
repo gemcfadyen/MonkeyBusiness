@@ -1,7 +1,5 @@
 package server.messages;
 
-import server.Range;
-
 import java.util.Map;
 
 import static server.messages.HttpMessageHeaderProperties.AUTHORISATION;

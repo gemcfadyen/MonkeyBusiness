@@ -1,9 +1,9 @@
 package server.actions;
 
 import server.Action;
-import server.DelimitedFormatter;
+import server.messages.DelimitedFormatter;
 import server.ResourceHandler;
-import server.StatusCode;
+import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static server.Delimiter.BREAK;
+import static server.messages.Delimiter.BREAK;
 
 public class ListResourcesInPublicDirectory implements Action {
     private ResourceHandler resourceHandler;

@@ -5,7 +5,7 @@ import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
 
-import static server.StatusCode.NOT_FOUND;
+import static server.messages.StatusCode.NOT_FOUND;
 
 public class UnknownRoute implements Action {
     @Override

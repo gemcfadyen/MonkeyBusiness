@@ -3,7 +3,7 @@ package server.actions;
 import org.junit.Test;
 import server.ResourceHandler;
 import server.ResourceHandlerSpy;
-import server.StatusCode;
+import server.messages.StatusCode;
 import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
@@ -14,9 +14,9 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.HttpMethods.GET;
-import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.router.HttpMethods.GET;
 import static server.messages.HttpMessageHeaderProperties.AUTHORISATION;
+import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class AuthorisationTest {
     private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();

@@ -5,7 +5,7 @@ import server.ResourceHandler;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
-import static server.StatusCode.OK;
+import static server.messages.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class ReadResource implements Action {

@@ -1,16 +1,13 @@
 package server.messages;
 
-import server.DelimitedFormatter;
-import server.HttpMethods;
+import server.router.HttpMethods;
 import server.ResponseFormatter;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-import static server.Delimiter.COMMA;
-import static server.messages.HttpMessageHeaderProperties.ALLOW;
-import static server.messages.HttpMessageHeaderProperties.AUTHENTICATE;
-import static server.messages.HttpMessageHeaderProperties.LOCATION;
+import static server.messages.Delimiter.COMMA;
+import static server.messages.HttpMessageHeaderProperties.*;
 
 public class HttpResponseFormatter implements ResponseFormatter {
 

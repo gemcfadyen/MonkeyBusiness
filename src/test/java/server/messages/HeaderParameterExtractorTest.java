@@ -1,7 +1,6 @@
 package server.messages;
 
 import org.junit.Test;
-import server.Range;
 
 import java.util.HashMap;
 import java.util.Map;

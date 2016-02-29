@@ -3,6 +3,7 @@ package server;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
+import server.messages.StatusCode;
 
 public class RouteProcessorSpy implements RouteProcessor {
     private boolean hasProcessed = false;

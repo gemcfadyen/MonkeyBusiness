@@ -1,7 +1,7 @@
 package server.actions;
 
 import org.junit.Test;
-import server.HttpMethods;
+import server.router.HttpMethods;
 import server.ResourceHandlerSpy;
 import server.messages.HttpRequest;
 import server.messages.HttpRequestBuilder;

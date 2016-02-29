@@ -6,8 +6,8 @@ import server.messages.HttpResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.HttpMethods.GET;
-import static server.StatusCode.NOT_FOUND;
+import static server.router.HttpMethods.GET;
+import static server.messages.StatusCode.NOT_FOUND;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class UnknownRouteTest {

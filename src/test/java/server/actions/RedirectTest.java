@@ -6,8 +6,8 @@ import server.messages.HttpResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.HttpMethods.GET;
-import static server.StatusCode.FOUND;
+import static server.router.HttpMethods.GET;
+import static server.messages.StatusCode.FOUND;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class RedirectTest {

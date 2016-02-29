@@ -1,15 +1,15 @@
 package server.actions;
 
 import server.Action;
-import server.Range;
 import server.ResourceHandler;
 import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
+import server.messages.Range;
 
 import java.util.Arrays;
 
-import static server.StatusCode.PARTIAL_CONTENT;
+import static server.messages.StatusCode.PARTIAL_CONTENT;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class PartialContent implements Action {

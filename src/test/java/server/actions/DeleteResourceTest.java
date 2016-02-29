@@ -2,13 +2,13 @@ package server.actions;
 
 import org.junit.Test;
 import server.ResourceHandlerSpy;
-import server.StatusCode;
+import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.HttpMethods.DELETE;
+import static server.router.HttpMethods.DELETE;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class DeleteResourceTest {

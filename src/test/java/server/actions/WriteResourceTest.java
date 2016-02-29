@@ -7,8 +7,8 @@ import server.messages.HttpResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.HttpMethods.POST;
-import static server.StatusCode.OK;
+import static server.router.HttpMethods.POST;
+import static server.messages.StatusCode.OK;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 
 public class WriteResourceTest {

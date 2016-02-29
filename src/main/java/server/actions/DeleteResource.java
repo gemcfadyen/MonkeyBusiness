@@ -2,7 +2,7 @@ package server.actions;
 
 import server.Action;
 import server.ResourceHandler;
-import server.StatusCode;
+import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
