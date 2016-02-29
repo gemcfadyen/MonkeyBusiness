@@ -11,19 +11,16 @@ public class HttpServerRunner {
     public static void main(String... args) throws IOException {
         CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(System.getProperty("user.home"));
 
-        String host = "localhost";
         int port = commandLineArgumentParser.extractPort(args);
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(args);
-        System.out.println("[Public Directory] " + publicDirectory);
 
         HttpServerSocket httpServerSocket = new HttpServerSocket(new ServerSocket(port), new HttpResponseFormatter());
 
         HttpServer httpServer = new HttpServer(
-                host,
-                port,
                 httpServerSocket,
                 new HttpRequestParser(),
-                new HttpRouteProcessor(new FileResourceHandler(publicDirectory))
+                new HttpRouteProcessor( new FileResourceHandler(publicDirectory)),
+                new FixedThreadPoolExecutorService(4)
         );
 
         start(httpServer);

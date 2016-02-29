@@ -13,6 +13,8 @@ public class HttpServerTest {
     private HttpServer httpServer;
     private ClientSpy clientSpy;
     private RouteProcessorSpy httpRequestProcessorSpy;
+    private ExecutorServiceFactorySpy executorServiceFactorySpy;
+    private ExecutorServiceSpy executorServiceSpy;
 
     @Before
     public void setUp() throws Exception {
@@ -20,51 +22,34 @@ public class HttpServerTest {
         serverSocketSpy = new ServerSocketSpy(clientSpy);
         httpRequestParserSpy = new RequestParserSpy();
         httpRequestProcessorSpy = new RouteProcessorSpy();
-        httpServer = new HttpServer("localhost", 8080, serverSocketSpy, httpRequestParserSpy, httpRequestProcessorSpy);
+        executorServiceSpy = new ExecutorServiceSpy();
+        executorServiceFactorySpy = new ExecutorServiceFactorySpy(executorServiceSpy);
+        httpServer = new HttpServer(serverSocketSpy,
+                httpRequestParserSpy,
+                httpRequestProcessorSpy,
+                executorServiceFactorySpy
+        );
     }
 
     @Test
-    public void serverHasAHost() {
-        assertThat(httpServer.getHost(), is("localhost"));
+    public void whenServerIsProcessingItCreatesThreadpool() {
+        httpServer.processRequest();
+
+        assertThat(executorServiceFactorySpy.hasInitialisedThreadPool(), is(true));
     }
 
     @Test
-    public void serverHasAPort() {
-        assertThat(httpServer.getPort(), is(8080));
-    }
-
-    @Test
-    public void whenServerIsStartedItAcceptsClientRequests() {
+    public void whenServerIsProcessingItExecutesRunnableTask() {
         httpServer.processRequest();
 
         assertThat(serverSocketSpy.isAcceptingRequests(), is(true));
+        assertThat(executorServiceSpy.hasExecuted(), is(true));
     }
 
     @Test
-    public void serverParsesClientRequest() {
+    public void threadExecutorServiceShutsdown() {
         httpServer.processRequest();
 
-        assertThat(httpRequestParserSpy.hasParsedRequest(), is(true));
-    }
-
-    @Test
-    public void serverProcessesRequest() {
-        httpServer.processRequest();
-
-        assertThat(httpRequestProcessorSpy.hasProcessed(), is(true));
-    }
-
-    @Test
-    public void providesClientWithHttpResponse() {
-        httpServer.processRequest();
-
-        assertThat(clientSpy.hasHttpResponse(), is(true));
-    }
-
-    @Test
-    public void clientConnectionIsClosed() {
-        httpServer.processRequest();
-
-        assertThat(clientSpy.isClosed(), is(true));
+        assertThat(executorServiceSpy.hasShutdodwn(), is(true));
     }
 }

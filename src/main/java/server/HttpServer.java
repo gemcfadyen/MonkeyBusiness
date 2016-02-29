@@ -1,41 +1,31 @@
 package server;
 
-import server.messages.HttpRequest;
+import java.util.concurrent.ExecutorService;
 
 public class HttpServer {
-    private final String host;
-    private final int port;
     private final HttpServerSocket serverSocket;
     private final RequestParser requestParser;
     private RouteProcessor httpRouteProcessor;
+    private ExecutorServiceFactory executorServiceFactory;
 
-    public HttpServer(String host, int port,
-                      HttpServerSocket serverSocket,
+    public HttpServer(HttpServerSocket serverSocket,
                       RequestParser requestParser,
-                      RouteProcessor httpRouteProcessor) {
-        this.host = host;
-        this.port = port;
+                      RouteProcessor httpRouteProcessor,
+                      ExecutorServiceFactory requestExecutorService) {
         this.serverSocket = serverSocket;
         this.requestParser = requestParser;
         this.httpRouteProcessor = httpRouteProcessor;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
+        this.executorServiceFactory = requestExecutorService;
     }
 
     public void processRequest() {
         System.out.println("Listening for request.....");
-
-        HttpSocket client = serverSocket.accept();
-        HttpRequest httpRequest = requestParser.parse(client.getRawHttpRequest());
-
-        client.setHttpResponse(httpRouteProcessor.process(httpRequest));
-        client.close();
+        ExecutorService executor = executorServiceFactory.create();
+        ProcessClientRequestTask task = new ProcessClientRequestTask(serverSocket.accept(), requestParser, httpRouteProcessor);
+        ThreadExecutorService requestProcessorThread = new RequestThreadExecutorService(executor);
+        requestProcessorThread.execute(task);
+        requestProcessorThread.shutdown();
     }
 }
+
 
