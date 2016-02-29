@@ -14,7 +14,7 @@ import static server.messages.HttpMessageHeaderProperties.LOCATION;
 
 public class HttpResponseFormatter implements ResponseFormatter {
 
-    private DelimitedFormatter listFormatter = new DelimitedFormatter<HttpMethods>();
+    private DelimitedFormatter<HttpMethods> listFormatter = new DelimitedFormatter<>();
 
     @Override
     public byte[] format(HttpResponse response) {

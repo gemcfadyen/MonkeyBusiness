@@ -1,13 +1,22 @@
 package server.actions;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.actions.EtagGenerationAlgorithm.SHA_1;
 
 public class EtagGeneratorTest {
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    private final EtagGenerator etagGenerator = new EtagGenerator(SHA_1);
 
-    private final EtagGenerator etagGenerator = new EtagGenerator();
     @Test
     public void calculateEtagForDefaultContent() {
         String etag = etagGenerator.calculateEtag("default content".getBytes());
@@ -18,5 +27,19 @@ public class EtagGeneratorTest {
     public void calculateEtagForPatchedContent() {
         String etag = etagGenerator.calculateEtag("patched content".getBytes());
         assertThat(etag, is("5c36acad75b78b82be6d9cbbd6143ab7e0cc04b0"));
+    }
+
+    @Test
+    public void exceptionThrownIfEtagAlgorithmNotValid() {
+        expectedException.expect(EtagGeneratorException.class);
+        expectedException.expectMessage("Exception in generating etag");
+        expectedException.expectCause(instanceOf(NoSuchAlgorithmException.class));
+
+        EtagGenerator etagGeneratorWhichThrowsAlgorithmException = new EtagGenerator(SHA_1) {
+           protected MessageDigest getMessageDigest() throws NoSuchAlgorithmException {
+               throw new NoSuchAlgorithmException("Throws exception for test");
+           }
+        };
+        etagGeneratorWhichThrowsAlgorithmException.calculateEtag("some-content".getBytes());
     }
 }

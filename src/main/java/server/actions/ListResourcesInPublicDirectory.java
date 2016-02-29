@@ -16,11 +16,11 @@ import static server.Delimiter.BREAK;
 
 public class ListResourcesInPublicDirectory implements Action {
     private ResourceHandler resourceHandler;
-    private final DelimitedFormatter listFormatter;
+    private final DelimitedFormatter<String> listFormatter;
 
     public ListResourcesInPublicDirectory(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
-        listFormatter = new DelimitedFormatter<String>();
+        listFormatter = new DelimitedFormatter<>();
     }
 
     public HttpResponse process(HttpRequest request) {

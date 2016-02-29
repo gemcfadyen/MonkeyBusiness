@@ -36,7 +36,7 @@ public class PatchResource implements Action {
             httpResponseBuilder.withStatusCode(PRECONDITION_FAILED);
         }
 
-        return httpResponseBuilder .build();
+        return httpResponseBuilder.build();
     }
 
     private byte[] getResource(String resourceName) {
@@ -57,7 +57,6 @@ public class PatchResource implements Action {
 
     private boolean canUpdateResource(byte[] originalContent, String requestEtag) {
         String generatedEtag = etagGenerator.calculateEtag(originalContent);
-
         return generatedEtag.equals(requestEtag);
     }
 }

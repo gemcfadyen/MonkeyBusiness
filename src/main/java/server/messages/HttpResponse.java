@@ -10,14 +10,12 @@ public class HttpResponse {
     private final StatusCode statusCode;
     private String location;
     private final List<HttpMethods> allowedMethods;
-    private String httpVersion;
     private boolean authorisationRequest;
     private byte[] body;
     private String contentRange;
     private String eTag;
 
     protected HttpResponse(StatusCode statusCode,
-                           String httpVersion,
                            String location,
                            List<HttpMethods> allowedMethods,
                            boolean authorisationRequest,
@@ -25,7 +23,6 @@ public class HttpResponse {
                            String eTag,
                            byte[] body) {
         this.statusCode = statusCode;
-        this.httpVersion = httpVersion;
         this.location = location;
         this.allowedMethods = allowedMethods;
         this.authorisationRequest = authorisationRequest;
@@ -39,7 +36,7 @@ public class HttpResponse {
     }
 
     public String httpVersion() {
-        return httpVersion;
+        return "HTTP/1.1";
     }
 
     public List<HttpMethods> allowedMethods() {

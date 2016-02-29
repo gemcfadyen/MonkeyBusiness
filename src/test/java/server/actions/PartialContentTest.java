@@ -72,21 +72,4 @@ public class PartialContentTest {
         assertThat(httpResponse.body(), is("ata".getBytes()));
         assertThat(resourceHandlerSpy.hasReadResource(), is(true));
     }
-
-    @Test
-    public void correctPortionOfResourceReturnedWhenOnlyFirstIndexGiven() {
-        Map<String, String> headerParams = new HashMap<>();
-        headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "bytes=-2");
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/partial_content.txt")
-                .withRequestLine(GET.name())
-                .withHeaderParameters(headerParams)
-                .build();
-
-        HttpResponse httpResponse = partialContentAction.process(httpRequest);
-
-        assertThat(httpResponse.contentRange(), is("bytes=5-7"));
-        assertThat(httpResponse.body(), is("ta".getBytes()));
-        assertThat(resourceHandlerSpy.hasReadResource(), is(true));
-    }
 }

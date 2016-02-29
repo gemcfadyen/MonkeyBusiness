@@ -19,7 +19,7 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void defaultsPortTo5000IfInvalidValueProvided() {
-        String commandLineArguments = "-p banana";
+        String[] commandLineArguments = new String[] {"-p", "banana"};
         int port = commandLineArgumentParser.extractPort(commandLineArguments);
 
         assertThat(port, is(5000));

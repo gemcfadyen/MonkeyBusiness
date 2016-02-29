@@ -1,10 +1,10 @@
 package server;
 
 class RoutingCriteria {
-    private final String route;
+    private final Route route;
     private final HttpMethods method;
 
-    public RoutingCriteria(String route, HttpMethods method) {
+    public RoutingCriteria(Route route, HttpMethods method) {
         this.route = route;
         this.method = method;
     }

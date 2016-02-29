@@ -6,9 +6,15 @@ import java.security.NoSuchAlgorithmException;
 
 public class EtagGenerator {
 
+    private final String algorithm;
+
+    public EtagGenerator(EtagGenerationAlgorithm algorithm) {
+       this.algorithm = algorithm.getAlgorithm();
+    }
+
     public String calculateEtag(byte[] content) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            MessageDigest messageDigest = getMessageDigest();
             messageDigest.update(content, 0, content.length);
             byte[] digest = messageDigest.digest();
             return new HexBinaryAdapter().marshal(digest).toLowerCase();
@@ -16,5 +22,9 @@ public class EtagGenerator {
         } catch (NoSuchAlgorithmException e) {
             throw new EtagGeneratorException("Exception in generating etag", e);
         }
+    }
+
+    protected MessageDigest getMessageDigest() throws NoSuchAlgorithmException {
+        return MessageDigest.getInstance(algorithm);
     }
 }
