@@ -6,23 +6,22 @@ HTTP Server adhering to the Http Cob Spec
 
 ## Setup this Http Server
 
-# Clone the project
+#### Clone the project
 `git clone git@github.com:gemcfadyen/Apprenticeship-HttpServer.git`
 
-# cd into the root folder
+#### cd into the root folder
 `cd Apprenticeship-HttpServer`
 
-# build using gradle
-`./gradlew build`
+#### build using gradle
+`./gradlew clean build`
 
 
 ## Setup the Acceptance tests which run against this server
 
-# Navigate to your {home.directory}/Documents
+#### Navigate to your {home.directory}/Documents
+`cd {user.home}/Documents`
 
-# Create a a folder named Projects/cob-server and clone the cob_spec repository there
-git clone git@github.com:8thlight/cob_spec.git
+#### Create a a folder named Projects/cob-server and clone the cob_spec repository
+`git clone git@github.com:8thlight/cob_spec.git`
 
-# Follow the instructions to setup the [cob_spec Fitnesse tests on the 8th Light group](https://github.com/8thlight/cob_spec)
-
-
+#### Follow the instructions to setup the [cob_spec Fitnesse tests on the 8th Light github page](https://github.com/8thlight/cob_spec)
