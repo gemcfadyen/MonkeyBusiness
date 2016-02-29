@@ -41,6 +41,10 @@ public class HttpRequest {
     public Map<String, String> params() {
         return requestParams;
     }
+
+    public String getProtocolVersion() {
+        return "HTTP/1.1";
+    }
 }
 
 

@@ -21,7 +21,7 @@ public final class HttpResponseBuilder {
     }
 
     public HttpResponse build() {
-        return new HttpResponse(statusCode, "HTTP/1.1", location, allowedMethods, includeAuthorisation, contentRange, eTag, body);
+        return new HttpResponse(statusCode, location, allowedMethods, includeAuthorisation, contentRange, eTag, body);
     }
 
     public HttpResponseBuilder withStatusCode(StatusCode statusCode) {

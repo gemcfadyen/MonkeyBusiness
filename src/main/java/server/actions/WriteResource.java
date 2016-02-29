@@ -2,10 +2,10 @@ package server.actions;
 
 import server.Action;
 import server.ResourceHandler;
-import server.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
+import static server.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class WriteResource implements Action {
@@ -20,7 +20,7 @@ public class WriteResource implements Action {
         resourceHandler.write(request.getRequestUri(), request.getBody());
 
         return anHttpResponseBuilder()
-                .withStatusCode(StatusCode.OK)
+                .withStatusCode(OK)
                 .withBody(request.getBody().getBytes())
                 .build();
     }
