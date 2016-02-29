@@ -5,9 +5,9 @@ import server.ResourceHandler;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
-import static server.router.Route.LOGS;
-import static server.messages.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
+import static server.messages.StatusCode.OK;
+import static server.router.Route.LOGS;
 
 public class LogRequest implements Action {
     private ResourceHandler resourceHandler;

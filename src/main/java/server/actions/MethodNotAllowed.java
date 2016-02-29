@@ -1,10 +1,10 @@
 package server.actions;
 
 import server.Action;
-import server.router.HttpMethods;
-import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
+import server.messages.StatusCode;
+import server.router.HttpMethods;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 

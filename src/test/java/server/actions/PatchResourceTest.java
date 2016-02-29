@@ -11,13 +11,13 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static server.router.HttpMethods.PATCH;
-import static server.messages.StatusCode.NO_CONTENT;
-import static server.messages.StatusCode.PRECONDITION_FAILED;
 import static server.actions.EtagGenerationAlgorithm.SHA_1;
 import static server.messages.HttpMessageHeaderProperties.CONTENT_LENGTH;
 import static server.messages.HttpMessageHeaderProperties.IF_MATCH;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.StatusCode.NO_CONTENT;
+import static server.messages.StatusCode.PRECONDITION_FAILED;
+import static server.router.HttpMethods.PATCH;
 
 public class PatchResourceTest {
 

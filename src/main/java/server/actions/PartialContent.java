@@ -9,8 +9,8 @@ import server.messages.Range;
 
 import java.util.Arrays;
 
-import static server.messages.StatusCode.PARTIAL_CONTENT;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
+import static server.messages.StatusCode.PARTIAL_CONTENT;
 
 public class PartialContent implements Action {
     private HeaderParameterExtractor headerParameterExtractor;

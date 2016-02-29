@@ -7,9 +7,9 @@ import server.messages.HttpResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.router.HttpMethods.GET;
-import static server.messages.StatusCode.OK;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.StatusCode.OK;
+import static server.router.HttpMethods.GET;
 
 public class ReadResourceTest {
     private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();

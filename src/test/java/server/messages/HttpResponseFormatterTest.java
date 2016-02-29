@@ -5,16 +5,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import server.router.HttpMethods;
 import server.ResponseFormatter;
+import server.router.HttpMethods;
 
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.FOUND;
 import static server.messages.StatusCode.OK;
-import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 
 public class HttpResponseFormatterTest {
     @Rule

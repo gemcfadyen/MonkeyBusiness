@@ -1,11 +1,11 @@
 package server.actions;
 
 import org.junit.Test;
-import server.router.HttpMethods;
 import server.ResourceHandlerSpy;
-import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
+import server.messages.StatusCode;
+import server.router.HttpMethods;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

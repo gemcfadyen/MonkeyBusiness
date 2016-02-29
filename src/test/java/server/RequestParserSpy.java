@@ -1,6 +1,5 @@
 package server;
 
-import server.RequestParser;
 import server.messages.HttpRequest;
 
 import java.io.InputStream;

@@ -11,8 +11,8 @@ import server.messages.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import static server.router.HttpMethods.*;
 import static server.actions.EtagGenerationAlgorithm.SHA_1;
+import static server.router.HttpMethods.*;
 import static server.router.Route.*;
 
 public class HttpRouteProcessor implements RouteProcessor {

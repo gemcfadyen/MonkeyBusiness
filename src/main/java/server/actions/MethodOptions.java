@@ -1,12 +1,12 @@
 package server.actions;
 
 import server.Action;
-import server.router.HttpMethods;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
+import server.router.HttpMethods;
 
-import static server.messages.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
+import static server.messages.StatusCode.OK;
 
 public class MethodOptions implements Action {
 

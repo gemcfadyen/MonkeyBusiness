@@ -1,7 +1,6 @@
 package server.messages;
 
 import org.junit.Test;
-import server.messages.DelimitedFormatter;
 
 import java.util.ArrayList;
 import java.util.List;

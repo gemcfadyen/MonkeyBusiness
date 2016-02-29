@@ -1,7 +1,12 @@
 package server.messages;
 
 public enum Delimiter {
-    COMMA(","), BREAK("<br>");
+    COMMA(","),
+    COLON(":"),
+    AMPERSAND("&"),
+    EQUALS("="),
+    QUESTION_MARK("\\?"),
+    BREAK("<br>");
 
     private String delimiter;
 

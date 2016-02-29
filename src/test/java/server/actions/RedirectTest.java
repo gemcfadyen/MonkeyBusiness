@@ -6,9 +6,9 @@ import server.messages.HttpResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.router.HttpMethods.GET;
-import static server.messages.StatusCode.FOUND;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.StatusCode.FOUND;
+import static server.router.HttpMethods.GET;
 
 public class RedirectTest {
     private Redirect redirect = new Redirect();

@@ -2,10 +2,10 @@ package server.actions;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpRequestBuilder;
 import server.messages.HttpResponse;
+import server.messages.StatusCode;
 
 import java.util.HashMap;
 import java.util.Map;

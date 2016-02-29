@@ -5,8 +5,8 @@ import server.ResourceHandler;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
-import static server.messages.StatusCode.OK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
+import static server.messages.StatusCode.OK;
 
 public class ReadResource implements Action {
     private final ResourceHandler resourceHandler;

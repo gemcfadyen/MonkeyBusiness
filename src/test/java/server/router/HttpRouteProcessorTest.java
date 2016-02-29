@@ -11,10 +11,10 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static server.router.HttpMethods.*;
-import static server.messages.StatusCode.*;
 import static server.messages.HttpMessageHeaderProperties.PARTIAL_CONTENT_RANGE;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.messages.StatusCode.*;
+import static server.router.HttpMethods.*;
 
 public class HttpRouteProcessorTest {
     private HttpRouteProcessor requestProcessor;

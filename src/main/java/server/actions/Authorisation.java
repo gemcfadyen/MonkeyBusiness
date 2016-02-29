@@ -8,8 +8,8 @@ import server.messages.HttpResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
-import static server.messages.StatusCode.UNAUTHORISED;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
+import static server.messages.StatusCode.UNAUTHORISED;
 
 public class Authorisation implements Action {
    private HeaderParameterExtractor headerParameterExtractor;

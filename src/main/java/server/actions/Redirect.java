@@ -1,10 +1,10 @@
 package server.actions;
 
 import server.Action;
-import server.messages.StatusCode;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
+import server.messages.StatusCode;
 
 public class Redirect implements Action {
 

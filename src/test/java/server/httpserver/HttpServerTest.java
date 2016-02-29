@@ -2,8 +2,8 @@ package server.httpserver;
 
 import org.junit.Before;
 import org.junit.Test;
-import server.RouteProcessorSpy;
 import server.RequestParserSpy;
+import server.RouteProcessorSpy;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

@@ -1,4 +1,4 @@
-package server.filsystem;
+package server.filesystem;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import server.ResourceHandler;
-import server.filesystem.FileResourceHandler;
-import server.filesystem.ResourceWriteException;
 
 import java.io.File;
 import java.io.FileWriter;
