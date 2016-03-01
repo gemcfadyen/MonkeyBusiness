@@ -5,6 +5,7 @@ import org.junit.Test;
 import server.ResourceHandlerSpy;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
+import server.messages.StatusCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,8 @@ import static server.messages.HttpMessageHeaderProperties.PARTIAL_CONTENT_RANGE;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 import static server.messages.StatusCode.*;
 import static server.router.HttpMethods.*;
+import static server.router.Route.*;
+import static server.router.Route.PARTIAL_CONTENT;
 
 public class HttpRouteProcessorTest {
     private HttpRouteProcessor requestProcessor;
@@ -41,7 +44,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesHomeToDirectoryListing() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/")
+                .withRequestUri(HOME.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -54,7 +57,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesFormAndGetToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
+                .withRequestUri(FORM.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -67,7 +70,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesFormAndPostToWriteResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
+                .withRequestUri(FORM.getPath())
                 .withBody("content")
                 .withRequestLine(POST.name())
                 .build();
@@ -82,7 +85,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesFormAndPutToWriteResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
+                .withRequestUri(FORM.getPath())
                 .withRequestLine(PUT.name())
                 .withBody("content")
                 .build();
@@ -97,7 +100,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesFormAndDeleteToRemoveResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
+                .withRequestUri(FORM.getPath())
                 .withRequestLine(DELETE.name())
                 .build();
 
@@ -110,7 +113,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesMethodOptionsReturningAllowHeaders() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/method_options")
+                .withRequestUri(METHOD_OPTIONS.getPath())
                 .withRequestLine(OPTIONS.name())
                 .build();
 
@@ -123,7 +126,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesRedirecToNewUrl() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/redirect")
+                .withRequestUri(REDIRECT.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -136,7 +139,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesJpegImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/image.jpeg")
+                .withRequestUri(IMAGE_JPEG.getPath())
                 .withRequestLine(GET.name())
                 .withBody("My=Data")
                 .build();
@@ -151,7 +154,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesPngImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/image.png")
+                .withRequestUri(IMAGE_PNG.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -165,7 +168,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesGifImageToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/image.gif")
+                .withRequestUri(IMAGE_GIF.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -179,7 +182,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesFile1ToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/file1")
+                .withRequestUri(FILE.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -193,7 +196,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesFileOneAndPutToMethodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/file1")
+                .withRequestUri(FILE.getPath())
                 .withRequestLine(PUT.name())
                 .build();
 
@@ -205,7 +208,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesUnknownHttpMethodToMethodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/file1")
+                .withRequestUri(FILE.getPath())
                 .withRequestLine("BOGUS_METHOD")
                 .build();
 
@@ -217,7 +220,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesTextFileToReadRequest() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/text-file.txt")
+                .withRequestUri(TEXT_FILE.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -230,7 +233,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesTextFilePostToMethodNotAllowed() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/text-file.txt")
+                .withRequestUri(TEXT_FILE.getPath())
                 .withRequestLine(POST.name())
                 .build();
 
@@ -245,7 +248,7 @@ public class HttpRouteProcessorTest {
         decodedParams.put("paramKey", "paramValue");
         decodedParams.put("anotherParamKey", "anotherParamValue");
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/parameters")
+                .withRequestUri(PARAMETERS.getPath())
                 .withRequestLine(GET.name())
                 .withParameters(decodedParams)
                 .build();
@@ -258,7 +261,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesToLogsWithNoAuthenticationReturnsUnauthorised() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/logs")
+                .withRequestUri(LOGS.getPath())
                 .withRequestLine(GET.name())
                 .withHeaderParameters(new HashMap<>())
                 .build();
@@ -271,7 +274,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void getLogWritesToLog() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/log")
+                .withRequestUri(LOG.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -284,7 +287,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void putTheseWritesToLog() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/these")
+                .withRequestUri(THESE.getPath())
                 .withRequestLine(PUT.name())
                 .build();
 
@@ -297,7 +300,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void headRequestsWritesToLog() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/requests")
+                .withRequestUri(REQUESTS.getPath())
                 .withRequestLine(HEAD.name())
                 .build();
 
@@ -314,20 +317,20 @@ public class HttpRouteProcessorTest {
         headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "byte=0-3");
 
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/partial_content.txt")
+                .withRequestUri(Route.PARTIAL_CONTENT.getPath())
                 .withRequestLine(GET.name())
                 .withHeaderParameters(headerParams)
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
 
-        assertThat(httpResponse.statusCode(), is(PARTIAL_CONTENT));
+        assertThat(httpResponse.statusCode(), is(StatusCode.PARTIAL_CONTENT));
     }
 
     @Test
     public void routesGetPatchContentToReadResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/patch-content.txt")
+                .withRequestUri(PATCH_CONTENT.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -340,7 +343,7 @@ public class HttpRouteProcessorTest {
     @Test
     public void routesPatchContentToPatchResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/patch-content.txt")
+                .withRequestUri(PATCH_CONTENT.getPath())
                 .withRequestLine(PATCH.name())
                 .build();
 
