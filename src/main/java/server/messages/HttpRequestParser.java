@@ -99,7 +99,6 @@ public class HttpRequestParser implements RequestParser {
         try {
             return decodeUsingUtf8(parameter);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
             throw new HttpRequestParsingException("Error in parsing Http Request", e);
         }
     }

@@ -67,7 +67,6 @@ public class Authorisation implements Action {
             byte[] decodedBytes = Base64.getDecoder().decode(encryptedParam.trim());
             return decode(decodedBytes);
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
