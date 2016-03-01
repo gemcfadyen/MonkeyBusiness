@@ -27,6 +27,24 @@ public class HttpRequestParser implements RequestParser {
         }
     }
 
+    protected Map<String, String> getRequestParams(String[] methodLine) {
+        Map<String, String> decodedParameters = new HashMap<>();
+        String[] lineContainingAllParameters = parameterLine(methodLine[1]);
+        for (int i = 1; i < lineContainingAllParameters.length; i++) {
+            String[] parameterPair = splitUsing(AMPERSAND.get(), lineContainingAllParameters[i]);
+
+            for (String parameters : parameterPair) {
+                String[] keyValueParameter = splitUsing(EQUALS.get(), parameters);
+                decodedParameters.put(getValueAtIndex(0, keyValueParameter), decode(keyValueParameter[1]));
+            }
+        }
+        return decodedParameters;
+    }
+
+    protected String decodeUsingUtf8(String parameter) throws UnsupportedEncodingException {
+        return URLDecoder.decode(parameter, "UTF-8");
+    }
+
     private HttpRequest createHttpRequest(BufferedReader reader) throws IOException {
         String[] requestLine = getRequestLine(reader);
         Map<String, String> headerParams = getHeaderParameters(reader);
@@ -73,20 +91,6 @@ public class HttpRequestParser implements RequestParser {
         return headerParams;
     }
 
-    protected Map<String, String> getRequestParams(String[] methodLine) {
-        Map<String, String> decodedParameters = new HashMap<>();
-        String[] lineContainingAllParameters = parameterLine(methodLine[1]);
-        for (int i = 1; i < lineContainingAllParameters.length; i++) {
-            String[] parameterPair = splitUsing(AMPERSAND.get(), lineContainingAllParameters[i]);
-
-            for (String parameters : parameterPair) {
-                String[] keyValueParameter = splitUsing(EQUALS.get(), parameters);
-                decodedParameters.put(getValueAtIndex(0, keyValueParameter), decode(keyValueParameter[1]));
-            }
-        }
-        return decodedParameters;
-    }
-
     private String[] splitUsing(String delimiter, String line) {
         return line.split(delimiter);
     }
@@ -101,10 +105,6 @@ public class HttpRequestParser implements RequestParser {
         } catch (UnsupportedEncodingException e) {
             throw new HttpRequestParsingException("Error in parsing Http Request", e);
         }
-    }
-
-    protected String decodeUsingUtf8(String parameter) throws UnsupportedEncodingException {
-        return URLDecoder.decode(parameter, "UTF-8");
     }
 
     private String headerParameterKey(String[] params) {

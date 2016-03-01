@@ -17,7 +17,6 @@ import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 import static server.messages.StatusCode.*;
 import static server.router.HttpMethods.*;
 import static server.router.Route.*;
-import static server.router.Route.PARTIAL_CONTENT;
 
 public class HttpRouteProcessorTest {
     private HttpRouteProcessor requestProcessor;

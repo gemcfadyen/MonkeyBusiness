@@ -24,6 +24,17 @@ public class HttpRouteProcessor implements RouteProcessor {
         configureRoutes();
     }
 
+    @Override
+    public HttpResponse process(HttpRequest httpRequest) {
+        if (isBogusMethod(httpRequest)) {
+            return methodNotSupported(httpRequest);
+        } else if (supportedRoute(httpRequest)) {
+            return processRoute(httpRequest);
+        } else {
+            return fourOFour(httpRequest);
+        }
+    }
+
     private void configureRoutes() {
         routes.put(new RoutingCriteria(HOME, GET), new ListResourcesInPublicDirectory(resourceHandler));
         routes.put(new RoutingCriteria(FORM, GET), new ReadResource(resourceHandler));
@@ -47,17 +58,6 @@ public class HttpRouteProcessor implements RouteProcessor {
         routes.put(new RoutingCriteria(PARTIAL_CONTENT, GET), new PartialContent(resourceHandler, new HeaderParameterExtractor()));
         routes.put(new RoutingCriteria(PATCH_CONTENT, GET), new ReadResource(resourceHandler));
         routes.put(new RoutingCriteria(PATCH_CONTENT, PATCH), new PatchResource(resourceHandler, new EtagGenerator(SHA_1)));
-    }
-
-    @Override
-    public HttpResponse process(HttpRequest httpRequest) {
-        if (isBogusMethod(httpRequest)) {
-            return methodNotSupported(httpRequest);
-        } else if (supportedRoute(httpRequest)) {
-            return processRoute(httpRequest);
-        } else {
-            return fourOFour(httpRequest);
-        }
     }
 
     private boolean isBogusMethod(HttpRequest httpRequest) {
