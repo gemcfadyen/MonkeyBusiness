@@ -288,6 +288,7 @@ public class HttpRouteProcessorTest {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri(THESE.getPath())
                 .withRequestLine(PUT.name())
+                .withBody("Hello")
                 .build();
 
         HttpResponse httpResponse = requestProcessor.process(httpRequest);
