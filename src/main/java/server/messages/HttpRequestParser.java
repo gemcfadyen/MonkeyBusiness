@@ -67,9 +67,7 @@ public class HttpRequestParser implements RequestParser {
     private String getRequestUri(String[] requestLine) {
         String firstLine = getValueAtIndex(1, requestLine);
         String[] splitOnQuestionMark = splitUsing(QUESTION_MARK.get(), firstLine);
-        String valueAtIndex = getValueAtIndex(0, splitOnQuestionMark);
-        System.out.println("URI " + valueAtIndex);
-        return valueAtIndex;
+        return getValueAtIndex(0, splitOnQuestionMark);
     }
 
     private String getValueAtIndex(int index, String[] values) {
@@ -77,22 +75,16 @@ public class HttpRequestParser implements RequestParser {
     }
 
     private String getMethod(String[] requestLine) {
-        String valueAtIndex = getValueAtIndex(0, requestLine);
-        System.out.println("METHOD " + valueAtIndex);
-        return valueAtIndex;
+        return getValueAtIndex(0, requestLine);
     }
 
     private Map<String, String> getHeaderParameters(BufferedReader reader) throws IOException {
         Map<String, String> headerParams = new HashMap<>();
 
         String line = readLine(reader);
-        System.out.println("HeaderParam ");
         while (hasContent(line)) {
             String[] mapEntry = splitUsing(COLON.get(), line);
-            String key = headerParameterKey(mapEntry);
-            String value = headerParameterValue(mapEntry);
-            System.out.println(key + " : " + value);
-            headerParams.put(key, value);
+            headerParams.put(headerParameterKey(mapEntry), headerParameterValue(mapEntry));
             line = readLine(reader);
         }
 

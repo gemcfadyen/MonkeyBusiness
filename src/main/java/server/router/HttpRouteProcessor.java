@@ -1,9 +1,9 @@
 package server.router;
 
 import server.Action;
-import server.ResourceHandler;
 import server.RouteProcessor;
-import server.actions.*;
+import server.actions.MethodNotAllowed;
+import server.actions.UnknownRoute;
 import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
@@ -12,20 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static server.actions.EtagGenerationAlgorithm.SHA_1;
-import static server.router.HttpMethods.*;
+import static server.router.HttpMethods.isBogus;
 
 public class HttpRouteProcessor implements RouteProcessor {
-    private final HeaderParameterExtractor headerParameterExtractor;
     private Map<HttpMethods, List<Action>> routes = new HashMap<>();
-    private ResourceHandler resourceHandler;
 
-    public HttpRouteProcessor(ResourceHandler resourceHandler, HeaderParameterExtractor headerParameterExtractor) {
-        this.resourceHandler = resourceHandler;
-        this.headerParameterExtractor = headerParameterExtractor;
-        configureRoutes();
+    public HttpRouteProcessor(Routes routes) {
+        this.routes = routes.routes();
     }
 
     @Override
@@ -37,31 +30,6 @@ public class HttpRouteProcessor implements RouteProcessor {
         } else {
             return fourOFour(httpRequest);
         }
-    }
-
-    private void configureRoutes() {
-        routes.put(GET, asList(
-                new UnknownRoute(),
-                new ListResourcesInPublicDirectory(resourceHandler),
-                new Redirect(),
-                new Authorisation(new ReadResource(resourceHandler), new HeaderParameterExtractor()),
-                new IncludeParametersInBody(),
-                new PartialContent(resourceHandler, headerParameterExtractor),
-                new ReadResource(resourceHandler)));
-
-        routes.put(POST, asList(
-                new MethodNotAllowed(headerParameterExtractor),
-                new WriteResource(resourceHandler)
-        ));
-
-        routes.put(PUT, asList(
-                new MethodNotAllowed(headerParameterExtractor),
-                new WriteResource(resourceHandler)));
-
-        routes.put(DELETE, singletonList(new DeleteResource(resourceHandler)));
-        routes.put(OPTIONS, singletonList(new ReadResource(resourceHandler)));
-        routes.put(PATCH, singletonList(new PatchResource(resourceHandler, new EtagGenerator(SHA_1), headerParameterExtractor)));
-        routes.put(HEAD, singletonList(new LogRequest(resourceHandler)));
     }
 
     private boolean isBogusMethod(HttpRequest httpRequest) {
