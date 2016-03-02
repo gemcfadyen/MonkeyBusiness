@@ -20,6 +20,39 @@ public class AuthorisationTest {
     private Authorisation authorisation = new Authorisation(readResourceSpy, new HeaderParameterExtractor());
 
     @Test
+    public void actionIsEligibleWhenRequestIsForLogs() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/logs")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(new HashMap<>())
+                .build();
+        assertThat(authorisation.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void actionIsEligibleWhenRequestHasAuthorisationHeader() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(AUTHORISATION.getPropertyName(), "Basic YWRtaW46aHVudGVyMg==");
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/another-uri-with-authentication")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(parameters)
+                .build();
+
+        assertThat(authorisation.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void actionIsNotEligibleIfItIsNotLogsAndDoesNotContainAuthorisationHeaders() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/something-else")
+                .withRequestLine(GET.name())
+                .withHeaderParameters(new HashMap<>())
+                .build();
+        assertThat(authorisation.isEligible(httpRequest), is(false));
+    }
+
+    @Test
     public void returns403WhenRequestDoesNotContainAuthorisationFields() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/logs")

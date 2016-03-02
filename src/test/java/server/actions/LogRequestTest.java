@@ -23,7 +23,7 @@ public class LogRequestTest {
         logRequest.process(httpRequest);
 
         assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
-        assertThat(resourceHandlerSpy.getNameOfResourceThatWasChanged(), is("/logs"));
+        assertThat(resourceHandlerSpy.getNameOfResourceThatWasAppended(), is("/logs"));
         assertThat(resourceHandlerSpy.getContentAppendedToResource(), is("GET /log HTTP/1.1\n"));
     }
 }

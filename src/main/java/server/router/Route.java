@@ -9,6 +9,7 @@ public enum Route {
     IMAGE_PNG("/image.png"),
     IMAGE_GIF("/image.gif"),
     FILE("/file1"),
+    FOOBAR("/foobar"),
     TEXT_FILE("/text-file.txt"),
     PARAMETERS("/parameters"),
     LOGS("/logs"),

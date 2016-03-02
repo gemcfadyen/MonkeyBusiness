@@ -9,9 +9,30 @@ import static org.junit.Assert.assertThat;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 import static server.messages.StatusCode.NOT_FOUND;
 import static server.router.HttpMethods.GET;
+import static server.router.Route.FOOBAR;
 
 public class UnknownRouteTest {
     private UnknownRoute unknownRoute = new UnknownRoute();
+
+    @Test
+    public void isEligibleForRouteFooBar() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri(FOOBAR.getPath())
+                .withRequestLine(GET.name())
+                .build();
+
+        assertThat(unknownRoute.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void isNotEligibleForAnotherRoute() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/another-route")
+                .withRequestLine(GET.name())
+                .build();
+
+        assertThat(unknownRoute.isEligible(httpRequest), is(false));
+    }
 
     @Test
     public void provides404WhenNoRoutesMet() {
@@ -24,5 +45,4 @@ public class UnknownRouteTest {
 
         assertThat(httpResponse.statusCode(), is(NOT_FOUND));
     }
-
 }

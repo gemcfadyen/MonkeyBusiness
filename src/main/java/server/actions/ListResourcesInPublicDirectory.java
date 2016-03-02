@@ -13,6 +13,7 @@ import java.util.List;
 import static server.messages.Delimiter.BREAK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
+import static server.router.Route.HOME;
 
 public class ListResourcesInPublicDirectory implements Action {
     private ResourceHandler resourceHandler;
@@ -21,6 +22,11 @@ public class ListResourcesInPublicDirectory implements Action {
     public ListResourcesInPublicDirectory(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
         listFormatter = new DelimitedFormatter<>();
+    }
+
+    @Override
+    public boolean isEligible(HttpRequest request) {
+        return HOME.getPath().equals(request.getRequestUri());
     }
 
     public HttpResponse process(HttpRequest request) {

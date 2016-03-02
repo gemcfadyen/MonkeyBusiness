@@ -2,6 +2,7 @@ package server.actions;
 
 import server.Action;
 import server.ResourceHandler;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 import server.messages.HttpResponseBuilder;
@@ -17,10 +18,17 @@ import static server.messages.StatusCode.PRECONDITION_FAILED;
 public class PatchResource implements Action {
     private ResourceHandler resourceHandler;
     private EtagGenerator etagGenerator;
+    private HeaderParameterExtractor headerParameterExtractor;
 
-    public PatchResource(ResourceHandler resourceHandler, EtagGenerator eTagGenerator) {
+    public PatchResource(ResourceHandler resourceHandler, EtagGenerator eTagGenerator, HeaderParameterExtractor headerParameterExtractor) {
         this.resourceHandler = resourceHandler;
         this.etagGenerator = eTagGenerator;
+        this.headerParameterExtractor = headerParameterExtractor;
+    }
+
+    @Override
+    public boolean isEligible(HttpRequest request) {
+        return headerParameterExtractor.hasEtagProperty(request.headerParameters());
     }
 
     @Override

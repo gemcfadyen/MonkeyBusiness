@@ -16,6 +16,16 @@ public class DeleteResourceTest {
     private DeleteResource deleteResource = new DeleteResource(resourceHandlerSpy);
 
     @Test
+    public void isEligible() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withRequestLine(DELETE.name())
+                .build();
+
+        assertThat(deleteResource.isEligible(httpRequest), is(true));
+    }
+
+    @Test
     public void deleteRequestRemovesResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")

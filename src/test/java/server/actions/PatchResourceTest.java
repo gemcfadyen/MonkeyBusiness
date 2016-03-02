@@ -2,6 +2,7 @@ package server.actions;
 
 import org.junit.Test;
 import server.ResourceHandlerSpy;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
@@ -27,7 +28,31 @@ public class PatchResourceTest {
         }
     };
     private final ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
-    private final PatchResource patchResource = new PatchResource(resourceHandlerSpy, etagGenerator);
+    private HeaderParameterExtractor headerParameterExtractor = new HeaderParameterExtractor();
+    private final PatchResource patchResource = new PatchResource(resourceHandlerSpy, etagGenerator, headerParameterExtractor);
+
+    @Test
+    public void isEligibleWhenHeaderHasEtag() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withRequestLine(PATCH.name())
+                .withHeaderParameters(getPatchRequestHeaderProperties())
+                .withBody("patched content")
+                .build();
+
+        assertThat(patchResource.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void isNotEligibleWhenHeaderHasNoEtag() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withRequestLine(PATCH.name())
+                .withBody("patched content")
+                .build();
+
+        assertThat(patchResource.isEligible(httpRequest), is(false));
+    }
 
     @Test
     public void patchingResourceReturns204() {
@@ -73,7 +98,7 @@ public class PatchResourceTest {
 
     @Test
     public void dontPatchResourceIfEtagMatchesOriginalContent() {
-        PatchResource patchResource = new PatchResource(resourceHandlerSpy, eTagDictionaryReturningNotFound());
+        PatchResource patchResource = new PatchResource(resourceHandlerSpy, eTagDictionaryReturningNotFound(), headerParameterExtractor);
 
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/partial_content.txt")
@@ -92,10 +117,10 @@ public class PatchResourceTest {
 
     private EtagGenerator eTagDictionaryReturningNotFound() {
         return new EtagGenerator(SHA_1) {
-                public String calculateEtag(byte[] value) {
-                    return "the wrong value";
-                }
-            };
+            public String calculateEtag(byte[] value) {
+                return "the wrong value";
+            }
+        };
     }
 
     private Map<String, String> getPatchRequestHeaderProperties() {

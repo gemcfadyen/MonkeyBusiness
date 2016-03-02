@@ -17,6 +17,11 @@ public class LogRequest implements Action {
     }
 
     @Override
+    public boolean isEligible(HttpRequest request) {
+        return false;
+    }
+
+    @Override
     public HttpResponse process(HttpRequest request) {
         String resourceContent = String.format("%s %s %s\n", request.getMethod(), request.getRequestUri(), request.getProtocolVersion());
         resourceHandler.append(LOGS.getPath(), resourceContent);

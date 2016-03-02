@@ -1,13 +1,14 @@
 package server.messages;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
 
     private final String method;
-    private final Map<String, String> requestParams;
+    private Map<String, String> requestParams = new HashMap<>();
+    private Map<String, String> headerParams = new HashMap<>();
     private final String requestUri;
-    private final Map<String, String> headerParams;
     private final String body;
 
     protected HttpRequest(String method,
