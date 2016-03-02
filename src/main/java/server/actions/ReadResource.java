@@ -8,13 +8,11 @@ import server.router.HttpMethods;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
-import static server.router.Route.LOGS;
 
-public class ReadResource implements Action {
-    private final ResourceHandler resourceHandler;
+public class ReadResource extends LogRequest implements Action {
 
     public ReadResource(ResourceHandler resourceHandler) {
-        this.resourceHandler = resourceHandler;
+        super(resourceHandler);
     }
 
     @Override
@@ -23,9 +21,7 @@ public class ReadResource implements Action {
     }
 
     @Override
-    public HttpResponse process(HttpRequest request) {
-        logGetRequest(request);
-
+    public HttpResponse createHttpResponse(HttpRequest request) {
         return anHttpResponseBuilder()
                 .withStatusCode(OK)
                 .withBody(readResourceAt(request))
@@ -35,10 +31,5 @@ public class ReadResource implements Action {
 
     private byte[] readResourceAt(HttpRequest request) {
         return resourceHandler.read(request.getRequestUri());
-    }
-
-    private void logGetRequest(HttpRequest request) {
-        String resourceContent = String.format("%s %s %s\n", request.getMethod(), request.getRequestUri(), request.getProtocolVersion());
-        resourceHandler.append(LOGS.getPath(), resourceContent);
     }
 }

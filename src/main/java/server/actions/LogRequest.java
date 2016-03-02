@@ -10,7 +10,7 @@ import static server.messages.StatusCode.OK;
 import static server.router.Route.LOGS;
 
 public class LogRequest implements Action {
-    private ResourceHandler resourceHandler;
+    protected ResourceHandler resourceHandler;
 
     public LogRequest(ResourceHandler resourceHandler) {
         this.resourceHandler = resourceHandler;
@@ -26,8 +26,13 @@ public class LogRequest implements Action {
         String resourceContent = String.format("%s %s %s\n", request.getMethod(), request.getRequestUri(), request.getProtocolVersion());
         resourceHandler.append(LOGS.getPath(), resourceContent);
 
-        return anHttpResponseBuilder()
+        return createHttpResponse(request);
+    }
+
+    protected HttpResponse createHttpResponse(HttpRequest request) {
+
+       return anHttpResponseBuilder()
                 .withStatusCode(OK)
                 .build();
-    }
+    };
 }

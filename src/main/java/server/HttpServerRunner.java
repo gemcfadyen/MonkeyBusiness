@@ -4,6 +4,7 @@ import server.filesystem.FileResourceHandler;
 import server.httpserver.FixedThreadPoolExecutorService;
 import server.httpserver.HttpServer;
 import server.httpserver.HttpServerSocket;
+import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequestParser;
 import server.messages.HttpResponseFormatter;
 import server.router.HttpRouteProcessor;
@@ -24,7 +25,7 @@ public class HttpServerRunner {
         HttpServer httpServer = new HttpServer(
                 httpServerSocket,
                 new HttpRequestParser(),
-                new HttpRouteProcessor( new FileResourceHandler(publicDirectory)),
+                new HttpRouteProcessor( new FileResourceHandler(publicDirectory), new HeaderParameterExtractor()),
                 new FixedThreadPoolExecutorService(4)
         );
 

@@ -7,13 +7,11 @@ import server.messages.HttpResponse;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
-import static server.router.Route.LOGS;
 
-public class WriteResource implements Action {
-    private final ResourceHandler resourceHandler;
+public class WriteResource extends LogRequest implements Action {
 
     public WriteResource(ResourceHandler resourceHandler) {
-        this.resourceHandler = resourceHandler;
+        super(resourceHandler);
     }
 
     @Override
@@ -22,18 +20,12 @@ public class WriteResource implements Action {
     }
 
     @Override
-    public HttpResponse process(HttpRequest request) {
-        logRequest(request);
+    public HttpResponse createHttpResponse(HttpRequest request) {
         resourceHandler.write(request.getRequestUri(), request.getBody());
 
         return anHttpResponseBuilder()
                 .withStatusCode(OK)
                 .withBody(request.getBody().getBytes())
                 .build();
-    }
-
-    private void logRequest(HttpRequest request) {
-        String resourceContent = String.format("%s %s %s\n", request.getMethod(), request.getRequestUri(), request.getProtocolVersion());
-        resourceHandler.append(LOGS.getPath(), resourceContent);
     }
 }
