@@ -46,6 +46,6 @@ public class CommandLineArgumentParserTest {
         String[] commandLineArguments = new String[]{};
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(commandLineArguments);
 
-        assertThat(publicDirectory, is("homeDir/Documents/Projects/cob-server/cob_spec/public"));
+        assertThat(publicDirectory, is("homeDir/vendor/cob_spec/public"));
     }
 }

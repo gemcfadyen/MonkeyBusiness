@@ -13,7 +13,7 @@ import static server.messages.StatusCode.UNAUTHORISED;
 import static server.router.Resource.LOGS;
 
 public class Authorisation implements Action {
-   private HeaderParameterExtractor headerParameterExtractor;
+    private HeaderParameterExtractor headerParameterExtractor;
     private ReadResource readResource;
 
     public Authorisation(ReadResource readResource, HeaderParameterExtractor headerParameterExtractor) {

@@ -17,7 +17,8 @@ import java.net.ServerSocket;
 public class HttpServerRunner {
 
     public static void main(String... args) throws IOException {
-        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(System.getProperty("user.home"));
+
+        CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(getRepositoryRootDirectory());
 
         int port = commandLineArgumentParser.extractPort(args);
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(args);
@@ -38,6 +39,14 @@ public class HttpServerRunner {
     private static void start(HttpServer server) {
         while (true) {
             server.processRequest();
+        }
+    }
+
+    private static String getRepositoryRootDirectory() {
+        try {
+            return new java.io.File(".").getCanonicalPath();
+        } catch (IOException e) {
+            throw new RootDirectoryException(e);
         }
     }
 }

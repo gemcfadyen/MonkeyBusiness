@@ -13,6 +13,7 @@ HTTP Server adhering to the Http Cob Spec
 
 #### build using gradle
 `./gradlew clean build`
+(you may wish to exclude the folder `vendor` from being compiled. You can do this in IntelliJ by right clicking on the vendor folder and choosing 'Mark Directory As Excluded')
 
 
 ## Setup the Acceptance tests which run against this server
@@ -20,7 +21,6 @@ HTTP Server adhering to the Http Cob Spec
 #### Navigate to the vendor cob-spec directory             ----------------your {home.directory}/Documents
 
 `cd vendor/cob-spec`
-
 
 #### Package the cob-spec tests
 

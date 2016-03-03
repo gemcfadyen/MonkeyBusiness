@@ -7,7 +7,7 @@ public class CommandLineArgumentParser {
     private static String DEFAULT_PUBLIC_DIRECTORY;
 
     public CommandLineArgumentParser(String homeDirectory) {
-        DEFAULT_PUBLIC_DIRECTORY = homeDirectory + "/Documents/Projects/cob-server/cob_spec/public";
+        DEFAULT_PUBLIC_DIRECTORY = homeDirectory + "/vendor/cob_spec/public";
     }
 
     public int extractPort(String... commandLineArgs) {
