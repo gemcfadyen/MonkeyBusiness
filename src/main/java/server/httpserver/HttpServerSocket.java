@@ -19,7 +19,7 @@ public class HttpServerSocket {
         try {
             return new ClientSocket(serverSocket.accept(), responseFormatter);
         } catch (IOException e) {
-            throw new HttpServerSocketException("Exception occurred whilst server was accepting client requests", e);
+            throw new HttpServerSocketException(e);
         }
     }
 }

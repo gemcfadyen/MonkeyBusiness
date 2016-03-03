@@ -15,12 +15,12 @@ public class EtagGeneratorExceptionTest {
     @Before
     public void setUp() throws Exception {
         originalException = new NoSuchAlgorithmException("no sha 1 algorithm");
-        exception = new EtagGeneratorException("Error in Etag Generation", originalException);
+        exception = new EtagGeneratorException(originalException);
     }
 
     @Test
     public void etagGeneratorExceptionHasAMessage() {
-        assertThat(exception.getMessage(), is("Error in Etag Generation"));
+        assertThat(exception.getMessage(), is("Exception thrown whilst generating etag"));
     }
 
     @Test

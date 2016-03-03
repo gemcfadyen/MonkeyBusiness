@@ -96,7 +96,7 @@ public class HttpResponseFormatterTest {
     @Test
     public void exceptionOnFormatting() {
         expectedException.expect(HttpResponseException.class);
-        expectedException.expectMessage("Error in creating HTTP Response");
+        expectedException.expectMessage("Error when creating Http Response");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(UnsupportedEncodingException.class));
 
         HttpResponse response =

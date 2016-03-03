@@ -16,12 +16,12 @@ public class HttpResponseExceptionTest {
     @Before
     public void setUp() throws Exception {
         originalException = new IOException();
-        exception = new HttpResponseException("Error when creating HTTP Response", originalException);
+        exception = new HttpResponseException(originalException);
     }
 
     @Test
     public void httpResponseExceptionHasMessage() {
-        assertThat(exception.getMessage(), is("Error when creating HTTP Response"));
+        assertThat(exception.getMessage(), is("Error when creating Http Response"));
     }
 
     @Test

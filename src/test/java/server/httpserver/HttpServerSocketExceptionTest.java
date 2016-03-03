@@ -15,12 +15,12 @@ public class HttpServerSocketExceptionTest {
     @Before
     public void setUp() throws Exception {
         originalException = new IOException();
-        exception = new HttpServerSocketException("Error in ServerSocket", originalException);
+        exception = new HttpServerSocketException(originalException);
     }
 
     @Test
     public void httpServerSocketExceptionHasMessage() {
-        assertThat(exception.getMessage(), is("Error in ServerSocket"));
+        assertThat(exception.getMessage(), is("Exception occurred whilst server was accepting client requests"));
     }
 
     @Test

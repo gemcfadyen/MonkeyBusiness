@@ -15,12 +15,12 @@ public class HttpRequestParsingExceptionTest {
     @Before
     public void setUp() throws Exception {
         originalException = new IOException();
-        exception = new HttpRequestParsingException("Error when parsing HTTP request", originalException);
+        exception = new HttpRequestParsingException(originalException);
     }
 
     @Test
     public void httpRequestParsingExceptionHasMessage() {
-        assertThat(exception.getMessage(), is("Error when parsing HTTP request"));
+        assertThat(exception.getMessage(), is("Error when parsing Http Request"));
     }
 
     @Test

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 
 public class ClientSocketExceptionTest {
     private IOException originalException;
-    private HttpServerSocketException exception;
+    private ClientSocketException exception;
 
     @Before
     public void setUp() throws Exception {

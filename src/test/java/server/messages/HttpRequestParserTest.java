@@ -41,7 +41,7 @@ public class HttpRequestParserTest {
     @Test
     public void exceptionThrownOnParseError() {
         expectedException.expect(HttpRequestParsingException.class);
-        expectedException.expectMessage("Error in parsing Http Request");
+        expectedException.expectMessage("Error when parsing Http Request");
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(IOException.class));
 
         BufferedReaderWhichThrowsExceptionOnReadLine readerToThrowException = new BufferedReaderWhichThrowsExceptionOnReadLine(new StringReader("hi"));
@@ -87,7 +87,7 @@ public class HttpRequestParserTest {
     @Test
     public void exceptionIsThrownWhenErrorInDecodingParameters() {
         expectedException.expect(HttpRequestParsingException.class);
-        expectedException.expectMessage("Error in parsing Http Request");
+        expectedException.expectMessage("Error when parsing Http Request");
         expectedException.expectCause(instanceOf(UnsupportedEncodingException.class));
 
         HttpRequestParser parserWhichThrowsExceptionOnDecoding = new HttpRequestParser() {

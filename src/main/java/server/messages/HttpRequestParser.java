@@ -23,7 +23,7 @@ public class HttpRequestParser implements RequestParser {
         try {
             return createHttpRequest(reader);
         } catch (IOException e) {
-            throw new HttpRequestParsingException("Error in parsing Http Request", e);
+            throw new HttpRequestParsingException(e);
         }
     }
 
@@ -103,7 +103,7 @@ public class HttpRequestParser implements RequestParser {
         try {
             return decodeUsingUtf8(parameter);
         } catch (UnsupportedEncodingException e) {
-            throw new HttpRequestParsingException("Error in parsing Http Request", e);
+            throw new HttpRequestParsingException(e);
         }
     }
 

@@ -1,5 +1,8 @@
 package server.router;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Resource {
 
     HOME("/"),
@@ -30,11 +33,7 @@ public enum Resource {
     }
 
     public static boolean isSupported(String route) {
-        for (Resource value : Resource.values()) {
-            if (value.getPath().equals(route)) {
-                return true;
-            }
-        }
-        return false;
+        List<Resource> allSupportedResources = Arrays.asList(values());
+        return allSupportedResources.stream().anyMatch(x -> x.getPath().equals(route));
     }
 }
