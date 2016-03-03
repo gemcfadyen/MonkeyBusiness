@@ -18,6 +18,11 @@ public class IncludeParametersInBody implements Action {
     private DelimitedFormatter<String> delimitedFormatter = new DelimitedFormatter<>();
 
     @Override
+    public boolean isEligible(HttpRequest request) {
+        return request.params().size() > 0;
+    }
+
+    @Override
     public HttpResponse process(HttpRequest request) {
         String commaSeparatedListOfParameters =
                 delimitedFormatter.delimitedValues(getParametersFrom(request), COMMA);

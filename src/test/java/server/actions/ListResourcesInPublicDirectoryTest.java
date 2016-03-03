@@ -10,15 +10,37 @@ import server.router.HttpMethods;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
+import static server.router.Resource.HOME;
 
 public class ListResourcesInPublicDirectoryTest {
+    private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
+    private ListResourcesInPublicDirectory listResources = new ListResourcesInPublicDirectory(resourceHandlerSpy);
+
+    @Test
+    public void isEligibleIfRouteIsHome() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri(HOME.getPath())
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
+        assertThat(listResources.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void actionNotEligibleIfRouteIsSomethingElse() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/something-else")
+                .withRequestLine(HttpMethods.GET.name())
+                .build();
+
+        assertThat(listResources.isEligible(httpRequest), is(false));
+
+    }
+
     @Test
     public void responseContainsFilenamesAsLinks() {
-        ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
-        ListResourcesInPublicDirectory listResources = new ListResourcesInPublicDirectory(resourceHandlerSpy);
-
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/")
+                .withRequestUri(HOME.getPath())
                 .withRequestLine(HttpMethods.GET.name())
                 .build();
 

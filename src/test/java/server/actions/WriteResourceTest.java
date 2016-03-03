@@ -16,6 +16,17 @@ public class WriteResourceTest {
     private WriteResource writeResource = new WriteResource(resourceHandlerSpy);
 
     @Test
+    public void isEligible() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/form")
+                .withBody("content")
+                .withRequestLine(POST.name())
+                .build();
+
+        assertThat(writeResource.isEligible(httpRequest), is(true));
+    }
+
+    @Test
     public void postMethodCreatesAResource() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")

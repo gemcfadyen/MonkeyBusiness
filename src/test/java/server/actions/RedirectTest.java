@@ -13,6 +13,27 @@ import static server.router.HttpMethods.GET;
 public class RedirectTest {
     private Redirect redirect = new Redirect();
 
+
+    @Test
+    public void isEligibleWhenRouteIsRedirect() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/redirect")
+                .withRequestLine(GET.name())
+                .build();
+
+        assertThat(redirect.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void isNotEligibleWhenRouteIsSomethingElse() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/something-else")
+                .withRequestLine(GET.name())
+                .build();
+
+        assertThat(redirect.isEligible(httpRequest), is(false));
+    }
+
     @Test
     public void redirectReturns302() {
         HttpRequest httpRequest = anHttpRequestBuilder()

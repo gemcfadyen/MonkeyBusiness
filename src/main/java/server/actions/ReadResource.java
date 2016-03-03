@@ -4,6 +4,7 @@ import server.Action;
 import server.ResourceHandler;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
+import server.router.HttpMethods;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
@@ -16,11 +17,20 @@ public class ReadResource implements Action {
     }
 
     @Override
+    public boolean isEligible(HttpRequest request) {
+        return true;
+    }
+
+    @Override
     public HttpResponse process(HttpRequest request) {
-        byte[] body = resourceHandler.read(request.getRequestUri());
         return anHttpResponseBuilder()
                 .withStatusCode(OK)
-                .withBody(body)
+                .withBody(readResourceAt(request))
+                .withAllowMethods(HttpMethods.values())
                 .build();
+    }
+
+    private byte[] readResourceAt(HttpRequest request) {
+        return resourceHandler.read(request.getRequestUri());
     }
 }

@@ -22,6 +22,11 @@ public class PartialContent implements Action {
     }
 
     @Override
+    public boolean isEligible(HttpRequest request) {
+        return headerParameterExtractor.hasPartialContentRange(request.headerParameters());
+    }
+
+    @Override
     public HttpResponse process(HttpRequest request) {
         byte[] readResource = resourceHandler.read(request.getRequestUri());
         Range partialContentRange = getRangeFrom(request, readResource);

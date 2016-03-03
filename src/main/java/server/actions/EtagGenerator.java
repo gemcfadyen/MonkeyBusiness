@@ -20,7 +20,7 @@ public class EtagGenerator {
             return new HexBinaryAdapter().marshal(digest).toLowerCase();
 
         } catch (NoSuchAlgorithmException e) {
-            throw new EtagGeneratorException("Exception in generating etag", e);
+            throw new EtagGeneratorException(e);
         }
     }
 

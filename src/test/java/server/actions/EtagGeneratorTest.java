@@ -32,7 +32,7 @@ public class EtagGeneratorTest {
     @Test
     public void exceptionThrownIfEtagAlgorithmNotValid() {
         expectedException.expect(EtagGeneratorException.class);
-        expectedException.expectMessage("Exception in generating etag");
+        expectedException.expectMessage("Exception thrown whilst generating etag");
         expectedException.expectCause(instanceOf(NoSuchAlgorithmException.class));
 
         EtagGenerator etagGeneratorWhichThrowsAlgorithmException = new EtagGenerator(SHA_1) {

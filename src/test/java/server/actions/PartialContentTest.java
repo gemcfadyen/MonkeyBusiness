@@ -22,11 +22,39 @@ public class PartialContentTest {
     private final PartialContent partialContentAction = new PartialContent(resourceHandlerSpy, new HeaderParameterExtractor());
 
     @Test
+    public void isEligibleWhenRequestHasRangeProperties() {
+        Map<String, String> headerParams = new HashMap<>();
+        headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "bytes=0-4");
+
+        PartialContent partialContentAction = new PartialContent(resourceHandlerSpy, new HeaderParameterExtractor());
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withHeaderParameters(headerParams)
+                .withRequestLine(GET.name())
+                .build();
+
+        assertThat(partialContentAction.isEligible(httpRequest), is(true));
+    }
+
+    @Test
+    public void isNotEligibleWhenRequestHasNoRangeProperties() {
+        Map<String, String> headerParams = new HashMap<>();
+
+        PartialContent partialContentAction = new PartialContent(resourceHandlerSpy, new HeaderParameterExtractor());
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/partial_content.txt")
+                .withHeaderParameters(headerParams)
+                .withRequestLine(GET.name())
+                .build();
+
+        assertThat(partialContentAction.isEligible(httpRequest), is(false));
+    }
+
+    @Test
     public void partialContentRequestContainsStatus206() {
         Map<String, String> headerParams = new HashMap<>();
         headerParams.put(PARTIAL_CONTENT_RANGE.getPropertyName(), "bytes=0-4");
 
-        ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
         PartialContent partialContentAction = new PartialContent(resourceHandlerSpy, new HeaderParameterExtractor());
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/partial_content.txt")

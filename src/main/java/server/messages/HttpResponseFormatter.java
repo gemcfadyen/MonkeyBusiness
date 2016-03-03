@@ -18,7 +18,7 @@ public class HttpResponseFormatter implements ResponseFormatter {
         try {
             return createFormatted(response);
         } catch (UnsupportedEncodingException e) {
-            throw new HttpResponseException("Error in creating HTTP Response", e);
+            throw new HttpResponseException(e);
         }
     }
 
