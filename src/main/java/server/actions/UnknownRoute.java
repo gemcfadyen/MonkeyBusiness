@@ -6,7 +6,7 @@ import server.messages.HttpResponse;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.NOT_FOUND;
-import static server.router.Route.FOOBAR;
+import static server.router.Resource.FOOBAR;
 
 public class UnknownRoute implements Action {
     @Override

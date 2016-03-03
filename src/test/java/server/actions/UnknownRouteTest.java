@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 import static server.messages.StatusCode.NOT_FOUND;
 import static server.router.HttpMethods.GET;
-import static server.router.Route.FOOBAR;
+import static server.router.Resource.FOOBAR;
 
 public class UnknownRouteTest {
     private UnknownRoute unknownRoute = new UnknownRoute();

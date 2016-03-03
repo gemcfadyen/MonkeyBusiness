@@ -59,7 +59,6 @@ public class HttpRouteProcessor implements RouteProcessor {
                 return action.process(httpRequest);
             }
         }
-        System.out.println("404 from inside processor");
         return fourOFour(httpRequest);
     }
 

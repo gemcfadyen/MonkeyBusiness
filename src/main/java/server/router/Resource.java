@@ -1,6 +1,6 @@
 package server.router;
 
-public enum Route {
+public enum Resource {
     HOME("/"),
     FOOBAR("/foobar"),
     REDIRECT("/redirect"),
@@ -8,7 +8,7 @@ public enum Route {
 
     private final String path;
 
-    Route(String path) {
+    Resource(String path) {
         this.path = path;
     }
 

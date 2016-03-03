@@ -10,7 +10,7 @@ import java.util.Base64;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.UNAUTHORISED;
-import static server.router.Route.LOGS;
+import static server.router.Resource.LOGS;
 
 public class Authorisation implements Action {
    private HeaderParameterExtractor headerParameterExtractor;

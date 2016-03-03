@@ -6,7 +6,7 @@ import server.messages.HttpResponse;
 
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.FOUND;
-import static server.router.Route.REDIRECT;
+import static server.router.Resource.REDIRECT;
 
 public class Redirect implements Action {
 

@@ -10,7 +10,7 @@ import server.router.HttpMethods;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
-import static server.router.Route.HOME;
+import static server.router.Resource.HOME;
 
 public class ListResourcesInPublicDirectoryTest {
     private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();

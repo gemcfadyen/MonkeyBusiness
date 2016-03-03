@@ -3,7 +3,7 @@ package server.router;
 import server.ResourceHandler;
 import server.messages.HttpRequest;
 
-import static server.router.Route.LOGS;
+import static server.router.Resource.LOGS;
 
 public class RouteLog implements Auditor {
     private ResourceHandler resourceHandler;

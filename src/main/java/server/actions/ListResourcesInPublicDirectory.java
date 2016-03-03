@@ -13,7 +13,7 @@ import java.util.List;
 import static server.messages.Delimiter.BREAK;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
-import static server.router.Route.HOME;
+import static server.router.Resource.HOME;
 
 public class ListResourcesInPublicDirectory implements Action {
     private ResourceHandler resourceHandler;
