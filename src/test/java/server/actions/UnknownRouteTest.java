@@ -9,6 +9,7 @@ import static org.junit.Assert.assertThat;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 import static server.messages.StatusCode.NOT_FOUND;
 import static server.router.HttpMethods.GET;
+import static server.router.Resource.FOOBAR;
 
 public class UnknownRouteTest {
     private UnknownRoute unknownRoute = new UnknownRoute();
@@ -16,7 +17,7 @@ public class UnknownRouteTest {
     @Test
     public void isEligibleForRouteFooBar() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/foobar")
+                .withRequestUri(FOOBAR.getPath())
                 .withRequestLine(GET.name())
                 .build();
 
@@ -26,7 +27,7 @@ public class UnknownRouteTest {
     @Test
     public void isNotEligibleForAnotherRoute() {
         HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/logs")
+                .withRequestUri("/another-route")
                 .withRequestLine(GET.name())
                 .build();
 
