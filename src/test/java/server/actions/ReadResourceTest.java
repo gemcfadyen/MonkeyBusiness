@@ -41,20 +41,6 @@ public class ReadResourceTest {
     }
 
     @Test
-    public void readingResourceLogs() {
-        HttpRequest httpRequest = anHttpRequestBuilder()
-                .withRequestUri("/form")
-                .withRequestLine(GET.name())
-                .build();
-
-        readResource.process(httpRequest);
-
-        assertThat(resourceHandlerSpy.hasAppendedToResource(), is(true));
-        assertThat(resourceHandlerSpy.getNameOfResourceThatWasAppended(), is("/logs"));
-        assertThat(resourceHandlerSpy.getContentAppendedToResource(), is("GET /form HTTP/1.1\n"));
-    }
-
-    @Test
     public void responseIncludesMethodOptions() {
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/form")

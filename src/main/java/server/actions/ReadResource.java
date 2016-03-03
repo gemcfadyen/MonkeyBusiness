@@ -9,10 +9,11 @@ import server.router.HttpMethods;
 import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
 
-public class ReadResource extends LogRequest implements Action {
+public class ReadResource implements Action {
+    private final ResourceHandler resourceHandler;
 
     public ReadResource(ResourceHandler resourceHandler) {
-        super(resourceHandler);
+        this.resourceHandler = resourceHandler;
     }
 
     @Override
@@ -21,7 +22,7 @@ public class ReadResource extends LogRequest implements Action {
     }
 
     @Override
-    public HttpResponse createHttpResponse(HttpRequest request) {
+    public HttpResponse process(HttpRequest request) {
         return anHttpResponseBuilder()
                 .withStatusCode(OK)
                 .withBody(readResourceAt(request))

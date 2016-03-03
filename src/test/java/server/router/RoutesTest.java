@@ -151,6 +151,6 @@ public class RoutesTest {
         List<Action> actions = routes.get(HEAD);
 
         Action lastAction = actions.get(0);
-        assertThat(lastAction, instanceOf(LogRequest.class));
+        assertThat(lastAction, instanceOf(HeadRequest.class));
     }
 }

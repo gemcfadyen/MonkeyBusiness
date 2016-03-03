@@ -18,9 +18,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;
 import static server.messages.StatusCode.*;
+import static server.router.HttpMethods.DELETE;
 import static server.router.HttpMethods.GET;
 
 public class HttpRouteProcessorTest {
+    private RouteLogSpy auditorSpy = new RouteLogSpy();
     private HttpRouteProcessor requestProcessor;
 
     @Before
@@ -32,7 +34,19 @@ public class HttpRouteProcessorTest {
                 return routes;
             }
         };
-        requestProcessor = new HttpRouteProcessor(routes);
+        requestProcessor = new HttpRouteProcessor(routes, auditorSpy);
+    }
+
+    @Test
+    public void auditLogWritten() {
+        HttpRequest httpRequest = anHttpRequestBuilder()
+                .withRequestUri("/anAddress")
+                .withRequestLine(DELETE.name())
+                .build();
+
+        requestProcessor.process(httpRequest);
+
+        assertThat(auditorSpy.hasLoggedRequest(), is(true));
     }
 
     @Test
@@ -61,7 +75,7 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void defaultsTo404WhenNoConfiguredRoutes() {
-        requestProcessor = new HttpRouteProcessor(noConfiguredRoutes());
+        requestProcessor = new HttpRouteProcessor(noConfiguredRoutes(), auditorSpy);
 
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/noMatchingRoutes")
@@ -75,7 +89,7 @@ public class HttpRouteProcessorTest {
 
     @Test
     public void routesTo404WhenNoEligibleConfiguredRoutes() {
-        requestProcessor = new HttpRouteProcessor(noEligibleConfiguredRoutes());
+        requestProcessor = new HttpRouteProcessor(noEligibleConfiguredRoutes(), auditorSpy);
 
         HttpRequest httpRequest = anHttpRequestBuilder()
                 .withRequestUri("/noEligibleMatchingRoutes")

@@ -16,20 +16,28 @@ import static server.router.HttpMethods.isBogus;
 
 public class HttpRouteProcessor implements RouteProcessor {
     private Map<HttpMethods, List<Action>> routes = new HashMap<>();
+    private Auditor auditor;
 
-    public HttpRouteProcessor(Routes routes) {
+    public HttpRouteProcessor(Routes routes, Auditor auditor) {
         this.routes = routes.routes();
+        this.auditor = auditor;
     }
 
     @Override
     public HttpResponse process(HttpRequest httpRequest) {
+        logRequest(httpRequest);
+
         if (isBogusMethod(httpRequest)) {
             return methodNotSupported(httpRequest);
-        } else if (supportedRoute(httpRequest)) {
-            return processRoute(httpRequest);
+        } else if (supportedMethod(httpRequest)) {
+            return processRequest(httpRequest);
         } else {
             return fourOFour(httpRequest);
         }
+    }
+
+    private void logRequest(HttpRequest httpRequest) {
+        auditor.audit(httpRequest);
     }
 
     private boolean isBogusMethod(HttpRequest httpRequest) {
@@ -40,17 +48,18 @@ public class HttpRouteProcessor implements RouteProcessor {
         return new MethodNotAllowed(new HeaderParameterExtractor()).process(httpRequest);
     }
 
-    private boolean supportedRoute(HttpRequest httpRequest) {
+    private boolean supportedMethod(HttpRequest httpRequest) {
         return routes.get(HttpMethods.valueOf(httpRequest.getMethod())) != null;
     }
 
-    private HttpResponse processRoute(HttpRequest httpRequest) {
+    private HttpResponse processRequest(HttpRequest httpRequest) {
         List<Action> actions = routes.get(HttpMethods.valueOf(httpRequest.getMethod()));
         for (Action action : actions) {
             if (action.isEligible(httpRequest)) {
                 return action.process(httpRequest);
             }
         }
+        System.out.println("404 from inside processor");
         return fourOFour(httpRequest);
     }
 

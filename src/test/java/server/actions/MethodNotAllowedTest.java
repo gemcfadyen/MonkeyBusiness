@@ -20,7 +20,6 @@ public class MethodNotAllowedTest {
 
     private MethodNotAllowed methodNotAllowed = new MethodNotAllowed(new HeaderParameterExtractor());
 
-
     @Test
     public void eligibleWhenContentLengthIsZero() {
         Map<String, String> headerProperties = new HashMap<>();

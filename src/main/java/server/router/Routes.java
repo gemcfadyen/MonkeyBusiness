@@ -47,7 +47,7 @@ public class Routes {
         routes.put(DELETE, singletonList(new DeleteResource(resourceHandler)));
         routes.put(OPTIONS, singletonList(new ReadResource(resourceHandler)));
         routes.put(PATCH, singletonList(new PatchResource(resourceHandler, new EtagGenerator(SHA_1), headerParameterExtractor)));
-        routes.put(HEAD, singletonList(new LogRequest(resourceHandler)));
+        routes.put(HEAD, singletonList(new HeadRequest()));
 
         return routes;
     }
