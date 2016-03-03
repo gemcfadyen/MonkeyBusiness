@@ -42,11 +42,7 @@ public class HttpServerRunner {
         }
     }
 
-    private static String getRepositoryRootDirectory() {
-        try {
-            return new java.io.File(".").getCanonicalPath();
-        } catch (IOException e) {
-            throw new RootDirectoryException(e);
-        }
+    private static String getRepositoryRootDirectory() throws IOException {
+        return new java.io.File(".").getCanonicalPath();
     }
 }
