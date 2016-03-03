@@ -36,28 +36,21 @@ HTTP Server adhering to the Http Cob Spec
 
 #### Configuring Cob Spec
 
-##### To run the tests you have to change three variables.
-
-Navigate to the HttpTestSuite.
-Click on Edit.
-Update the paths for the User-Defined Variable.
-SERVER_START_COMMAND is the command to start your server.
-Example: java -jar /User/somebody/project/my_jar.jar
-PUBLIC_DIR is the path to cob spec public folder.
-Example: /User/somebody/cob_spec/public/
-Remove the `-` from the start of the command so that the tests know these properties are defined.
-Click Save.
+The original 8th Light cob spec suite can be found [here](https://github.com/8thlight/cob_spec). The copy in this repository runs against the httpServer that this repository builds.
 
 #### Http Server
 
 Your server jar needs to take two command line arguments.
 
 -p which specifies the port to listen on. Default is 5000.
--d which specifies the directory to serve files from. Default is the PUBLIC_DIR variable.
+-d which specifies the directory to serve files from. Default is the PUBLIC_DIR variable configured in Fitnesse, which points to the vendor/cob_spec/public folder in this repository.
 Running Tests
 
-To run all tests, click the Suite button.
+To run all tests, click the Suite button. If you have not already started your server, the test suite will start it for you.
 To run the simple http request tests, first click the ResponseTestSuite link, then click the Suite button.
 To run the tests that require threading, first click the SimultaniousTestSuite link, then click the Suite button.
 To run a test individually, first click on the test link, then click the Test button.
+
+For info, you can start your server directly using the following command:
+`java -jar {enter-the-path-you-cloned-the-project}/build/libs/httpServer-1.0-SNAPSHOT.jar`
 
