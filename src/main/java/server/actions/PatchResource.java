@@ -2,6 +2,7 @@ package server.actions;
 
 import server.Action;
 import server.ResourceHandler;
+import server.actions.etag.EtagGenerator;
 import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;

@@ -1,4 +1,4 @@
-package server.actions;
+package server.actions.etag;
 
 public class EtagGeneratorException extends RuntimeException {
     public EtagGeneratorException(Throwable cause) {

@@ -3,6 +3,8 @@ package server.actions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import server.actions.etag.EtagGenerator;
+import server.actions.etag.EtagGeneratorException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static server.actions.EtagGenerationAlgorithm.SHA_1;
+import static server.actions.etag.EtagGenerationAlgorithm.SHA_1;
 
 public class EtagGeneratorTest {
     @Rule

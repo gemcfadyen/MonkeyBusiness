@@ -3,6 +3,7 @@ package server.router;
 import server.Action;
 import server.ResourceHandler;
 import server.actions.*;
+import server.actions.etag.EtagGenerator;
 import server.messages.HeaderParameterExtractor;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static server.actions.EtagGenerationAlgorithm.SHA_1;
+import static server.actions.etag.EtagGenerationAlgorithm.SHA_1;
 import static server.router.HttpMethods.*;
 
 public class Routes {

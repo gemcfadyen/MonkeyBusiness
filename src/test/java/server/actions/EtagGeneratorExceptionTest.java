@@ -2,6 +2,7 @@ package server.actions;
 
 import org.junit.Before;
 import org.junit.Test;
+import server.actions.etag.EtagGeneratorException;
 
 import java.security.NoSuchAlgorithmException;
 

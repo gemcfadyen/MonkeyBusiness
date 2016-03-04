@@ -1,4 +1,4 @@
-package server.actions;
+package server.actions.etag;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.security.MessageDigest;

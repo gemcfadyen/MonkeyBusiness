@@ -52,8 +52,8 @@ public class Authorisation implements Action {
     private boolean isCorrect(String credentials) {
         String[] encrypted = credentials.split(space());
         for (String encryptedParam : encrypted) {
-            if (isCredentials(encryptedParam)
-                    && authenticated(encryptedParam)) {
+            if (hasCredentials(encryptedParam)
+                    && hasAuthenticated(encryptedParam)) {
                 return true;
             }
         }
@@ -65,11 +65,11 @@ public class Authorisation implements Action {
         return " ";
     }
 
-    private boolean isCredentials(String encryptedParam) {
+    private boolean hasCredentials(String encryptedParam) {
         return !encryptedParam.equals("Basic");
     }
 
-    private boolean authenticated(String encryptedParam) {
+    private boolean hasAuthenticated(String encryptedParam) {
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(encryptedParam.trim());
             return decode(decodedBytes);

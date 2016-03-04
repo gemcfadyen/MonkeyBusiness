@@ -24,7 +24,7 @@ public class HttpServerRunner {
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(args);
 
         HttpServerSocket httpServerSocket = new HttpServerSocket(new ServerSocket(port), new HttpResponseFormatter());
-        FileResourceHandler resourceHandler = new FileResourceHandler(publicDirectory);
+        ResourceHandler resourceHandler = new FileResourceHandler(publicDirectory);
 
         HttpServer httpServer = new HttpServer(
                 httpServerSocket,

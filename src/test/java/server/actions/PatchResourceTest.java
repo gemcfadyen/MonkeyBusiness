@@ -2,6 +2,7 @@ package server.actions;
 
 import org.junit.Test;
 import server.ResourceHandlerSpy;
+import server.actions.etag.EtagGenerator;
 import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
@@ -12,7 +13,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static server.actions.EtagGenerationAlgorithm.SHA_1;
+import static server.actions.etag.EtagGenerationAlgorithm.SHA_1;
 import static server.messages.HttpMessageHeaderProperties.CONTENT_LENGTH;
 import static server.messages.HttpMessageHeaderProperties.IF_MATCH;
 import static server.messages.HttpRequestBuilder.anHttpRequestBuilder;

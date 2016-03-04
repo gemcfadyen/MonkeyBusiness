@@ -1,4 +1,4 @@
-package server.actions;
+package server.actions.etag;
 
 public enum EtagGenerationAlgorithm {
     SHA_1("SHA-1");
