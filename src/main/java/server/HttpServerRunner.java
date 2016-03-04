@@ -11,6 +11,7 @@ import server.router.HttpRouteProcessor;
 import server.router.RouteLog;
 import server.router.Routes;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -43,6 +44,6 @@ public class HttpServerRunner {
     }
 
     private static String getRepositoryRootDirectory() throws IOException {
-        return new java.io.File(".").getCanonicalPath();
+        return new File(".").getCanonicalPath();
     }
 }
