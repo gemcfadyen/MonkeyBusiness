@@ -49,7 +49,7 @@ public class HttpRequestParser implements RequestParser {
         String[] requestLine = getRequestLine(reader);
         Map<String, String> headerParams = getHeaderParameters(reader);
         char[] bodyContents = getBody(reader, getContentLength(headerParams));
-
+        System.out.println("Received Request..." + new String(bodyContents));
         return anHttpRequestBuilder()
                 .withRequestLine(getMethod(requestLine))
                 .withRequestUri(getRequestUri(requestLine))
@@ -61,11 +61,13 @@ public class HttpRequestParser implements RequestParser {
 
     private String[] getRequestLine(BufferedReader reader) throws IOException {
         String firstLine = readLine(reader);
+        System.out.println("RECEIVED REQUEST " + firstLine);
         return splitUsing(space(), firstLine);
     }
 
     private String getRequestUri(String[] requestLine) {
         String firstLine = getValueAtIndex(1, requestLine);
+        System.out.println("RECEIVED REQUEST "  + firstLine);
         String[] splitOnQuestionMark = splitUsing(QUESTION_MARK.get(), firstLine);
         return getValueAtIndex(0, splitOnQuestionMark);
     }

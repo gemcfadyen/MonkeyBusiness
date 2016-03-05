@@ -1,2 +1,3 @@
 rootProject.name = 'httpServer'
+include 'game-of-monkeys-server'
 
