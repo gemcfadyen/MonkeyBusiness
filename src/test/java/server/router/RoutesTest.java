@@ -17,7 +17,7 @@ import static server.router.HttpMethods.*;
 public class RoutesTest {
     private ResourceHandlerSpy resourceHandlerSpy = new ResourceHandlerSpy();
     private HeaderParameterExtractor headerParameterExtractor = new HeaderParameterExtractor();
-    private Routes routes = new Routes(resourceHandlerSpy, headerParameterExtractor);
+    private Routes routes = new CobSpecRoutes(resourceHandlerSpy, headerParameterExtractor);
 
     @Test
     public void routesForSevenMethods() {

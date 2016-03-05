@@ -7,6 +7,7 @@ import server.httpserver.HttpServerSocket;
 import server.messages.HeaderParameterExtractor;
 import server.messages.HttpRequestParser;
 import server.messages.HttpResponseFormatter;
+import server.router.CobSpecRoutes;
 import server.router.HttpRouteProcessor;
 import server.router.RouteLog;
 import server.router.Routes;
@@ -25,7 +26,7 @@ public class HttpServerRunner {
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(args);
         ResourceHandler resourceHandler = new FileResourceHandler(publicDirectory);
 
-        runJojonatra(port, publicDirectory, new Routes(resourceHandler, new HeaderParameterExtractor()));
+        runJojonatra(port, publicDirectory, new CobSpecRoutes(resourceHandler, new HeaderParameterExtractor()));
     }
 
     public static void runJojonatra(int port, String logginDirectory, Routes routes) throws IOException {

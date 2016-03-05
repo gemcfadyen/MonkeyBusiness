@@ -27,7 +27,7 @@ public class HttpRouteProcessorTest {
 
     @Before
     public void setup() {
-        Routes routes = new Routes(new ResourceHandlerSpy(), new HeaderParameterExtractor()) {
+        Routes routes = new CobSpecRoutes(new ResourceHandlerSpy(), new HeaderParameterExtractor()) {
             public Map<HttpMethods, List<Action>> routes() {
                 Map<HttpMethods, List<Action>> routes = new HashMap<>();
                 routes.put(GET, asList(new ActionStub(true)));
@@ -103,7 +103,7 @@ public class HttpRouteProcessorTest {
     }
 
     private Routes noEligibleConfiguredRoutes() {
-        return new Routes(new ResourceHandlerSpy(), new HeaderParameterExtractor()) {
+        return new CobSpecRoutes(new ResourceHandlerSpy(), new HeaderParameterExtractor()) {
             public Map<HttpMethods, List<Action>> routes() {
                 Map<HttpMethods, List<Action>> routes = new HashMap<>();
                 routes.put(GET, asList(new ActionStub(false)));
@@ -113,7 +113,7 @@ public class HttpRouteProcessorTest {
     }
 
     private Routes noConfiguredRoutes() {
-        return new Routes(new ResourceHandlerSpy(), new HeaderParameterExtractor()) {
+        return new CobSpecRoutes(new ResourceHandlerSpy(), new HeaderParameterExtractor()) {
                 public Map<HttpMethods, List<Action>> routes() {
                     return new HashMap<>();
                 }
