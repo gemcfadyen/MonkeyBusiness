@@ -29,7 +29,6 @@ public class GameOfMonkeysEndToEndTest {
         gameOfMonkeys.start();
 
         driver.get("http://localhost:5000/zoo");
-        Thread.sleep(5000);
 
         WebElement monkeyElement = driver.findElement(By.className("qa-monkey"));
 
