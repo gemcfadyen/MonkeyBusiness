@@ -23,14 +23,18 @@ public class HttpServerRunner {
 
         int port = commandLineArgumentParser.extractPort(args);
         String publicDirectory = commandLineArgumentParser.extractPublicDirectory(args);
-
-        HttpServerSocket httpServerSocket = new HttpServerSocket(new ServerSocket(port), new HttpResponseFormatter());
         ResourceHandler resourceHandler = new FileResourceHandler(publicDirectory);
 
+        runJojonatra(port, publicDirectory, new Routes(resourceHandler, new HeaderParameterExtractor()));
+    }
+
+    public static void runJojonatra(int port, String logginDirectory, Routes routes) throws IOException {
+        ResourceHandler resourceHandler = new FileResourceHandler(logginDirectory);
+
         HttpServer httpServer = new HttpServer(
-                httpServerSocket,
+                new HttpServerSocket(new ServerSocket(port), new HttpResponseFormatter()),
                 new HttpRequestParser(),
-                new HttpRouteProcessor(new Routes(resourceHandler, new HeaderParameterExtractor()), new RouteLog(resourceHandler)),
+                new HttpRouteProcessor(routes, new RouteLog(resourceHandler)),
                 new FixedThreadPoolExecutorService(4)
         );
 

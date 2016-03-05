@@ -26,7 +26,7 @@ public class Routes {
         return routes;
     }
 
-    private Map<HttpMethods, List<Action>> configure(ResourceHandler resourceHandler, HeaderParameterExtractor headerParameterExtractor) {
+    protected Map<HttpMethods, List<Action>> configure(ResourceHandler resourceHandler, HeaderParameterExtractor headerParameterExtractor) {
         routes.put(GET, asList(
                 new MonkeyBusiness(),
                 new UnknownRoute(),
