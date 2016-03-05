@@ -9,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -24,16 +26,19 @@ public class GameOfMonkeysEndToEndTest {
     }
 
     @Test
-    public void generateMonkeys() throws Exception {
+    public void generateCageWithEmptyBeds() throws Exception {
         GameOfMonkeys gameOfMonkeys = new GameOfMonkeys();
         gameOfMonkeys.start();
 
         driver.get("http://localhost:5000/zoo");
 
-        WebElement monkeyElement = driver.findElement(By.className("qa-monkey"));
+        WebElement monkeyElement = driver.findElement(By.className("cage"));
 
-        String expectedMonkeyText = monkeyElement.getText();
-        assertThat(expectedMonkeyText, is("Mun-key!"));
+        List<WebElement> expectedMonkeyText = monkeyElement.findElements(By.className("bed"));
+        assertThat(expectedMonkeyText.size(), is(100));
+        for (WebElement webElement : expectedMonkeyText) {
+            assertThat(webElement.getAttribute("class").equals("bed empty-bed"), is(true));
+        }
     }
 
     @After
