@@ -40,6 +40,7 @@ public class MonkeyBusiness implements Action {
         sb.append(".bed { border: 10px solid black;" +
                 "height: 60px;" +
                 "width: 60px; }");
+        sb.append(".empty-bed { background-color: #FFA500;}");
         sb.append(".monkey-in-bed { background-image: url('http://vignette4.wikia.nocookie.net/survivor-org/images/9/9b/Jumping-monkey-gif-animation_(1).gif');" +
                 "background-repeat: no-repeat;" +
                 "background-position: center;" +
