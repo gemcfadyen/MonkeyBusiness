@@ -3,7 +3,7 @@ package pgtips.gamoflife;
 import org.junit.Test;
 import pgtips.gameoflife.MonkeyGameRoutes;
 import server.Action;
-import server.actions.MonkeyBusiness;
+import pgtips.gameoflife.MonkeyBusiness;
 import server.router.HttpMethods;
 
 import java.util.List;

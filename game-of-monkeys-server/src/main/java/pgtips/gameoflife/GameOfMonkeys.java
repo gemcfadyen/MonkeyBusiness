@@ -1,12 +1,17 @@
-package pgtips.gamoflife;
+package pgtips.gameoflife;
 
-import pgtips.gameoflife.MonkeyGameRoutes;
 import server.HttpServerRunner;
 import server.router.Routes;
 
 import java.io.IOException;
 
 public class GameOfMonkeys {
+
+    public static void main(String[] args) {
+        new GameOfMonkeys().start();
+
+    }
+
     public void start() {
         Runnable runnable = () -> {
             try {

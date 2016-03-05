@@ -1,7 +1,7 @@
-package server.actions;
+package pgtips.gamoflife;
 
-import junit.framework.TestCase;
 import org.junit.Test;
+import pgtips.gameoflife.MonkeyBusiness;
 import server.messages.HttpRequest;
 import server.messages.HttpResponse;
 
