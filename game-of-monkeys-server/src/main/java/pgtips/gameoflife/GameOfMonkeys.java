@@ -7,21 +7,32 @@ import java.io.IOException;
 
 public class GameOfMonkeys {
 
-    public static void main(String[] args) {
-        new GameOfMonkeys().start();
+    private int numberOfMonkeysInNewGame;
+    private Thread thread;
 
+    public GameOfMonkeys(int numberOfMonkeysInNewGame) {
+        this.numberOfMonkeysInNewGame = numberOfMonkeysInNewGame;
+    }
+
+    public static void main(String[] args) {
+        new GameOfMonkeys(1).start();
     }
 
     public void start() {
         Runnable runnable = () -> {
             try {
-                Routes routes = new MonkeyGameRoutes();
+                Routes routes = new MonkeyGameRoutes(numberOfMonkeysInNewGame);
                 HttpServerRunner.runJojonatra(5000, "/tmp/", routes);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         };
 
-        new Thread(runnable).start();
+        thread = new Thread(runnable);
+        thread.start();
+    }
+
+    public void stop() {
+        thread.interrupt();
     }
 }

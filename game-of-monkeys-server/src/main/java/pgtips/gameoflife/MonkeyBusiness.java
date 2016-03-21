@@ -8,6 +8,12 @@ import static server.messages.HttpResponseBuilder.anHttpResponseBuilder;
 import static server.messages.StatusCode.OK;
 
 public class MonkeyBusiness implements Action {
+    private int numberOfMonkeys;
+
+    public MonkeyBusiness(int numberOfMonkeys) {
+        this.numberOfMonkeys = numberOfMonkeys;
+    }
+
     @Override
     public boolean isEligible(HttpRequest request) {
         return true;
@@ -55,9 +61,12 @@ public class MonkeyBusiness implements Action {
         for (int i = 0; i < 10; i++) {
             sb.append("<tr>");
             for (int j = 0; j < 10; j++) {
-                sb.append("<td class=\"bed empty-bed\">");
+                if (i == 0 && j == 0 && numberOfMonkeys == 1) {
+                    sb.append("<td class=\"bed monkey-in-bed bed-" + i + "-" + j + "\"");
+                } else {
+                    sb.append("<td class=\"bed empty-bed\">");
+                }
                 sb.append("</td>");
-
             }
             sb.append("</tr>");
         }

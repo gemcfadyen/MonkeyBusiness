@@ -19,7 +19,7 @@ public class MonkeyBusinessTest  {
                 .withRequestLine(GET.name())
                 .build();
 
-        MonkeyBusiness readResource = new MonkeyBusiness();
+        MonkeyBusiness readResource = new MonkeyBusiness(0);
         HttpResponse httpResponse = readResource.process(httpRequest);
 
         assertThat(httpResponse.statusCode(), is(OK));

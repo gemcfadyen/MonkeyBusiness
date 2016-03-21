@@ -16,7 +16,7 @@ import static org.junit.Assert.assertThat;
 public class MonkeyGameRoutesTest {
     @Test
     public void hasOneRoute() {
-        MonkeyGameRoutes routes = new MonkeyGameRoutes();
+        MonkeyGameRoutes routes = new MonkeyGameRoutes(0);
 
         Map<HttpMethods, List<Action>> monkeyRoutes = routes.routes();
         List<Action> getRoutes = monkeyRoutes.get(HttpMethods.GET);
